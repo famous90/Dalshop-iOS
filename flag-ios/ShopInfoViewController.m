@@ -63,11 +63,10 @@
     // change view
     BOOL isMall = NO;
     UIStoryboard *storyborad = [ViewUtil getStoryboard];
-    UINavigationController *navController;
     
     if (isMall) {
         
-        navController = (UINavigationController *)[storyborad instantiateViewControllerWithIdentifier:@"MallShopViewNav"];
+        UINavigationController *navController = (UINavigationController *)[storyborad instantiateViewControllerWithIdentifier:@"MallShopViewNav"];
         MallShopViewController *childViewController = (MallShopViewController *)[navController topViewController];
         
         childViewController.user = self.user;
@@ -78,19 +77,18 @@
         
     }else{
         
-        navController = (UINavigationController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoViewNav"];
+//        navController = (UINavigationController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoViewNav"];
 //        navController = [[UINavigationController alloc] init];
-        SaleInfoViewController *childViewController = (SaleInfoViewController *)[navController topViewController];
+//        SaleInfoViewController *childViewController = (SaleInfoViewController *)[navController topViewController];
+        SaleInfoViewController *childViewController = (SaleInfoViewController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoView"];
         
-        navController.navigationBar.tintColor = UIColorFromRGB(BASE_COLOR);
         childViewController.user = self.user;
         childViewController.shopId = self.shopId;
         childViewController.parentPage = SHOP_INFO_VIEW_PAGE;
         childViewController.title = self.shopName;
-        
+     
+        [self.navigationController pushViewController:childViewController animated:YES];
     }
-    
-    [self presentViewController:navController animated:YES completion:nil];
 }
 
 // GAI touch tracking
