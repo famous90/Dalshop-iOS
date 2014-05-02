@@ -26,6 +26,7 @@
         _barcodeId = [data valueForKey:@"barcodeId"];
         _reward = [[data valueForKey:@"reward"] integerValue];
         _rewarded = [[data valueForKey:@"rewarded"] boolValue];
+        _rewardable = [[data valueForKey:@"rewardable"] boolValue];
         _likes = [[data valueForKey:@"likes"] integerValue];
         _liked = [[data valueForKey:@"liked"] boolValue];
     }

@@ -49,10 +49,12 @@
 //#define GAI_SCREEN_NAME_MALL_SHOP_VIEW 
 #define GAI_SCREEN_NAME_SHOP_LIST_VIEW      @"Shop List Screen"
 #define GAI_SCREEN_NAME_MY_PAGE_VIEW        @"My Page Screen"
+#define GAI_SCREEN_NAME_SLIDE_MENU          @"Slide Menu Screen"
 
 
 // BASE VALUE
 #define BASE_COLOR  0x3C9CB2
+
 
 // METHOD
 
@@ -66,6 +68,12 @@ colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
 green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
 blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 
+
+// GOOGLE MAP
+
+#define GOOGLE_MAP_API_KEY  @"AIzaSyCOrp3cZWnafY1RGJHcIR_qY7BScyUxwds"
+
+
 // MAP TAG
 
 #define ZOOM_LEVEL_FOR_CURRENT_LOCATION 15
@@ -73,6 +81,13 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 #define BASE_LATITUDE       37.46
 #define BASE_LONGITUDE      126.96
 #define FLAG_LIST_RADIUS    1500
+
+
+// MAP MARKER STATUS
+
+#define BASE        0
+#define REWARDED    1
+#define SELECTED    2
 
 
 // DATE FORMAT TAG
@@ -104,9 +119,7 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 #define RETAIL                  8
 
 
-// MAP MARKER STATUS
+// LIKE TYPE
 
-#define BASE        0
-#define REWARDED     1
-#define SELECTED    2
-
+#define LIKE_SHOP   1
+#define LIKE_ITEM   2

@@ -60,7 +60,7 @@ static int const kGaDispatchPeriod = 30;
 
     
     // Google Map
-    [GMSServices provideAPIKey:@"AIzaSyCOrp3cZWnafY1RGJHcIR_qY7BScyUxwds"];
+    [GMSServices provideAPIKey:GOOGLE_MAP_API_KEY];
     
     
     // Google Analytics
@@ -220,18 +220,18 @@ static int const kGaDispatchPeriod = 30;
 {
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLaunched"]) {
         
-        UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"show" message:@"not first launch" delegate:nil cancelButtonTitle:@"okay" otherButtonTitles:nil, nil];
-        [alert show];
+//        UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"show" message:@"not first launch" delegate:nil cancelButtonTitle:@"okay" otherButtonTitles:nil, nil];
+//        [alert show];
         
         [self getUserInfoFromCoreData];
 
     }else{
-
+        
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveLaunched"];
         [[NSUserDefaults standardUserDefaults] synchronize];
 
-        UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"show" message:@"first launch" delegate:nil cancelButtonTitle:@"okay" otherButtonTitles:nil, nil];
-        [alert show];
+//        UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"show" message:@"first launch" delegate:nil cancelButtonTitle:@"okay" otherButtonTitles:nil, nil];
+//        [alert show];
 
         [self getGuestSession];
 
@@ -242,11 +242,12 @@ static int const kGaDispatchPeriod = 30;
 {
     GTLServiceFlagengine *service = [FlagClient flagengineService];
     
-    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUserGuestSession];
+    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGuest];
     
     NSLog(@"start execute");
-    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineGuestSession *object, NSError *error){
-        NSLog(@"result object \n %@", object);
+    
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *object, NSError *error){
+        NSLog(@"result object %@", object);
         
         User *user = [[User alloc] init];
         user.userId = [object identifier];

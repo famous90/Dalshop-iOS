@@ -20,6 +20,8 @@
 
 #import "ViewUtil.h"
 
+#import "FlagClient.h"
+#import "GTLFlagengine.h"
 #import "GoogleAnalytics.h"
 
 @interface SaleInfoViewController ()
@@ -35,10 +37,24 @@
     BOOL showItemFirstTapped;
 }
 
+CGFloat viewPadding = 0.0f;
+CGFloat textPadding = 30.0f;
+
+CGFloat shopFunctionButtonWidth = 107.0f;
+CGFloat shopFunctionButtonHeight = 44.0f;
+
+CGFloat showEventButtonHeight = 41.0f;
+CGFloat showEventButtonWidth = 171.0f;
+
 - (void)awakeFromNib
 {
     [super awakeFromNib];
     self.user = [[User alloc] init];
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -123,7 +139,7 @@
     UIImage *shopImage = [FlagClient getImageWithImagePath:self.shop.imageUrl];
 
     if (shopImage) {
-        saleImage = [ViewUtil imageWithImage:shopImage scaledToWidth:self.view.frame.size.width];
+        saleImage = [ViewUtil imageWithImage:shopImage scaledToWidth:self.view.frame.size.width - viewPadding*2];
     }
     [self.tableView reloadData];
 }
@@ -156,39 +172,72 @@
     if (indexPath.row == SALE_IMAGE_ROW) {
         
         if (saleImage) {
-            UIImageView *saleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, saleImage.size.height)];
-            CGFloat buttonDiameter = 79;
-            CGFloat buttonPadding = 20;
-            UIButton *showItemButton = [[UIButton alloc] initWithFrame:CGRectMake(self.view.frame.size.width - buttonPadding - buttonDiameter, saleImageView.frame.size.height - buttonPadding - buttonDiameter, buttonDiameter, buttonDiameter)];
             
+            // Sale image
+            UIImageView *saleImageView = [[UIImageView alloc] initWithFrame:CGRectMake(viewPadding, viewPadding, cell.frame.size.width - viewPadding*2, saleImage.size.height)];
             saleImageView.image = saleImage;
-            [showItemButton setBackgroundImage:[UIImage imageNamed:@"button_double_circle"] forState:UIControlStateNormal];
-            [showItemButton setTitle:@"구경하기" forState:UIControlStateNormal];
-            [showItemButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [showItemButton addTarget:self action:@selector(pushItemListView) forControlEvents:UIControlEventTouchUpInside];
+            
             [cell addSubview:saleImageView];
-            [cell addSubview:showItemButton];
+            
+            
+            // Like button
+            UIButton *likeItButton = [[UIButton alloc] initWithFrame:CGRectMake(0, cell.frame.size.height - shopFunctionButtonHeight, shopFunctionButtonWidth, shopFunctionButtonHeight)];
+            likeItButton.backgroundColor = UIColorFromRGBWithAlpha(BASE_COLOR, 0.8);
+            if (self.shop.liked) {
+                [likeItButton setImage:[UIImage imageNamed:@"icon_likeIt_done_white"] forState:UIControlStateNormal];
+            }else{
+                [likeItButton setImage:[UIImage imageNamed:@"icon_likeIt_white"] forState:UIControlStateNormal];
+            }
+            [likeItButton setTitle:[NSString stringWithFormat:@"%d", 467] forState:UIControlStateNormal];
+            [likeItButton setTintColor:[UIColor whiteColor]];
+            [likeItButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 10)];                                                                                                                                                                                                    
+            [likeItButton addTarget:self action:@selector(likeItButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [cell addSubview:likeItButton];
+            
+            
+            // Share Button
+            UIButton *shareButton = [[UIButton alloc] initWithFrame:CGRectMake(likeItButton.frame.origin.x + likeItButton.frame.size.width, cell.frame.size.height - shopFunctionButtonHeight, shopFunctionButtonWidth, shopFunctionButtonHeight)];
+            shareButton.backgroundColor = UIColorFromRGBWithAlpha(BASE_COLOR, 0.8);
+            [shareButton setImage:[UIImage imageNamed:@"icon_share"] forState:UIControlStateNormal];
+            [shareButton setTintColor:[UIColor whiteColor]];
+            [shareButton addTarget:self action:@selector(shareButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [cell addSubview:shareButton];
+            
+            
+            // show location Button
+            UIButton *showLocationButton = [[UIButton alloc] initWithFrame:CGRectMake(shareButton.frame.origin.x + shareButton.frame.size.width, cell.frame.size.height - shopFunctionButtonHeight, shopFunctionButtonWidth, shopFunctionButtonHeight)];
+            showLocationButton.backgroundColor = UIColorFromRGBWithAlpha(BASE_COLOR, 0.8);
+            [showLocationButton setImage:[UIImage imageNamed:@"icon_map"] forState:UIControlStateNormal];
+            [showLocationButton setTintColor:[UIColor whiteColor]];
+            [showLocationButton addTarget:self action:@selector(showLocationButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [cell addSubview:showLocationButton];
         }
         
     }else if (indexPath.row == SALE_INFO_ROW){
         
         if (self.shop) {
             
-            CGFloat padding = 20;
+            // Text view
             UIFont *labelFont = [UIFont fontWithName:@"Helvetica" size:14];
-            CGRect labelFrame = [self.shop.description boundingRectWithSize:CGSizeMake(cell.frame.size.width - padding*2, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:labelFont} context:Nil];
-            UILabel *saleInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(padding, padding, labelFrame.size.width, labelFrame.size.height)];
-            UIView *innerDivisionLine = [[UIView alloc] initWithFrame:CGRectMake(0, 0, cell.frame.size.width, 0.5f)];
-            
+            CGRect labelFrame = [self.shop.description boundingRectWithSize:CGSizeMake(cell.frame.size.width - textPadding*2, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:labelFont} context:Nil];
+            UILabel *saleInfoLabel = [[UILabel alloc] initWithFrame:CGRectMake(textPadding, textPadding, labelFrame.size.width, labelFrame.size.height)];
+
             saleInfoLabel.text = self.shop.description;
+            [saleInfoLabel setTextColor:UIColorFromRGB(BASE_COLOR)];
             saleInfoLabel.font = labelFont;
             saleInfoLabel.numberOfLines = 0;
             [saleInfoLabel sizeToFit];
             
-            innerDivisionLine.backgroundColor = UIColorFromRGB(BASE_COLOR);
-            
-            [cell addSubview:innerDivisionLine];
             [cell addSubview:saleInfoLabel];
+            
+            
+            // Show Item Button
+            UIButton *showItemButton = [[UIButton alloc] initWithFrame:CGRectMake((cell.frame.size.width - showEventButtonWidth)/2, cell.frame.size.height - showEventButtonHeight, showEventButtonWidth, showEventButtonHeight)];
+            [showItemButton setBackgroundColor:UIColorFromRGB(BASE_COLOR)];
+            [showItemButton setTitle:@"이벤트 보러가기" forState:UIControlStateNormal];
+            [showItemButton addTarget:self action:@selector(pushItemListView) forControlEvents:UIControlEventTouchUpInside];
+            
+            [cell addSubview:showItemButton];
         }
         
     }
@@ -201,14 +250,14 @@
 {
     if (indexPath.row == SALE_IMAGE_ROW) {
         
-        return saleImage.size.height;
+        return saleImage.size.height + viewPadding;
         
     }else if (indexPath.row ==  SALE_INFO_ROW){
         
         CGRect frame = [self.shop.description boundingRectWithSize:CGSizeMake(280, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica" size:14]} context:nil];
         
         labelHeight = frame.size.height;
-        return frame.size.height + 20*2;
+        return frame.size.height + textPadding*2 + showEventButtonHeight;
         
     }else return 0;
 }
@@ -229,6 +278,37 @@
         [self.navigationController popViewControllerAnimated:YES];
         
     }
+}
+
+- (IBAction)likeItButtonTapped:(id)sender
+{
+    NSLog(@"like it button tapped");
+}
+
+- (IBAction)shareButtonTapped:(id)sender
+{
+    NSLog(@"share button tapped");
+}
+
+- (IBAction)showLocationButtonTapped:(id)sender
+{
+    NSLog(@"show location button tapped");
+}
+
+- (void)likeItem
+{
+    GTLServiceFlagengine *service = [FlagClient flagengineService];
+    
+    GTLFlagengineLike *like = [GTLFlagengineLike alloc];
+    [like setTargetId:self.shop.shopId];
+    [like setUserId:self.user.userId];
+    [like setType:[NSNumber numberWithInt:LIKE_SHOP]];
+    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForLikesInsertWithObject:like];
+    
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineLike *object, NSError *error){
+        
+        NSLog(@"result object %@", object);
+    }];
 }
 
 #pragma mark - Implementation

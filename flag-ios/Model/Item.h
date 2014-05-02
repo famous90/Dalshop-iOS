@@ -22,6 +22,7 @@
 @property (nonatomic, strong) NSString *barcodeId;
 @property (nonatomic, assign) NSInteger reward;
 @property (nonatomic, assign) BOOL rewarded;
+@property (nonatomic, assign) BOOL rewardable;
 @property (nonatomic, assign) NSInteger likes;
 @property (nonatomic, assign) BOOL liked;
 

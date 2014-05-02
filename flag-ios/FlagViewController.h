@@ -23,7 +23,6 @@
 @property (nonatomic, strong) User *user;
 //@property (nonatomic, weak) CLLocation *currentLocation;
 
-- (IBAction)showMyPageButtonTapped:(id)sender;
-- (IBAction)showShopListButtonTapped:(id)sender;
 - (IBAction)findCurrentPositionButtonTapped:(id)sender;
+- (IBAction)showMyPageTapped:(id)sender;
 @end

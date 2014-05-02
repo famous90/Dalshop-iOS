@@ -37,8 +37,11 @@
 {
     [super viewDidLayoutSubviews];
     
-    self.view.layer.borderColor = UIColorFromRGB(BASE_COLOR).CGColor;
-    self.view.layer.borderWidth = 0.5f;
+    CALayer *topBorder = [CALayer layer];
+    topBorder.frame = CGRectMake(self.view.frame.origin.x, self.view.frame.origin.y, self.view.frame.size.width, 0.5f);
+    topBorder.backgroundColor = [UIColor colorWithRed:0 green:0 blue:0 alpha:0.1f].CGColor;
+    
+    [self.view.layer addSublayer:topBorder];
 }
 
 - (void)viewDidLoad

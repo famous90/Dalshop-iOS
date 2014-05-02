@@ -44,8 +44,8 @@
 }
 
 CGFloat navigationBarHeight = 64.0f;
-CGFloat tabBarHeight = 49.0f;
-CGFloat mapPadding = 4.0f;
+CGFloat tabBarHeight = 0.0f;
+CGFloat mapPadding = 5.0f;
 
 - (void)awakeFromNib
 {
@@ -136,7 +136,7 @@ CGFloat mapPadding = 4.0f;
 - (void)setMapView
 {
     self.mapView.frame = CGRectMake(mapPadding, mapPadding + navigationBarHeight, self.view.frame.size.width - mapPadding*2, self.view.frame.size.height - navigationBarHeight - tabBarHeight - mapPadding*2);
-    self.shopInfoView.frame = CGRectMake(0, self.view.frame.size.height, self.shopInfoView.frame.size.width, self.shopInfoView.frame.size.height);
+    self.shopInfoView.frame = CGRectMake(mapPadding, self.view.frame.size.height, self.view.frame.size.width - mapPadding*2, self.shopInfoView.frame.size.height);
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
@@ -164,7 +164,7 @@ CGFloat mapPadding = 4.0f;
     [UIView setAnimationDuration:.5];
     
     CGRect frame = _shopInfoView.frame;
-    frame.origin.y = self.view.frame.size.height - frame.size.height - tabBarHeight;
+    frame.origin.y = self.view.frame.size.height - frame.size.height - tabBarHeight - mapPadding;
     _shopInfoView.frame = frame;
     
     [UIView commitAnimations];
@@ -224,23 +224,6 @@ CGFloat mapPadding = 4.0f;
 //}
 
 #pragma mark - IBAction
-- (IBAction)showMyPageButtonTapped:(id)sender
-{
-    // GAI event
-    if (!myPageFirstTapped) {
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.delegate.timeCriteria]] name:@"go_to_my_page" label:nil] build]];
-        myPageFirstTapped = YES;
-    }
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"go_to_my_page" label:@"escape_view" value:nil] build]];
-    
-    if (self.user.registered) {
-        [self showMyPage];
-    }else{
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"회원가입" message:@"회원가입을 하시면 이용하실 수 있습니다.\n앱을 더 유용하게 쓸 수 있게 저희앱에 가입해주시겠습니까?" delegate:self cancelButtonTitle:@"싫다!안할란다" otherButtonTitles:@"좋아!가입해준다", nil];
-        [alert setTag:ASK_JOIN_ALERT];
-        [alert show];
-    }
-}
 
 - (void)showMyPage
 {
@@ -269,17 +252,17 @@ CGFloat mapPadding = 4.0f;
 //    [self.navigationController pushViewController:childViewController animated:YES];
 }
 
-- (IBAction)showShopListButtonTapped:(id)sender
-{
-    // GAI event
-    if (!flagListFirstTapped) {
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.delegate.timeCriteria]] name:@"go_to_flag_list" label:nil] build]];
-        flagListFirstTapped = YES;
-    }
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"go_to_flag_list" label:@"escape_view" value:nil] build]];
-    
-    [self showShopList];
-}
+//- (IBAction)showShopListButtonTapped:(id)sender
+//{
+//    // GAI event
+//    if (!flagListFirstTapped) {
+//        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.delegate.timeCriteria]] name:@"go_to_flag_list" label:nil] build]];
+//        flagListFirstTapped = YES;
+//    }
+//    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"go_to_flag_list" label:@"escape_view" value:nil] build]];
+//    
+//    [self showShopList];
+//}
 
 - (void)showShopList
 {
@@ -297,6 +280,10 @@ CGFloat mapPadding = 4.0f;
 - (IBAction)findCurrentPositionButtonTapped:(id)sender
 {
     [self.mapViewController showCurrentLocation];
+}
+
+- (IBAction)showMyPageTapped:(id)sender {
+    [self showMyPage];
 }
 
 #pragma mark - 

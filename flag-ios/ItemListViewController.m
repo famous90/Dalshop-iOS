@@ -34,8 +34,8 @@
     ImageDataController *imageData;
 }
 
-CGFloat itemImageWidth = 314.0f;
-CGFloat itemImageHeight = 398.0f;
+CGFloat itemImageWidth = 306.0f;
+CGFloat itemImageHeight = 384.0f;
 
 - (void)awakeFromNib
 {
@@ -65,7 +65,7 @@ CGFloat itemImageHeight = 398.0f;
     
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
-        UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"menu" style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
+        UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
         
         self.navigationItem.leftBarButtonItem = menuButton;
         menuButton.tintColor = UIColorFromRGB(BASE_COLOR);
@@ -201,9 +201,9 @@ CGFloat itemImageHeight = 398.0f;
     UIImageView *itemImageView = (UIImageView *)[cell viewWithTag:201];
     UIImageView *itemLikeImageView = (UIImageView *)[cell viewWithTag:202];
     UILabel *itemLikeCountLabel = (UILabel *)[cell viewWithTag:203];
-    UIView *cellInnerDivisionLine = [[UIView alloc] initWithFrame:CGRectMake(0, itemImageView.frame.size.height, cell.frame.size.width, 0.5f)];
 //    UIImageView *itemScanImageView = (UIImageView *)[cell viewWithTag:204];
     UIButton *itemScanButton = (UIButton *)[cell viewWithTag:204];
+    UILabel *itemRewardLabel = (UILabel *)[cell viewWithTag:205];
     
     if (theItem.liked) {
         itemLikeImageView.image = [UIImage imageNamed:@"icon_like_selected"];
@@ -212,26 +212,45 @@ CGFloat itemImageHeight = 398.0f;
     }
     
     if (theItem.reward == 0) {
+        
         [itemScanButton setHidden:YES];
-    }else if (theItem.rewarded) {
-        [itemScanButton setBackgroundImage:[UIImage imageNamed:@"icon_scan_done"] forState:UIControlStateNormal];
+        [itemRewardLabel setHidden:YES];
+        
     }else{
-        [itemScanButton setBackgroundImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
+        
+        NSString *reward = [NSString stringWithFormat:@"%ld달", (long)theItem.reward];
+//        UIFont *textFont = [UIFont fontWithName:@"System Bold" size:13];
+//        CGRect rewardStringFrame = [reward boundingRectWithSize:CGSizeMake(100, 40) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:textFont} context:nil];
+//        CGRect rewardLabelFrame = CGRectMake(cell.frame.size.width - 13 - rewardStringFrame.size.width, itemRewardLabel.frame.origin.y, rewardStringFrame.size.width, itemRewardLabel.frame.size.height);
+//        itemRewardLabel.frame = rewardLabelFrame;
+        itemRewardLabel.text = reward;
+
+        if (theItem.rewarded) {
+            [itemScanButton setBackgroundImage:[UIImage imageNamed:@"icon_scan_done"] forState:UIControlStateNormal];
+        }else{
+            [itemScanButton setBackgroundImage:[UIImage imageNamed:@"icon_scan"] forState:UIControlStateNormal];
+        }
     }
     [itemScanButton addTarget:self action:@selector(scanButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
 
     itemImageView.image = theImage;
+    itemImageView.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;
+    itemImageView.layer.borderWidth = 0.5f;
     itemLikeCountLabel.text = [NSString stringWithFormat:@"%ld", (long)theItem.likes];
+
     
-    cellInnerDivisionLine.backgroundColor = UIColorFromRGBWithAlpha(BASE_COLOR, 0.5);
-//    cellInnerDivisionLine.backgroundColor = UIColorFromRGB(BASE_COLOR);
-//    cellInnerDivisionLine.backgroundColor = [UIColor colorWithRed:34.0f/225.0f green:173.0f/225.0f blue:167.0f/255.f alpha:0.5f];
-    
-    cell.layer.borderColor = UIColorFromRGB(BASE_COLOR).CGColor;
+    // Division line
+//    UIView *cellInnerDivisionLine = [[UIView alloc] initWithFrame:CGRectMake(0, itemImageView.frame.size.height, cell.frame.size.width, 0.5f)];
+//    [cellInnerDivisionLine setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.1]];
+//    [cell addSubview:cellInnerDivisionLine];
+
+
+    // Border line
+    cell.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;
     cell.layer.borderWidth = 0.5f;
     
-    [cell addSubview:cellInnerDivisionLine];
     
+    // Shadow
 //    CALayer *layer = cell.layer;
 //    layer.shadowOffset = CGSizeMake(0.5f, 0.5f);
 //    layer.shadowColor = [[UIColor blackColor] CGColor];
@@ -301,5 +320,4 @@ CGFloat itemImageHeight = 398.0f;
     
     [self.navigationController pushViewController:childViewController animated:YES];
 }
-
 @end

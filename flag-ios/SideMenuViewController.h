@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@class User;
+
 @interface SideMenuViewController : UITableViewController
+
+@property (nonatomic, strong) User *user;
 
 @end

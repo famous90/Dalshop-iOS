@@ -660,14 +660,14 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     UINavigationController *firstChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:0];
     FlagViewController *firstChildViewController = (FlagViewController *)[firstChildNavController topViewController];
     firstChildViewController.user = self.user;
-    firstChildViewController.title = @"Map";
+    firstChildViewController.title = @"MAP";
     [firstChildNavController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
     
     UINavigationController *secondChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:1];
     ShopListViewController *secondChildViewController = (ShopListViewController *)[secondChildNavController topViewController];
     secondChildViewController.user = self.user;
     secondChildViewController.parentPage = TAB_BAR_VIEW_PAGE;
-    secondChildViewController.title = @"Shop";
+    secondChildViewController.title = @"SHOP";
     [secondChildNavController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
     
     UINavigationController *thirdChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:2];
@@ -675,7 +675,7 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     thirdChildViewController.user = self.user;
     thirdChildViewController.shop.shopId = [NSNumber numberWithInt:1];
     thirdChildViewController.parentPage = TAB_BAR_VIEW_PAGE;
-    thirdChildViewController.title = @"Item";
+    thirdChildViewController.title = @"ITEM";
     [thirdChildNavController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
 }
 
@@ -686,15 +686,21 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     UITabBarItem *tabBarItem2 = [tabBar.items objectAtIndex:1];
     UITabBarItem *tabBarItem3 = [tabBar.items objectAtIndex:2];
     
-    [tabBarItem1 setTitle:@"Map"];
-    [tabBarItem2 setTitle:@"Shop"];
-    [tabBarItem3 setTitle:@"Item"];
+    [tabBarItem1 setTitle:@"MAP"];
+    [tabBarItem2 setTitle:@"SHOP"];
+    [tabBarItem3 setTitle:@"ITEM"];
     
     [tabBarItem1 setImage:[UIImage imageNamed:@"tabbar_icon_map"]];
     [tabBarItem2 setImage:[UIImage imageNamed:@"tabbar_icon_shops"]];
     [tabBarItem3 setImage:[UIImage imageNamed:@"tabbar_icon_item"]];
     
-    [tabBar setTintColor:UIColorFromRGB(0x22ada7)];
+    UIImage *tabbarBackground = [UIImage imageNamed:@"tabbar_bg_selected"];
+    [[UITabBar appearance] setSelectionIndicatorImage:tabbarBackground];
+    [[UITabBar appearance] setTintColor:[UIColor whiteColor]];
+    
+    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor grayColor], NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
+    [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
+    [[UITabBarItem appearance] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
 }
 
 // Load any defined front/rear controllers from the storyboard

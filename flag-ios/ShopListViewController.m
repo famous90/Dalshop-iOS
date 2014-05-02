@@ -71,7 +71,7 @@
     
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
-        UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithTitle:@"menu" style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
+        UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
         
         self.navigationItem.leftBarButtonItem = menuButton;
         menuButton.tintColor = UIColorFromRGB(BASE_COLOR);
@@ -84,12 +84,13 @@
     shopData = [[ShopDataController alloc] init];
     imageData = [[ImageDataController alloc] init];
     
-    [self performSelectorInBackground:@selector(getShopList) withObject:nil];
+//    [self performSelectorInBackground:@selector(getShopList) withObject:nil];
+    [self initializeLocationManager];
 }
 
 #pragma mark
 #pragma mark - connect server
-- (void)getShopList
+- (void)getShopListWithLocation:(CLLocation *)theLocation
 {
     // Activity Indicator
     ActivityIndicatorView *aiView = [ActivityIndicatorView startActivityIndicatorInParentView:self.tableView];
@@ -97,12 +98,13 @@
     NSDate *loadBeforeTime = [NSDate date];
     
 //    NSArray *shopIdList = [self.flagData shopIdListInFlagList];
-
+    
     URLParameters *urlParam = [[URLParameters alloc] init];
-    [urlParam setMethodName:@"shop_all"];
-//        for(NSString *object in shopIdList){
-//            [urlParam addParameterWithKey:@"ids" withParameter:object];
-//        }
+    [urlParam setMethodName:@"shop_init"];
+    [urlParam addParameterWithKey:@"lat" withParameter:[NSNumber numberWithDouble:theLocation.coordinate.latitude]];
+    [urlParam addParameterWithKey:@"lon" withParameter:[NSNumber numberWithDouble:theLocation.coordinate.longitude]];
+    [urlParam addParameterWithUserId:self.user.userId];
+    
     NSURL *url = [urlParam getURLForRequest];
     
     [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
@@ -205,7 +207,7 @@ shopLogoImageView.image = shopLogo;
 #pragma mark - table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 139;
+    return 140.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -251,21 +253,22 @@ shopLogoImageView.image = shopLogo;
     }
 }
 
-- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-{
-    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 3.0f)];
-    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:headerView.frame];
-    
-    headerImageView.backgroundColor = UIColorFromRGB(BASE_COLOR);
-    [headerView addSubview:headerImageView];
-    
-    return headerView;
-}
+//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+//{
+//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 3.0f)];
+//    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:headerView.frame];
+//    
+//    headerImageView.backgroundColor = UIColorFromRGB(BASE_COLOR);
+//    [headerView addSubview:headerImageView];
+//    
+//    return headerView;
+//}
 
-- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-{
-    return 3.0f;
-}
+//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+//{
+//    return 3.0f;
+//}
+
 
 #pragma mark - implementation
 - (void)initializeLocationManager
@@ -274,6 +277,32 @@ shopLogoImageView.image = shopLogo;
     locationManager.delegate = self;
     locationManager.distanceFilter = kCLDistanceFilterNone;
     locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    [locationManager startUpdatingLocation];
+}
+
+#pragma mark -
+#pragma mark CLLocation
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
+{
+    CLLocation *currentLocation = [locations objectAtIndex:0];
+    
+    if (!currentLocation) {
+        currentLocation = [[CLLocation alloc] initWithLatitude:BASE_LATITUDE longitude:BASE_LONGITUDE];
+    }
+    location = currentLocation;
+    [self performSelectorInBackground:@selector(getShopListWithLocation:) withObject:location];
+    
+    [manager stopUpdatingLocation];
+}
+
+- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+{
+    NSLog(@"fail to error %@", error.localizedDescription);
+    
+    location = [[CLLocation alloc] initWithLatitude:BASE_LATITUDE longitude:BASE_LONGITUDE];
+    
+    [manager stopUpdatingLocation];
 }
 
 #pragma mark - IBAction

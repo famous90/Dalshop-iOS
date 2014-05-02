@@ -177,8 +177,6 @@
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    
-    // Create a GMSCameraPosition that tells the map to display the coordinate 은천아파트 at zoom level 10.
     CLLocation *currentLocation = [locations objectAtIndex:0];
     
     if (!currentLocation){
