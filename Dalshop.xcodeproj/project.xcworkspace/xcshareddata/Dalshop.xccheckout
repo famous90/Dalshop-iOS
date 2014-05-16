@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>E232959A-8E84-465C-A475-D347E6D2E511</string>
+	<key>IDESourceControlProjectName</key>
+	<string>Dalshop</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>01CBB77B-007E-4674-B560-2AE2405333EA</key>
+		<string>https://github.com/famous90/Flag-iOS.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>Dalshop.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>01CBB77B-007E-4674-B560-2AE2405333EA</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/famous90/Flag-iOS.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>110</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>01CBB77B-007E-4674-B560-2AE2405333EA</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>01CBB77B-007E-4674-B560-2AE2405333EA</string>
+			<key>IDESourceControlWCCName</key>
+			<string>Flag-iOS</string>
+		</dict>
+	</array>
+</dict>
+</plist>

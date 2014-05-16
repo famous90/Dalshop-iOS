@@ -42,9 +42,11 @@
                       [GTLFlagengineRewardCollection class],
                       [GTLFlagengineShop class],
                       [GTLFlagengineShopCollection class],
+                      [GTLFlagengineText class],
                       [GTLFlagengineUploadUrl class],
                       [GTLFlagengineUser class],
                       [GTLFlagengineUserForm class],
+                      [GTLFlagengineUserInfo class],
                       [GTLFlagengineVersion class],
                       nil];
   return classes;

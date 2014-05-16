@@ -13,13 +13,15 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineFeedbackMessage (0 custom class methods, 5 custom properties)
+//   GTLFlagengineFeedbackMessage (0 custom class methods, 6 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
 #else
   #import "GTLObject.h"
 #endif
+
+@class GTLFlagengineText;
 
 // ----------------------------------------------------------------------------
 //
@@ -28,11 +30,12 @@
 
 @interface GTLFlagengineFeedbackMessage : GTLObject
 @property (retain) NSNumber *createdAt;  // longLongValue
+@property (copy) NSString *createdAtString;
 @property (copy) NSString *email;
 
 // identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
 @property (retain) NSNumber *identifier;  // longLongValue
 
-@property (copy) NSString *message;
+@property (retain) GTLFlagengineText *message;
 @property (retain) NSNumber *userId;  // longLongValue
 @end

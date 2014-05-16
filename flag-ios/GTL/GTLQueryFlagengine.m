@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLQueryFlagengine (44 custom class methods, 29 custom properties)
+//   GTLQueryFlagengine (49 custom class methods, 32 custom properties)
 
 #import "GTLQueryFlagengine.h"
 
@@ -37,14 +37,16 @@
 #import "GTLFlagengineUploadUrl.h"
 #import "GTLFlagengineUser.h"
 #import "GTLFlagengineUserForm.h"
+#import "GTLFlagengineUserInfo.h"
 #import "GTLFlagengineVersion.h"
 
 @implementation GTLQueryFlagengine
 
-@dynamic barcodeId, beaconId, descriptionProperty, fields, flagId, identifier,
-         ids, imageUrl, itemId, lat, liked, likes, logoUrl, lon, mark, name,
-         oldPrice, parentId, price, providerId, reward, rewardable, rewarded,
-         sale, shopId, tag, thumbnailUrl, type, userId;
+@dynamic barcodeId, beaconId, birth, descriptionProperty, fields, flagId,
+         identifier, ids, imageUrl, itemId, job, lat, liked, likes, logoUrl,
+         lon, mark, name, oldPrice, parentId, price, providerId, reward,
+         rewardable, rewarded, sale, sex, shopId, tag, thumbnailUrl, type,
+         userId;
 
 + (NSDictionary *)parameterNameMap {
   NSDictionary *map =
@@ -309,6 +311,21 @@
   return query;
 }
 
+#pragma mark -
+#pragma mark "items.list" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForItemsListUser {
+  NSString *methodName = @"flagengine.items.list.user";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineItemCollection class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "items" methods
+// These create a GTLQueryFlagengine object.
+
 + (id)queryForItemsPatch {
   NSString *methodName = @"flagengine.items.patch";
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
@@ -494,6 +511,40 @@
 }
 
 #pragma mark -
+#pragma mark "userinfos" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForUserinfosGet {
+  NSString *methodName = @"flagengine.userinfos.get";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineUserInfo class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "userInfos" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForUserInfosPatch {
+  NSString *methodName = @"flagengine.userInfos.patch";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineUserInfo class];
+  return query;
+}
+
++ (id)queryForUserInfosUpdateWithObject:(GTLFlagengineUserInfo *)object {
+  if (object == nil) {
+    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  NSString *methodName = @"flagengine.userInfos.update";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.bodyObject = object;
+  query.expectedObjectClass = [GTLFlagengineUserInfo class];
+  return query;
+}
+
+#pragma mark -
 #pragma mark "users" methods
 // These create a GTLQueryFlagengine object.
 
@@ -537,6 +588,22 @@
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
   query.bodyObject = object;
   query.expectedObjectClass = [GTLFlagengineUser class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "usreinfos" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForUsreinfosInsertWithObject:(GTLFlagengineUserInfo *)object {
+  if (object == nil) {
+    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  NSString *methodName = @"flagengine.usreinfos.insert";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.bodyObject = object;
+  query.expectedObjectClass = [GTLFlagengineUserInfo class];
   return query;
 }
 

@@ -18,15 +18,26 @@
 + (NSString *)changeStringFirstSpaceToLineBreak:(NSString *)string;
 + (NSString *)addImageParameterInImagePath:(NSString *)url width:(CGFloat)width height:(CGFloat)height;
 
+
 // TEXT FIELD
 + (void)setHorizontalPaddingWithTextField:(UITextField *)textField;
 + (void)setPlaceholderAttributeWithTextField:(UITextField *)textField placeholderContent:(NSString *)string;
++ (void)textFieldHasProblemWithTextField:(UITextField *)textField message:(NSString *)message alertTitle:(NSString *)title;
 
 
 // ENCRYPT
 + (NSString *)encryptPasswordWithPassword:(NSString *)password;
 
+
 // ALERT
 + (void)showAlertView:(id<UIAlertViewDelegate>)delegate message:(NSString *)message title:(NSString*)title;
+
+
+//  PUSH
++ (void)showLocalNotificationAtDate:(NSDate *)date message:(NSString *)message;
+
+
+// FILE
++ (NSArray *)getListFromPropertyListFile:(NSString *)fileName;
 
 @end

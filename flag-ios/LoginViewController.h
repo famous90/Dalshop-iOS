@@ -10,15 +10,20 @@
 #import "GTMHTTPFetcherLogging.h"
 //#import "GTLFlagengine.h"
 
+@class User;
+
 @interface LoginViewController : UIViewController <UITextFieldDelegate>
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;
 @property (weak, nonatomic) IBOutlet UIButton *loginButton;
 
-- (IBAction)emailTextFieldTapped:(id)sender;
-- (IBAction)passwordTextFieldTapped:(id)sender;
+@property (nonatomic, strong) User *user;
+@property (nonatomic, assign) NSInteger parentPage;
+
 - (IBAction)loginButtonTapped:(id)sender;
 - (IBAction)joinButtonTapped:(id)sender;
 - (IBAction)backgroundTapped:(id)sender;
+- (IBAction)cancelButtonTapped:(id)sender;
+
 @end

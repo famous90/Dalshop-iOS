@@ -31,6 +31,7 @@
 #import "FlagViewController.h"
 #import "ShopListViewController.h"
 #import "ItemListViewController.h"
+#import "SideMenuViewController.h"
 
 #import "User.h"
 #import "Shop.h"
@@ -621,6 +622,8 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     {
         if ( [identifier isEqualToString:SWSegueRearIdentifier] )
         {
+            [self setSlideMenuWithSegue:segue];
+            
             segue.performBlock = ^(SWRevealViewControllerSegue* rvc_segue, UIViewController* svc, UIViewController* dvc)
             {
                 [self _setRearViewController:dvc animated:NO];
@@ -643,6 +646,12 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
             };
         }
     }
+}
+
+- (void)setSlideMenuWithSegue:(UIStoryboardSegue *)segue
+{
+    SideMenuViewController *slideMenuViewController = (SideMenuViewController *)[segue destinationViewController];
+    slideMenuViewController.user = self.user;
 }
 
 - (void)setTabBarChildViewWithSegue:(UIStoryboardSegue *)segue

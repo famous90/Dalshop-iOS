@@ -32,9 +32,11 @@
 #import "GTLFlagengineRewardCollection.h"
 #import "GTLFlagengineShop.h"
 #import "GTLFlagengineShopCollection.h"
+#import "GTLFlagengineText.h"
 #import "GTLFlagengineUploadUrl.h"
 #import "GTLFlagengineUser.h"
 #import "GTLFlagengineUserForm.h"
+#import "GTLFlagengineUserInfo.h"
 #import "GTLFlagengineVersion.h"
 
 #import "GTLQueryFlagengine.h"

@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class GTLFlagengineUser;
+
 @interface User : NSObject
 
 @property (nonatomic, strong) NSNumber *userId;
@@ -16,6 +18,7 @@
 @property (nonatomic, assign) BOOL registered;
 
 - (id)initWithData:(id)data;
+- (id)initWithLoginData:(GTLFlagengineUser *)user;
 - (id)initWithCoreData:(id)data;
 
 @end

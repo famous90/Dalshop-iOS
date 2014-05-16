@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLQueryFlagengine (44 custom class methods, 29 custom properties)
+//   GTLQueryFlagengine (49 custom class methods, 32 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLQuery.h"
@@ -33,6 +33,7 @@
 @class GTLFlagengineReward;
 @class GTLFlagengineShop;
 @class GTLFlagengineUserForm;
+@class GTLFlagengineUserInfo;
 @class GTLFlagengineVersion;
 
 @interface GTLQueryFlagengine : GTLQuery
@@ -49,6 +50,7 @@
 //
 @property (copy) NSString *barcodeId;
 @property (copy) NSString *beaconId;
+@property (assign) long long birth;
 // Remapped to 'descriptionProperty' to avoid NSObject's 'description'.
 @property (copy) NSString *descriptionProperty;
 @property (assign) long long flagId;
@@ -57,6 +59,7 @@
 @property (retain) NSArray *ids;  // of NSNumber (longLongValue)
 @property (copy) NSString *imageUrl;
 @property (assign) long long itemId;
+@property (assign) NSInteger job;
 @property (assign) double lat;
 @property (assign) BOOL liked;
 @property (assign) NSInteger likes;
@@ -72,6 +75,7 @@
 @property (assign) BOOL rewardable;
 @property (assign) BOOL rewarded;
 @property (assign) NSInteger sale;
+@property (assign) BOOL sex;
 @property (assign) long long shopId;
 @property (assign) long long tag;
 @property (copy) NSString *thumbnailUrl;
@@ -283,6 +287,22 @@
 // Fetches a GTLFlagengineItemCollection.
 + (id)queryForItemsList;
 
+#pragma mark -
+#pragma mark "items.list" methods
+// These create a GTLQueryFlagengine object.
+
+// Method: flagengine.items.list.user
+//  Optional:
+//   userId: long long
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineItemCollection.
++ (id)queryForItemsListUser;
+
+#pragma mark -
+#pragma mark "items" methods
+// These create a GTLQueryFlagengine object.
+
 // Method: flagengine.items.patch
 //  Optional:
 //   barcodeId: NSString
@@ -460,6 +480,41 @@
 + (id)queryForShopsUpdateWithObject:(GTLFlagengineShop *)object;
 
 #pragma mark -
+#pragma mark "userinfos" methods
+// These create a GTLQueryFlagengine object.
+
+// Method: flagengine.userinfos.get
+//  Optional:
+//   userId: long long
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineUserInfo.
++ (id)queryForUserinfosGet;
+
+#pragma mark -
+#pragma mark "userInfos" methods
+// These create a GTLQueryFlagengine object.
+
+// Method: flagengine.userInfos.patch
+//  Optional:
+//   birth: long long
+//   job: NSInteger
+//   lat: double
+//   lon: double
+//   sex: BOOL
+//   userId: long long
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineUserInfo.
++ (id)queryForUserInfosPatch;
+
+// Method: flagengine.userInfos.update
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineUserInfo.
++ (id)queryForUserInfosUpdateWithObject:(GTLFlagengineUserInfo *)object;
+
+#pragma mark -
 #pragma mark "users" methods
 // These create a GTLQueryFlagengine object.
 
@@ -486,5 +541,15 @@
 //   kGTLAuthScopeFlagengineUserinfoEmail
 // Fetches a GTLFlagengineUser.
 + (id)queryForUsersRetainWithObject:(GTLFlagengineRetainForm *)object;
+
+#pragma mark -
+#pragma mark "usreinfos" methods
+// These create a GTLQueryFlagengine object.
+
+// Method: flagengine.usreinfos.insert
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineUserInfo.
++ (id)queryForUsreinfosInsertWithObject:(GTLFlagengineUserInfo *)object;
 
 @end

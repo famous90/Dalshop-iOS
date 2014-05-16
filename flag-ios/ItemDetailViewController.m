@@ -70,7 +70,7 @@ CGFloat lineSpace = 7.0f;
     textPadding = tableViewPadding + itemDetailViewPadding;
     
     [self getItemDetail];
-    [self getItemDetailImage];
+    [self performSelectorInBackground:@selector(getItemDetailImage) withObject:nil];
 }
 
 #pragma mark - 
@@ -209,6 +209,7 @@ CGFloat lineSpace = 7.0f;
             [likeItButton setImage:[UIImage imageNamed:@"icon_likeIt_white"] forState:UIControlStateNormal];
         }
         [likeItButton setTitle:[NSString stringWithFormat:@"%ld", (long)self.item.likes] forState:UIControlStateNormal];
+        [likeItButton.titleLabel setFont:[UIFont fontWithName:@"system" size:12]];
         [likeItButton setTintColor:[UIColor whiteColor]];
         [likeItButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 10)];
         [likeItButton addTarget:self action:@selector(likeItButtonTapped:) forControlEvents:UIControlEventTouchUpInside];

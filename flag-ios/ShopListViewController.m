@@ -175,7 +175,10 @@
         UILabel *shopSaleLabel = (UILabel *)[cell viewWithTag:605];
         UILabel *shopDistanceLabel = (UILabel *)[cell viewWithTag:606];
         UIImageView *shopCellBgImageView = (UIImageView *)[cell viewWithTag:607];
+        UIImageView *shopCheckInImageView = (UIImageView *)[cell viewWithTag:608];
+//        UIImageView *shopSaleImageView = (UIImageView *)[cell viewWithTag:609];
         UIView *cellInnerDivisionLine = [[UIView alloc] initWithFrame:CGRectMake(6, 65, 308, 0.5f)];
+
 //        CLLocation *shopLocation = [[CLLocation alloc] initWithLatitude:[theFlag.lat floatValue] longitude:[theFlag.lon floatValue]];
         
         shopNameLabel.text = [Util changeStringFirstSpaceToLineBreak:theShop.name];
@@ -185,6 +188,9 @@ shopLogoImageView.image = shopLogo;
         [shopLogoImageView setContentMode:UIViewContentModeScaleAspectFit];
         shopSaleLabel.text = [NSString stringWithFormat:@"%d%%SALE", (rand() % 99)];
         [shopDistanceLabel setHidden:YES];
+        if (theShop.reward == 0) {
+            shopCheckInImageView.hidden = YES;
+        }
 //        shopDistanceLabel.text = [NSString stringWithFormat:@"%dm", (rand() % 200)];
 //        if (self.currentLocation) {
 //            CLLocationDistance distance = [shopLocation distanceFromLocation:self.currentLocation];
@@ -207,7 +213,7 @@ shopLogoImageView.image = shopLogo;
 #pragma mark - table view delegate
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    return 140.0f;
+    return 135.0f;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -253,21 +259,21 @@ shopLogoImageView.image = shopLogo;
     }
 }
 
-//- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
-//{
-//    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 3.0f)];
-//    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:headerView.frame];
-//    
-//    headerImageView.backgroundColor = UIColorFromRGB(BASE_COLOR);
-//    [headerView addSubview:headerImageView];
-//    
-//    return headerView;
-//}
+- (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
+{
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 2.0f)];
+    UIImageView *headerImageView = [[UIImageView alloc] initWithFrame:headerView.frame];
+    
+    headerImageView.backgroundColor = UIColorFromRGB(BASE_COLOR);
+    [headerView addSubview:headerImageView];
+    
+    return headerView;
+}
 
-//- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
-//{
-//    return 3.0f;
-//}
+- (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
+{
+    return 2.0f;
+}
 
 
 #pragma mark - implementation

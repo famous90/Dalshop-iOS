@@ -14,7 +14,6 @@
 
 - (void)initForTest;
 
-//- (Beacon *)beaconInListWithBeaconId:(NSString *)beaconId;
 - (NSArray *)scannableBeaconList;
 - (Beacon *)didScanBeaconWithBeaconId:(NSString *)beaconId;
 

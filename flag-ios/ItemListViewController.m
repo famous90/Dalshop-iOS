@@ -21,6 +21,7 @@
 
 #import "Util.h"
 #import "ViewUtil.h"
+#import "SVPullToRefresh.h"
 
 #import "GoogleAnalytics.h"
 
@@ -29,9 +30,9 @@
 
 @implementation ItemListViewController{
     ItemDataController *allItemData;
-//    ItemDataController *itemData;
-//    ItemDataController *scanData;
     ImageDataController *imageData;
+    
+    NSURL *itemListUrl;
 }
 
 CGFloat itemImageWidth = 306.0f;
@@ -45,15 +46,13 @@ CGFloat itemImageHeight = 384.0f;
     self.shop = [[Shop alloc] init];
     
     allItemData = [[ItemDataController alloc] init];
-//    itemData = [[ItemDataController alloc] init];
-//    scanData = [[ItemDataController alloc] init];
     imageData = [[ImageDataController alloc] init];
 }
 
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-    
+
     [self.collectionView setBackgroundColor:UIColorFromRGB(BASE_COLOR)];
 }
 
@@ -61,33 +60,104 @@ CGFloat itemImageHeight = 384.0f;
 {
     [super viewDidLoad];
     
-    NSURL *url;
+    [self setContentView];
+    [self setContent];
     
+    __weak ItemListViewController *weakSelf = self;
+    
+    // setup pull-to-refresh
+//    [self.collectionView addPullToRefreshWithActionHandler:^{
+//        [weakSelf insertRowAtTop];
+//    }];
+    
+    // setup infinite scrolling
+    [self.collectionView addInfiniteScrollingWithActionHandler:^{
+        [weakSelf insertRowAtBottom];
+    }];
+}
+
+- (void)setContentView
+{
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
+        // navigation bar
         UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
-        
         self.navigationItem.leftBarButtonItem = menuButton;
         menuButton.tintColor = UIColorFromRGB(BASE_COLOR);
+        
+        
+        // slide menu
         [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
-        url = [self getURLPathWithRandomItem];
         
     }else if (self.parentPage == SALE_INFO_VIEW_PAGE){
-    
-        url = [self getURLPathWithSaleInfo];
+        
+    }else if (self.parentPage == SLIDE_MENU_PAGE){
+        
+        // navigation bar
+        self.title = @"나의 좋아요";
+        
+        UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
+        self.navigationItem.leftBarButtonItem = menuButton;
         
     }
+}
 
-    [self performSelectorInBackground:@selector(getItemListWithURL:) withObject:url];
-
+- (void)setContent
+{
+    if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+        
+        itemListUrl = [self getURLPathWithRandomItem];
+        
+    }else if (self.parentPage == SALE_INFO_VIEW_PAGE){
+        
+        itemListUrl = [self getURLPathWithSaleInfo];
+        
+    }else if (self.parentPage == SLIDE_MENU_PAGE){
+        
+        itemListUrl = [self getURLPathWithMyLikeItem];
+        
+    }
+    
+    [self performSelectorInBackground:@selector(getItemListWithURL:) withObject:itemListUrl];
 }
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    [super viewDidAppear:animated];
-    
-    [self.collectionView reloadData];
+//    [super viewDidAppear:animated];
+    [self.collectionView triggerPullToRefresh];
+//    [self.collectionView reloadData];
 }
+
+#pragma mark -
+#pragma mark pull to refresh delegate
+- (void)insertRowAtTop
+{
+    __weak ItemListViewController *weakSelf = self;
+    
+    int64_t delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+        
+        NSLog(@"insert row at top");
+        [weakSelf.collectionView.infiniteScrollingView stopAnimating];
+    });
+    
+}
+
+- (void)insertRowAtBottom
+{
+    __weak ItemListViewController *weakSelf = self;
+    
+    int64_t delayInSeconds = 2.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+
+        [weakSelf performSelectorInBackground:@selector(getItemListWithURL:) withObject:itemListUrl];
+        [weakSelf.collectionView.infiniteScrollingView stopAnimating];
+
+    });
+}
+
 
 #pragma mark -
 #pragma mark - server connect
@@ -115,10 +185,22 @@ CGFloat itemImageHeight = 384.0f;
     return url;
 }
 
+
+- (NSURL *)getURLPathWithMyLikeItem
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    
+    [urlParam setMethodName:@"item_user"];
+    [urlParam addParameterWithUserId:self.user.userId];
+    NSURL *url = [urlParam getURLForRequest];
+    
+    return url;
+}
+
 - (void)getItemListWithURL:(NSURL *)url
 {
     // Activity Indicator
-    ActivityIndicatorView *aiView = [ActivityIndicatorView startActivityIndicatorInParentView:self.view];
+//    ActivityIndicatorView *aiView = [ActivityIndicatorView startActivityIndicatorInParentView:self.view];
     
     NSDate *loadBeforeTime = [NSDate date];
     
@@ -134,22 +216,10 @@ CGFloat itemImageHeight = 384.0f;
             [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"data_load" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:loadBeforeTime]] name:@"item_list" label:nil] build]];
 
             [self.collectionView reloadData];
-            [aiView stopActivityIndicator];
+//            [aiView stopActivityIndicator];
             
         }];
     }];
-    
-//    NSURLRequest *request = [NSURLRequest requestWithURL:url];
-//    
-//    [NSURLConnection sendAsynchronousRequest:request queue:[[NSOperationQueue alloc] init] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error){
-//        
-//        if (!data) {
-//            NSLog(@"Error downloading data : %@", error.localizedFailureReason);
-//            return;
-//        }
-//        
-//        NSLog(@"%@", data);
-//    }];
 }
 
 - (void)setItemDataWithJsonData:(NSDictionary *)results
@@ -179,15 +249,6 @@ CGFloat itemImageHeight = 384.0f;
 #pragma mark - Collection view data source
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
-//    if (self.pageType == ITEM_LIST_VIEW_PAGE) {
-//        
-//        return [itemData countOfList];
-//        
-//    }else if (self.pageType == SCAN_LIST_VIEW_PAGE){
-//        
-//        return [scanData countOfList];
-//        
-//    }else return 0;
     return [allItemData countOfList];
 }
 
@@ -238,12 +299,6 @@ CGFloat itemImageHeight = 384.0f;
     itemImageView.layer.borderWidth = 0.5f;
     itemLikeCountLabel.text = [NSString stringWithFormat:@"%ld", (long)theItem.likes];
 
-    
-    // Division line
-//    UIView *cellInnerDivisionLine = [[UIView alloc] initWithFrame:CGRectMake(0, itemImageView.frame.size.height, cell.frame.size.width, 0.5f)];
-//    [cellInnerDivisionLine setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.1]];
-//    [cell addSubview:cellInnerDivisionLine];
-
 
     // Border line
     cell.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;
@@ -292,6 +347,9 @@ CGFloat itemImageHeight = 384.0f;
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
+    if (self.parentPage == SLIDE_MENU_PAGE) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 - (IBAction)cancel:(UIStoryboardSegue *)segue
@@ -320,4 +378,5 @@ CGFloat itemImageHeight = 384.0f;
     
     [self.navigationController pushViewController:childViewController animated:YES];
 }
+
 @end

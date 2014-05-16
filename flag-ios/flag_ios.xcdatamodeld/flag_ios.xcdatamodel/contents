@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C64" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="5064" systemVersion="13C1021" minimumToolsVersion="Automatic" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="BeaconLastUpdateTime">
         <attribute name="lastUpdateTime" optional="YES" attributeType="Date">
             <userInfo/>
@@ -22,6 +22,6 @@
     <elements>
         <element name="BeaconLastUpdateTime" positionX="261" positionY="189" width="128" height="58"/>
         <element name="BeaconList" positionX="439" positionY="198" width="128" height="135"/>
-        <element name="UserInfo" positionX="351" positionY="243" width="128" height="30"/>
+        <element name="UserInfo" positionX="351" positionY="243" width="128" height="90"/>
     </elements>
 </model>

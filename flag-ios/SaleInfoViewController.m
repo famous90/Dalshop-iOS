@@ -19,6 +19,7 @@
 #import "URLParameters.h"
 
 #import "ViewUtil.h"
+#import "SNSUtil.h"
 
 #import "FlagClient.h"
 #import "GTLFlagengine.h"
@@ -82,7 +83,7 @@ CGFloat showEventButtonWidth = 171.0f;
 - (void)getSaleInfo
 {
     // Activity Indicator
-//    ActivityIndicatorView *aiView = [ActivityIndicatorView startActivityIndicatorInParentView:self.view];
+    ActivityIndicatorView *aiView = [ActivityIndicatorView startActivityIndicatorInParentView:self.view];
     
     if (self.parentPage == SHOP_INFO_VIEW_PAGE) {
         
@@ -122,7 +123,7 @@ CGFloat showEventButtonWidth = 171.0f;
         [self getSaleImage];
     }
     
-//    [aiView stopActivityIndicator];
+    [aiView stopActivityIndicator];
 }
 
 - (void)setShopWithJsonData:(NSDictionary *)results
@@ -188,7 +189,8 @@ CGFloat showEventButtonWidth = 171.0f;
             }else{
                 [likeItButton setImage:[UIImage imageNamed:@"icon_likeIt_white"] forState:UIControlStateNormal];
             }
-            [likeItButton setTitle:[NSString stringWithFormat:@"%d", 467] forState:UIControlStateNormal];
+            [likeItButton setTitle:[NSString stringWithFormat:@"%ld", (long)self.shop.likes] forState:UIControlStateNormal];
+            [likeItButton.titleLabel setFont:[UIFont fontWithName:@"system" size:12]];
             [likeItButton setTintColor:[UIColor whiteColor]];
             [likeItButton setImageEdgeInsets:UIEdgeInsetsMake(0, 0, 0, 10)];                                                                                                                                                                                                    
             [likeItButton addTarget:self action:@selector(likeItButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -250,6 +252,9 @@ CGFloat showEventButtonWidth = 171.0f;
 {
     if (indexPath.row == SALE_IMAGE_ROW) {
         
+        if (saleImage.size.height == 0) {
+            return 200;
+        }
         return saleImage.size.height + viewPadding;
         
     }else if (indexPath.row ==  SALE_INFO_ROW){
@@ -282,6 +287,7 @@ CGFloat showEventButtonWidth = 171.0f;
 
 - (IBAction)likeItButtonTapped:(id)sender
 {
+    [self likeItem];
     NSLog(@"like it button tapped");
 }
 
@@ -308,7 +314,18 @@ CGFloat showEventButtonWidth = 171.0f;
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineLike *object, NSError *error){
         
         NSLog(@"result object %@", object);
+        
     }];
+}
+
+- (void)shareItemWithKakaoTalk
+{
+    NSMutableDictionary *kakaoTalkLinkObjects = [[NSMutableDictionary alloc] init];
+    NSString *message = [NSString stringWithFormat:@"%@\n%@", self.shop.name, self.shop.description];
+    NSString *imageURL = self.shop.imageUrl;
+    
+    [SNSUtil makeKakaoTalkLinkToKakaoTalkLinkObjects:kakaoTalkLinkObjects message:message imageURL:imageURL imageWidth:saleImage.size.width Height:saleImage.size.height execParameter:@{@"method":@"shop", @"shopId":self.shop.shopId}];
+    [SNSUtil sendKakaoTalkLinkByKakaoTalkLinkObjects:kakaoTalkLinkObjects];
 }
 
 #pragma mark - Implementation

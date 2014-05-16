@@ -50,7 +50,9 @@
     return url;
 }
 
+
 // TEXT FIELD
+
 + (void)setHorizontalPaddingWithTextField:(UITextField *)textField
 {
     UIView *paddingView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 5, textField.frame.size.height)];
@@ -77,8 +79,15 @@
     }
 }
 
++ (void)textFieldHasProblemWithTextField:(UITextField *)textField message:(NSString *)message alertTitle:(NSString *)title
+{
+    [self showAlertView:nil message:message title:title];
+    [textField becomeFirstResponder];
+}
+
 
 // ENCRYPT
+
 + (NSString *)encryptPasswordWithPassword:(NSString *)password
 {
     const char *str = [password UTF8String];
@@ -94,18 +103,44 @@
 
 
 // ALERT
-+ (void)showAlertView:(id<UIAlertViewDelegate>)delegate message:(NSString *)message title:(NSString *)title
+
++ (void)showAlertView:(id<UIAlertViewDelegate>)delegate message:(NSString *)message title:(NSString*)title
 {
     if ( message == nil || [message isKindOfClass:[NSNull class]] )
         return ;
     
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:nil
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
 													message:message
 												   delegate:delegate
-										  cancelButtonTitle:title
+										  cancelButtonTitle:@"확인"
 										  otherButtonTitles:nil];
     
 	[alert show];
 }
 
+
+// PUSH
+
++ (void)showLocalNotificationAtDate:(NSDate *)date message:(NSString *)message
+{
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    if (localNotification) {
+        localNotification.fireDate = date;
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        localNotification.repeatInterval = 0;
+        localNotification.alertBody = message;
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    }
+}
+
+
+// FILE
++ (NSArray *)getListFromPropertyListFile:(NSString *)fileName
+{
+    NSBundle *bundle = [NSBundle mainBundle];
+    NSURL *plistURL = [bundle URLForResource:fileName withExtension:@"plist"];
+    NSArray *list = [NSArray arrayWithContentsOfURL:plistURL];
+    
+    return list;
+}
 @end

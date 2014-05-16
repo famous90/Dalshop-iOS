@@ -1,0 +1,132 @@
+//
+//  Prefix header
+//
+//  The contents of this file are implicitly included at the beginning of every source file.
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+    #import <CoreData/CoreData.h>
+    #import "User.h"
+    #import "FlagClient.h"
+#endif
+
+
+// DEVICE INFO 
+
+#define ScreenHeightForiPhone35   480
+#define ScreenHeightForiPhone4    568
+
+
+// GOOGLE APP ENGINE
+
+#define kMyClientID @"602934081594-5magguboridnh714tiu4qf9l7b2f7bdh.apps.googleusercontent.com"
+#define kMyClientSecret @"X1RUk35DSxwbz7FhjNBxUnnb"
+#define BASE_URL @"https://genuine-evening-455.appspot.com/_ah/api/flagengine/v1";
+
+
+// BEACON
+#define BEACON_COOL_TIME    86400.0f
+#define BEACON_DETECT_RADIUS_DISTANCE   100
+#define BEACON_DETECT_RADIUS_GEODETIC   0.002
+
+
+// GOOGLE ANALYTICS
+
+#define GAI_SCREEN_NAME_FLAG_VIEW           @"Flag Screen"
+#define GAI_SCREEN_NAME_MAP_VIEW            @"Map Screen"
+#define GAI_SCREEN_NAME_SHOP_INFO_VIEW      @"Shop Info Screen"
+#define GAI_SCREEN_NAME_SALE_INFO_VIEW      @"Sale Info Screen"
+#define GAI_SCREEN_NAME_ITEM_LIST_VIEW      @"Item List Screen"
+#define GAI_SCREEN_NAME_QRCODE_READER_VIEW  @"QRCode Read Screen"
+//#define GAI_SCREEN_NAME_MALL_SHOP_VIEW 
+#define GAI_SCREEN_NAME_SHOP_LIST_VIEW      @"Shop List Screen"
+#define GAI_SCREEN_NAME_MY_PAGE_VIEW        @"My Page Screen"
+#define GAI_SCREEN_NAME_SLIDE_MENU          @"Slide Menu Screen"
+
+
+// BASE VALUE
+#define BASE_COLOR  0x3C9CB2
+
+
+// METHOD
+
+#define UIColorFromRGB(rgbValue) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:1.0]
+
+#define UIColorFromRGBWithAlpha(rgbValue, a) [UIColor \
+colorWithRed:((float)((rgbValue & 0xFF0000) >> 16))/255.0 \
+green:((float)((rgbValue & 0xFF00) >> 8))/255.0 \
+blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
+
+
+// GOOGLE MAP
+
+#define GOOGLE_MAP_API_KEY  @"AIzaSyCOrp3cZWnafY1RGJHcIR_qY7BScyUxwds"
+
+
+// MAP TAG
+
+#define ZOOM_LEVEL_FOR_CURRENT_LOCATION 15
+#define ZOOM_LEVEL                      15
+#define BASE_LATITUDE       37.46
+#define BASE_LONGITUDE      126.96
+#define FLAG_LIST_RADIUS    1500
+
+
+// MAP MARKER STATUS
+
+#define BASE        0
+#define REWARDED    1
+#define SELECTED    2
+
+
+// DATE FORMAT TAG
+
+#define DATE_FORMAT_YYYYMMDD  1
+
+
+// PAGE TAG
+
+#define SHOP_INFO_VIEW_PAGE     1
+#define MALL_SHOP_VIEW_PAGE     2
+#define SALE_INFO_VIEW_PAGE     3
+#define SHOP_LIST_VIEW_PAGE     4
+#define ITEM_LIST_VIEW_PAGE     5
+#define SCAN_LIST_VIEW_PAGE     6
+#define TAB_BAR_VIEW_PAGE       7
+#define LOGIN_VIEW_PAGE         8
+#define SLIDE_MENU_PAGE         9
+
+// SHOP CATEGORY
+
+#define TANKERS                 0
+#define CLOTHES                 1
+#define SHOES                   2
+#define COSMETIC                3
+#define ACCESSARY               4
+#define ELECTRONIC_APPLIANCE    5
+#define ETC                     6
+#define BEAUTY                  7
+#define RETAIL                  8
+
+
+// LIKE TYPE
+
+#define LIKE_SHOP   1
+#define LIKE_ITEM   2
+
+
+// REWARD TYPE
+
+#define REWARD_CHECHIN  10
+#define REWARD_SCAN     11

@@ -6,16 +6,21 @@
 //
 //
 
+#import <GoogleMaps/GoogleMaps.h>
+#import <KakaoOpenSDK/KakaoOpenSDK.h>
+
 #import "AppDelegate.h"
 #import "FlagViewController.h"
 #import "SWRevealViewController.h"
-#import <GoogleMaps/GoogleMaps.h>
+
+#import "DidRewardPopupViewController.h"
 
 #import "User.h"
 #import "BeaconDataController.h"
 #import "Beacon.h"
 #import "URLParameters.h"
 
+#import "Util.h"
 #import "ViewUtil.h"
 #import "MapUtil.h"
 
@@ -25,7 +30,13 @@
 /******* Set your tracking ID here *******/
 static NSString *const kGaTrackingId = @"UA-45882688-3";
 static NSString *const kTrackingPreferenceKey = @"allowTracking";
+
+#ifdef DEBUG
 static BOOL const kGaDryRun = YES;
+#else
+static BOOL const kGaDryRun = NO;
+#endif
+
 static int const kGaDispatchPeriod = 30;
 
 @interface AppDelegate ()<CLLocationManagerDelegate>
@@ -70,7 +81,7 @@ static int const kGaDispatchPeriod = 30;
     // Check detect app launching for the first time
     [self checkUserSession];
     
-    return YES;
+    return NO;
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
@@ -107,25 +118,6 @@ static int const kGaDispatchPeriod = 30;
     // Saves changes in the application's managed object context before the application terminates.
     [self saveContext];
 }
-
-#pragma mark -
-#pragma mark server connection
-
-//- (void)setUserWithJsonData:(NSDictionary *)results
-//{
-//    User *user = [[User alloc] initWithData:results];
-//    
-//    NSManagedObjectContext *context = [self managedObjectContext];
-//    
-//    NSManagedObject *guestUser;
-//    guestUser = [NSEntityDescription insertNewObjectForEntityForName:@"UserInfo" inManagedObjectContext:context];
-//    [guestUser setValue:user.userId forKeyPath:@"userId"];
-//    [guestUser setValue:@"" forKeyPath:@"email"];
-//    [guestUser setValue:[NSNumber numberWithBool:NO] forKeyPath:@"registered"];
-//    
-//    NSError *error;
-//    [context save:&error];
-//}
 
 #pragma mark -
 #pragma mark Core Data stack
@@ -215,23 +207,21 @@ static int const kGaDispatchPeriod = 30;
 }
 
 
-#pragma mark - Check Guest Session
+#pragma mark -
+#pragma mark Check Guest Session
 - (void)checkUserSession
 {
+    // not first launch app
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLaunched"]) {
-        
-//        UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"show" message:@"not first launch" delegate:nil cancelButtonTitle:@"okay" otherButtonTitles:nil, nil];
-//        [alert show];
         
         [self getUserInfoFromCoreData];
 
+        
+    // first launch app
     }else{
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveLaunched"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-
-//        UIAlertView *alert = [[UIAlertView alloc ]initWithTitle:@"show" message:@"first launch" delegate:nil cancelButtonTitle:@"okay" otherButtonTitles:nil, nil];
-//        [alert show];
 
         [self getGuestSession];
 
@@ -264,7 +254,7 @@ static int const kGaDispatchPeriod = 30;
     
     NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"UserInfo" inManagedObjectContext:context];
     [object setValue:theUser.userId forKey:@"userId"];
-    [object setValue:NO forKey:@"registered"];
+    [object setValue:[NSNumber numberWithBool:NO] forKey:@"registered"];
     
     NSError *error;
     [context save:&error];
@@ -285,11 +275,31 @@ static int const kGaDispatchPeriod = 30;
         NSManagedObject *userInfo = [userInfoCoreData objectAtIndex:0];
         
         User *user = [[User alloc] initWithCoreData:userInfo];
-        [self initializeRootViewControllerWithUser:user];
+        [self getUserRewardWithUser:user];
         
     }else{
         [self getGuestSession];
     }
+}
+
+- (void)getUserRewardWithUser:(User *)user
+{
+    GTLServiceFlagengine *service = [FlagClient flagengineService];
+    
+    GTLFlagengineUserForm *userForm = [GTLFlagengineUserForm alloc];
+    [userForm setIdentifier:user.userId];
+    
+    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGetWithObject:userForm];
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *result, NSError *error){
+        
+        if (error == nil) {
+            user.reward = [result.reward integerValue];
+        }else{
+            user.reward = 0;
+        }
+        [self initializeRootViewControllerWithUser:user];
+        
+    }];
 }
 
 - (void)initializeRootViewControllerWithUser:(User *)theUser
@@ -518,17 +528,6 @@ static int const kGaDispatchPeriod = 30;
                 //Perform your tasks that your application requires
                 NSLog(@"\n\nRunning in the background!\n\n");
                 
-//                [self initializeBeaconDetector];
-//                beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:@"696818FB-86BC-4CCE-9155-010F50D2458D"] identifier: @"Hello"];
-//                beaconRegion.notifyEntryStateOnDisplay = YES;
-//                [_locationManager startMonitoringForRegion:beaconRegion];
-//                [_locationManager stopRangingBeaconsInRegion:beaconRegion];
-//                locationManager = [[CLLocationManager alloc] init];
-//                locationManager.delegate = self;
-//                locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-//                [locationManager startRangingBeaconsInRegion:beaconRegion];
-//                [locationManager startUpdatingLocation];
-                
 //                [application endBackgroundTask: background_task]; //End the task so the system knows that you are done with what you need to perform
 //                background_task = UIBackgroundTaskInvalid; //Invalidate the background_task
                 
@@ -556,7 +555,10 @@ static int const kGaDispatchPeriod = 30;
     
     if ([MapUtil currentLocation:currentLocation getOutOfPreviousLocation:savedLocation withBoundRadius:BEACON_DETECT_RADIUS_DISTANCE]) {
         
-        NSLog(@"location updated");
+#ifdef DEBUG
+        [Util showLocalNotificationAtDate:[NSDate date] message:[NSString stringWithFormat:@"location updated (%f, %f)", currentLocation.coordinate.latitude, currentLocation.coordinate.longitude]];
+#else
+#endif
         
         savedLocation = currentLocation;
         
@@ -587,41 +589,27 @@ static int const kGaDispatchPeriod = 30;
     
     if ([beacons count]) {
         
-        NSLog(@"found something");
+        NSLog(@"found BLE but does not know exactly");
         
         [locationManager stopUpdatingLocation];
         
         for(CLBeacon *beacon in beacons){
             
-            NSLog(@"find beacon %@ rssi %ld, accuracy %f", beacon, (long)beacon.rssi, beacon.accuracy);
-            
             Beacon *foundBeacon = [beaconData didScanBeaconWithBeaconId:beacon.proximityUUID.UUIDString];
             
             if (foundBeacon) {
                 
-                UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-                if (localNotification) {
-                    localNotification.fireDate = [[NSDate date] dateByAddingTimeInterval:.3];
-                    localNotification.timeZone = [NSTimeZone defaultTimeZone];
-                    localNotification.repeatInterval = 0;
-                    localNotification.alertBody = [NSString stringWithFormat:@"find beacon %@ r %ld t,a %f", foundBeacon.shopName, (long) beacon.rssi, beacon.accuracy];
-                    [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
-                }
+                [Util showLocalNotificationAtDate:[NSDate date] message:[NSString stringWithFormat:@"%@\n%@", foundBeacon.shopName, foundBeacon.lastScanTime]];
             }
         }
         
         [locationManager stopRangingBeaconsInRegion:region];
         [locationManager startUpdatingLocation];
     }
-    
-    // Stop beacon detect
-    // Reset beacon data
-    // Restart beacon detect
-//    [locationManager stopRangingBeaconsInRegion:region];
-//    [self startBeaconDetectNearby];
 }
 
-#pragma mark - local notification
+#pragma mark -
+#pragma mark local notification
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     UIApplicationState state = [application applicationState];
@@ -630,16 +618,35 @@ static int const kGaDispatchPeriod = 30;
         
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Beacon Detected" message:notification.alertBody delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
         [alert show];
+        NSLog(@"beacon detedted in active");
+        DidRewardPopupViewController *popupViewController = [[DidRewardPopupViewController alloc] init];
+        [self.window.rootViewController presentViewController:popupViewController animated:YES completion:nil];
         
     }else if (state == UIApplicationStateBackground){
         
+        [Util showLocalNotificationAtDate:[NSDate date] message:notification.alertBody];
         NSLog(@"beacon detected in background");
         
     }else if (state == UIApplicationStateInactive){
         
+        [Util showLocalNotificationAtDate:[NSDate date] message:notification.alertBody];
         NSLog(@"beacon detected in inactive");
         
     }
 }
 
+
+#pragma mark - 
+#pragma mark url link
+- (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
+{
+    
+    // Kakao Talk Link
+    if ([KOSession isKakaoLinkCallback:url]) {
+        NSLog(@"kakaoLink callback! query string : %@", [url query]);
+        return YES;
+    }
+    
+    return NO;
+}
 @end
