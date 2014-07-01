@@ -8,10 +8,10 @@
 
 #import "AppDelegate.h"
 #import "ShopInfoViewController.h"
-#import "MallShopViewController.h"
 #import "SaleInfoViewController.h"
 
 #import "User.h"
+#import "Shop.h"
 
 #import "ViewUtil.h"
 
@@ -24,7 +24,6 @@
 @end
 
 @implementation ShopInfoViewController{
-    BOOL shopInfoFirstTapped;
 }
 
 - (void)awakeFromNib
@@ -47,62 +46,46 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    shopInfoFirstTapped = NO;
+    [self setUser:[DelegateUtil getUser]];
+}
+
+#pragma mark -
+#pragma mark Implementation
+- (void)configureShopScanRewardInfo
+{
+    [self.scanRewardImageView setHidden:!self.shop.reward];
+}
+
+- (void)configureShopSaleInfo
+{
+    [self.shopSaleImageView setHidden:!self.shop.onSale];
 }
 
 #pragma mark - 
 #pragma mark - IBAction
 - (IBAction)shopInfoViewTapped:(id)sender
 {
-    // GAI event tracker
-    if (!shopInfoFirstTapped) {
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.appDelegate.timeCriteria]] name:@"go_to_shop" label:nil] build]];
-        shopInfoFirstTapped = YES;
-    }
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"go_to_shop" label:@"escape_view" value:nil] build]];
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_to_shop" label:@"escape_view" value:nil];
     
     
     // change view
-    BOOL isMall = NO;
     UIStoryboard *storyborad = [ViewUtil getStoryboard];
     
-    if (isMall) {
-        
-        UINavigationController *navController = (UINavigationController *)[storyborad instantiateViewControllerWithIdentifier:@"MallShopViewNav"];
-        MallShopViewController *childViewController = (MallShopViewController *)[navController topViewController];
-        
-        childViewController.user = self.user;
-        childViewController.parentPage = SHOP_INFO_VIEW_PAGE;
-        childViewController.shopId = [self.shopId mutableCopy];
-        childViewController.shopName = [self.shopName mutableCopy];
-        childViewController.title = self.shopName;
-        
-    }else{
-        
-//        navController = (UINavigationController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoViewNav"];
-//        navController = [[UINavigationController alloc] init];
-//        SaleInfoViewController *childViewController = (SaleInfoViewController *)[navController topViewController];
-        SaleInfoViewController *childViewController = (SaleInfoViewController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoView"];
-        
-        childViewController.user = self.user;
-        childViewController.shopId = self.shopId;
-        childViewController.parentPage = SHOP_INFO_VIEW_PAGE;
-        childViewController.title = self.shopName;
-     
-        [self.navigationController pushViewController:childViewController animated:YES];
-    }
-}
-
-// GAI touch tracking
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
-{
-    UITouch *touch = [[event allTouches] anyObject];
-    CGPoint touchLocation = [touch locationInView:touch.view];
-    CGFloat relativeTouchPositionX = touchLocation.x/[ViewUtil getIOSDeviceScreenHeight];
-    CGFloat relativeTouchPositionY = ([ViewUtil getIOSDeviceScreenHeight] - self.view.frame.size.height + touchLocation.y)/[ViewUtil getIOSDeviceScreenHeight];
+    SaleInfoViewController *childViewController = (SaleInfoViewController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoView"];
     
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_touch" action:GAI_SCREEN_NAME_SHOP_INFO_VIEW label:[NSString stringWithFormat:@"%f,%f", relativeTouchPositionX, relativeTouchPositionY] value:nil] build]];
+    childViewController.user = self.user;
+    childViewController.shopId = self.shop.shopId;
+    childViewController.parentPage = SHOP_INFO_VIEW_PAGE;
+    childViewController.title = self.shop.name;
+ 
+    [self.navigationController pushViewController:childViewController animated:YES];
 }
 
 @end

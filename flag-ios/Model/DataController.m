@@ -19,6 +19,15 @@
     return self;
 }
 
+- (id)initWithArray:(NSArray *)dataArray
+{
+    self = [super init];
+    if (self) {
+        self.masterData = [[NSMutableArray alloc] initWithArray:dataArray];
+    }
+    return self;
+}
+
 //- (void)setMasterData:(NSMutableArray *)masterData
 //{
 //    if (self.masterData != masterData) {

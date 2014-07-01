@@ -15,6 +15,7 @@
 + (BOOL)isPositionOutOfBounderyAtPreviousPosition:(CLLocation *)previousPosition WithChangedPosition:(CLLocation *)changedPosition;
 + (NSString *)getMapMarkerImageWithCategory:(NSInteger)shopType;
 + (NSString *)getMapMarkerImageFileNameWithCategory:(NSInteger)shopType status:(NSInteger)status;
++ (CLLocation *)getProximateCheckInSpotFromLocation:(CLLocation *)location;
 //+ (NSString *)changeMapMarkerImageWithImageFileName:(NSString *)fileName fromStatus:(NSInteger)previousStatus toStatus:(NSInteger)pastStatus;
 
 @end

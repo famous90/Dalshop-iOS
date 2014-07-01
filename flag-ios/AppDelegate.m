@@ -13,9 +13,10 @@
 #import "FlagViewController.h"
 #import "SWRevealViewController.h"
 
-#import "DidRewardPopupViewController.h"
-
 #import "User.h"
+#import "Shop.h"
+#import "Flag.h"
+#import "FlagDataController.h"
 #import "BeaconDataController.h"
 #import "Beacon.h"
 #import "URLParameters.h"
@@ -23,6 +24,9 @@
 #import "Util.h"
 #import "ViewUtil.h"
 #import "MapUtil.h"
+#import "DataUtil.h"
+#import "BeaconUtil.h"
+#import "UIDevice-Reachability.h"
 
 #import "FlagClient.h"
 #import "GTLFlagengine.h"
@@ -42,13 +46,12 @@ static int const kGaDispatchPeriod = 30;
 @interface AppDelegate ()<CLLocationManagerDelegate>
 
 - (void)initializeGoogleAnalytics;
-- (void)initializeBeaconDetector;
 
 @end
 
 @implementation AppDelegate{
     CLLocationManager *locationManager;
-    CLLocation *savedLocation;
+//    CLLocation *savedLocation;
     
     CLBeaconRegion *beaconRegion;
     BeaconDataController *beaconDataWithGPS;
@@ -61,8 +64,23 @@ static int const kGaDispatchPeriod = 30;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    // Beacon Detect
-    [self initializeBeaconDetector];
+    // check device network
+    if (![self checkDeviceNetworkState]) {
+        return NO;
+    }
+    
+    
+    self.transitionDelegate = [[TransitionDelegate alloc] init];
+    // update flag list
+    [self updateFlagTimeStamp];
+    
+    
+    // location manager
+    [self initializeLocationManager];
+    
+    
+    // set beacon data controller
+    [self startDetectingBeacon];
     
 
     // NAV BAR
@@ -78,8 +96,14 @@ static int const kGaDispatchPeriod = 30;
     [self initializeGoogleAnalytics];
     
     
+    // is launched by Notification
+    if ([self checkLaunchApplicationByNotificationWithOptions:launchOptions]) {
+        return YES;
+    }
+    
+    
     // Check detect app launching for the first time
-    [self checkUserSession];
+    [self checkUserSessionAndOpenViewType:TAB_BAR_VIEW_PAGE withObject:nil];
     
     return NO;
 }
@@ -90,7 +114,7 @@ static int const kGaDispatchPeriod = 30;
     
 //    [locationManager stopMonitoringSignificantLocationChanges];
 //    [locationManager startUpdatingLocation];
-    [self startMonitoringBeaconInBackground];
+    [self startMonitoringInBackground];
 }
 
 - (void)applicationDidEnterBackground:(UIApplication *)application
@@ -170,12 +194,13 @@ static int const kGaDispatchPeriod = 30;
     if (_persistentStoreCoordinator != nil) {
         return _persistentStoreCoordinator;
     }
+    NSDictionary *migrateOptions = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES], NSMigratePersistentStoresAutomaticallyOption, [NSNumber numberWithBool:YES], NSInferMappingModelAutomaticallyOption, nil];
     
     NSURL *storeURL = [[self applicationDocumentsDirectory] URLByAppendingPathComponent:@"flag_ios.sqlite"];
     
     NSError *error = nil;
     _persistentStoreCoordinator = [[NSPersistentStoreCoordinator alloc] initWithManagedObjectModel:[self managedObjectModel]];
-    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:nil error:&error]) {
+    if (![_persistentStoreCoordinator addPersistentStoreWithType:NSSQLiteStoreType configuration:nil URL:storeURL options:migrateOptions error:&error]) {
         /*
          Replace this implementation with code to handle the error appropriately.
          
@@ -207,107 +232,105 @@ static int const kGaDispatchPeriod = 30;
 }
 
 
+#pragma mark - 
+#pragma mark Reachability
+- (BOOL)checkDeviceNetworkState
+{
+    UIDevice *device = [UIDevice currentDevice];
+    BOOL isNetworkAvailable = [device networkAvailable];
+    
+    if (!isNetworkAvailable) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"네트워크 에러" message:@"네트워크 상태가 좋지 않습니다\n네트워크를 확인해주세요" delegate:self cancelButtonTitle:nil otherButtonTitles:@"종료", nil];
+        [alert setTag:ALERT_NETWORK_CHECK];
+        [alert show];
+    }
+    
+    return isNetworkAvailable;
+}
+
+
+
 #pragma mark -
 #pragma mark Check Guest Session
-- (void)checkUserSession
+- (void)checkUserSessionAndOpenViewType:(NSInteger)viewType withObject:(id)object
 {
-    // not first launch app
+    if ([self isFirstLaunchApplication]) {
+        [self getGuestSessionAndOpenViewType:viewType withObject:object];
+    }else{
+        [self getUserInfoFromCoreDataAndOpenViewType:viewType withObject:object];
+    }
+}
+
+- (BOOL)isFirstLaunchApplication
+{
     if ([[NSUserDefaults standardUserDefaults] boolForKey:@"haveLaunched"]) {
         
-        [self getUserInfoFromCoreData];
-
+        return NO;
         
-    // first launch app
     }else{
         
         [[NSUserDefaults standardUserDefaults] setBool:YES forKey:@"haveLaunched"];
         [[NSUserDefaults standardUserDefaults] synchronize];
-
-        [self getGuestSession];
-
+        
+        return YES;
+        
     }
 }
 
-- (void)getGuestSession
+- (void)getGuestSessionAndOpenViewType:(NSInteger)viewType withObject:(id)object
 {
+    NSDate *startDate = [NSDate date];
+    
     GTLServiceFlagengine *service = [FlagClient flagengineService];
     
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGuest];
     
-    NSLog(@"start execute");
-    
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *object, NSError *error){
-        NSLog(@"result object %@", object);
+        NSLog(@"start guest session result object %@", object);
         
-        User *user = [[User alloc] init];
-        user.userId = [object identifier];
-        user.reward = [[object reward] integerValue];
-        
-        [self saveGuestSessionInCoreData:user];
-        [self initializeRootViewControllerWithUser:user];
+        if (error == nil) {
+            [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_guest_session" label:nil];
+            User *user = [[User alloc] init];
+            user.userId = [object identifier];
+            user.reward = [[object reward] integerValue];
+            self.user = user;
+            
+            [DataUtil saveGuestSessionWithUser:user];
+            [self initializeViewControllerForViewType:viewType withObject:object user:user];
+        }
     }];
 }
 
-- (void)saveGuestSessionInCoreData:(User *)theUser
+- (void)getUserInfoFromCoreDataAndOpenViewType:(NSInteger)viewType withObject:(id)object
 {
-    NSManagedObjectContext *context = [self managedObjectContext];
-    
-    NSManagedObject *object = [NSEntityDescription insertNewObjectForEntityForName:@"UserInfo" inManagedObjectContext:context];
-    [object setValue:theUser.userId forKey:@"userId"];
-    [object setValue:[NSNumber numberWithBool:NO] forKey:@"registered"];
-    
-    NSError *error;
-    [context save:&error];
-}
+    self.user = [DataUtil getUserInfo];
 
-- (void)getUserInfoFromCoreData
-{
-    NSManagedObjectContext *context = [self managedObjectContext];
-    
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"UserInfo" inManagedObjectContext:context];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSMutableArray *userInfoCoreData = [[context executeFetchRequest:request error:nil] mutableCopy];
-    
-    // user data loaded
-    if ([userInfoCoreData count]) {
-        NSManagedObject *userInfo = [userInfoCoreData objectAtIndex:0];
-        
-        User *user = [[User alloc] initWithCoreData:userInfo];
-        [self getUserRewardWithUser:user];
-        
+    if (self.user) {
+        [self getUserRewardWithUser:self.user andOpenViewWithViewType:viewType withObject:object];
     }else{
-        [self getGuestSession];
+        [self getGuestSessionAndOpenViewType:viewType withObject:object];
     }
 }
 
-- (void)getUserRewardWithUser:(User *)user
+- (void)getUserRewardWithUser:(User *)user andOpenViewWithViewType:(NSInteger)viewType withObject:(id)object
 {
-    GTLServiceFlagengine *service = [FlagClient flagengineService];
-    
-    GTLFlagengineUserForm *userForm = [GTLFlagengineUserForm alloc];
-    [userForm setIdentifier:user.userId];
-    
-    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGetWithObject:userForm];
-    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *result, NSError *error){
-        
-        if (error == nil) {
-            user.reward = [result.reward integerValue];
-        }else{
-            user.reward = 0;
-        }
-        [self initializeRootViewControllerWithUser:user];
+    [DataUtil getUserFormServerAtCompletionHandler:^(User *theUser){
+       
+        self.user.reward = theUser.reward;
+        [self initializeViewControllerForViewType:viewType withObject:object user:self.user];
         
     }];
 }
 
-- (void)initializeRootViewControllerWithUser:(User *)theUser
+- (void)initializeViewControllerForViewType:(NSInteger)viewType withObject:(id)object user:(User *)user
 {
-    UIStoryboard *storyboard = [ViewUtil getStoryboard];
-    SWRevealViewController *rootViewController = (SWRevealViewController *)[storyboard instantiateViewControllerWithIdentifier:@"RevealView"];
-    rootViewController.user = theUser;
-    [self.window setRootViewController:rootViewController];
+    if (viewType == TAB_BAR_VIEW_PAGE) {
+        [ViewUtil initializeRootViewControllerWithUser:self.user window:self.window];
+    }else if (viewType == SALE_INFO_VIEW_PAGE){
+        [ViewUtil initializeSaleInfoViewControllerWithUser:self.user shopId:object window:self.window];
+    }else if (viewType == ITEM_DETAIL_VIEW_PAGE){
+        [ViewUtil initializeItemDetailViewControllerWithUser:self.user itemId:object window:self.window];
+    }
 }
 
 
@@ -319,9 +342,10 @@ static int const kGaDispatchPeriod = 30;
     [[GAI sharedInstance] setDispatchInterval:kGaDispatchPeriod];
     [[GAI sharedInstance] setDryRun:kGaDryRun];
     [[GAI sharedInstance] setTrackUncaughtExceptions:YES];
-    self.tracker = [[GAI sharedInstance] trackerWithTrackingId:kGaTrackingId];
-    self.timeCriteria = [NSDate date];
+    
+    [self setTracker:[[GAI sharedInstance] trackerWithTrackingId:kGaTrackingId]];
 }
+
 
 #pragma mark - Application's Documents directory
 
@@ -331,172 +355,178 @@ static int const kGaDispatchPeriod = 30;
     return [[[NSFileManager defaultManager] URLsForDirectory:NSDocumentDirectory inDomains:NSUserDomainMask] lastObject];
 }
 
-#pragma mark - beacon data load
-- (void)getBeaconListAfterLastUpdateTime:(NSTimeInterval)time
+
+#pragma mark - 
+#pragma mark Flag data
+- (void)updateFlagTimeStamp
 {
-    NSString *url = BASE_URL;
-    NSString *methodName = @"lastUpdateTime";
+    NSDate *lastUpdateTime = [DataUtil getLastUpdateTime];
+    NSTimeInterval lastUpdateTimeWithTimeInterval;
     
-    url = [NSString stringWithFormat:@"%@/%@?time=%@", url, methodName, [NSString stringWithFormat:@"%.0f", time*1000]];
+    if (lastUpdateTime) {
+        lastUpdateTimeWithTimeInterval = [lastUpdateTime timeIntervalSince1970];
+    }else{
+        lastUpdateTimeWithTimeInterval = 0;
+    }
     
-    NSData *jsonDataString = [[NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:Nil] dataUsingEncoding:NSUTF8StringEncoding];
-    NSError *error = nil;
-    NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonDataString options:NSJSONReadingMutableContainers error:&error];
-    NSLog(@"data response result : %@", results);
+    [self getFlagListAfterLastUpdateTime:lastUpdateTimeWithTimeInterval];
+}
+
+- (void)getFlagListAfterLastUpdateTime:(NSTimeInterval)time
+{
+    URLParameters *urlParams = [self urlToUpdateFlagListWithLastUpdateTime:time];
+    NSURL *url = [urlParams getURLForRequest];
+    NSString *methodName = [urlParams getMethodName];
     
-    NSArray *beacons = [results objectForKey:@"beacons"];
-    NSArray *deletedBeacons = [results objectForKey:@"deletedBeacons"];
-    
-    if ([beacons count]) {
+    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *results){
         
-        BeaconDataController *newBeaconData = [[BeaconDataController alloc] init];
-        
-        for(NSDictionary *object in beacons){
-            Beacon *theBeacon = [[Beacon alloc] initWithData:object];
-            [newBeaconData addObjectWithObject:theBeacon];
+        if (results) {
+            
+            if ([results objectForKey:@"error"]) {
+                NSLog(@"update flag list error %@", [results objectForKey:@"error"]);
+            }else{
+                [DataUtil updateFlagListWithData:results afterLastUpdateTime:time];
+            }
         }
+    }];
+}
+
+- (URLParameters *)urlToUpdateFlagListWithLastUpdateTime:(NSTimeInterval)time
+{
+    NSNumber *timeStampForJava = [NSNumber numberWithLongLong:(time * 1000)];
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"flag_list_all"];
+    [urlParam addParameterWithKey:@"tag" withParameter:timeStampForJava];
+    
+    return urlParam;
+}
+
+- (void)detectFlagListAroundLocation:(CLLocation *)location
+{
+    if (self.user) {
+        FlagDataController *flagDataNearby = [[FlagDataController alloc] init];
         
-        [self addBeaconsInCoredataWithBeacons:newBeaconData];
+        flagDataNearby = [DataUtil getFlagListAroundLatitude:location.coordinate.latitude longitude:location.coordinate.longitude];
+        
+        if ([flagDataNearby countOfList]) {
+            
+            NSArray *shopIds = [flagDataNearby shopIdListInFlagList];
+            URLParameters *urlParam = [self urlToGetRecommandShopListWithShopIds:shopIds];
+            NSURL *url = [urlParam getURLForRequest];
+            NSString *methodName = [urlParam getMethodName];
+            
+            [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *result){
+                
+                if (result) {
+                    NSLog(@"recommand shop near user");
+                    [self recommandShopsNearUserWithData:result];
+                }
+            }];
+            
+        }else NSLog(@"no flag list nearby");
+    }
+}
+
+- (URLParameters *)urlToGetRecommandShopListWithShopIds:(NSArray *)shopIds
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"shop_recommend_near"];
+    for(NSNumber *shopId in shopIds){
+        [urlParam addParameterWithKey:@"ids" withParameter:shopId];
+    }
+    [urlParam addParameterWithUserId:self.user.userId];
+    
+    return urlParam;
+}
+
+- (void)recommandShopsNearUserWithData:(NSDictionary *)result
+{
+    Shop *theShop = [[Shop alloc] initWithData:result];
+    
+    NSString *shopName;
+    if (theShop.name) {
+        shopName = theShop.name;
+    }else{
+        shopName = @"상점";
     }
     
-    if ([deletedBeacons count]) {
-        
-        NSMutableArray *deletedBeaconData = [[NSMutableArray alloc] init];
-        
-        for(NSDictionary *object in deletedBeacons){
-            NSNumber *deletedBeaconId = [object valueForKey:@"beaconId"];
-            [deletedBeaconData addObject:deletedBeaconId];
+    NSString *message = [NSString stringWithFormat:@"주변에 %@이/가 있습니다\n달샵과 함께 쇼핑을 즐겨보세요", shopName];
+    NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:theShop.shopId, @"shopId", theShop.name, @"shopName", [NSNumber numberWithInteger:NOTIFICATION_BY_GPS], @"type", nil];
+    
+    [Util showLocalNotificationWithUserInfo:userInfo atDate:[NSDate date] message:message];
+}
+
+
+#pragma mark -
+#pragma mark Beacon detect
+- (void)startDetectingBeacon
+{
+    NSUUID *beaconUUID = [[NSUUID alloc] initWithUUIDString:BEACON_UUID];
+    beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:beaconUUID identifier:BEACON_IDENTIFIER];
+    beaconRegion.notifyEntryStateOnDisplay = YES;
+    
+    [locationManager startRangingBeaconsInRegion:beaconRegion];
+}
+
+- (URLParameters *)urlToGetShopWithShopId:(NSNumber *)shopId
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"shop"];
+    [urlParam addParameterWithKey:@"id" withParameter:shopId];
+    [urlParam addParameterWithUserId:self.user.userId];
+    
+    return urlParam;
+}
+
+- (void)checkInShopWithShopId:(NSNumber *)shopId inFlagId:(NSNumber *)flagId
+{
+    URLParameters *urlParam = [self urlToGetShopWithShopId:shopId];
+    NSURL *url = [urlParam getURLForRequest];
+    NSString *methodName = [urlParam getMethodName];
+    
+    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *result){
+       
+        if (result) {
+            
+            NSLog(@"result %@", result);
+            Shop *theShop = [[Shop alloc] initWithData:result];
+            
+            [self popUpForCheckInRewardWithShop:theShop];
+            [self requestCheckInRewardWithShop:theShop];
+            [DataUtil didCheckInFlagWithFlagId:flagId];
+            [DataUtil saveRewardObjectWithObjectId:theShop.shopId type:REWARD_CHECKIN];
         }
-        
-        [self deleteBeaconsIdCoredataWithBeaconIds:deletedBeaconData];
-    }
+    }];
 }
 
-- (void)addBeaconsInCoredataWithBeacons:(BeaconDataController *)beacons
+- (void)popUpForCheckInRewardWithShop:(Shop *)theShop
 {
-    // add to coredata
-    NSManagedObjectContext *context = [self managedObjectContext];
-    
-    for(Beacon *beacon in beacons.masterData){
-        
-        NSManagedObject *newBeacon;
-        newBeacon = [NSEntityDescription insertNewObjectForEntityForName:@"BeaconList" inManagedObjectContext:context];
-        [newBeacon setValue:beacon.beaconId forKey:@"beaconId"];
-        [newBeacon setValue:beacon.shopId forKey:@"shopId"];
-        [newBeacon setValue:beacon.shopName forKey:@"shopName"];
-        [newBeacon setValue:beacon.latitude forKey:@"latitude"];
-        [newBeacon setValue:beacon.longitude forKey:@"longitude"];
-        [newBeacon setValue:beacon.lastScanTime forKeyPath:@"lastScanTime"];
-        
-    }
-    
-    NSError *error;
-    [context save:&error];
-    NSLog(@"Beacon Saved");
+    NSString *message = [NSString stringWithFormat:@"체크인 가능한 상점에 들어왔습니다. 쇼핑도 하고 달도 받아가세요!"];
+    NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:theShop.shopId, @"shopId", theShop.name, @"shopName", [NSNumber numberWithInteger:theShop.reward], @"reward", [NSNumber numberWithInteger:NOTIFICATION_BY_BEACON], @"type", nil];
+    [Util showLocalNotificationWithUserInfo:userInfo atDate:[NSDate date] message:message];
 }
 
-- (void)deleteBeaconsIdCoredataWithBeaconIds:(NSMutableArray *)beaconIds
+- (void)requestCheckInRewardWithShop:(Shop *)shop
 {
-    // delete in coredata
-    NSManagedObjectContext *context = [self managedObjectContext];
+    NSDate *startDate = [NSDate date];
     
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"BeaconList" inManagedObjectContext:context];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
+    GTLService *service = [FlagClient flagengineService];
+    GTLFlagengineReward *reward = [GTLFlagengineReward alloc];
+    [reward setUserId:self.user.userId];
+    [reward setTargetId:shop.shopId];
+    [reward setTargetName:shop.name];
+    [reward setReward:[NSNumber numberWithInteger:shop.reward]];
+    [reward setType:[NSNumber numberWithInteger:REWARD_CHECKIN]];
+    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForRewardsInsertWithObject:reward];
     
-    NSMutableArray *pred = [NSMutableArray array];
-    for(NSString *beaconId in beaconIds){
-        [pred addObject:[NSPredicate predicateWithFormat:@"beaconId LIKE[c] %@", beaconId]];
-    }
-    NSPredicate *compoundPred = [NSCompoundPredicate andPredicateWithSubpredicates:pred];
-    [request setPredicate:compoundPred];
-    
-    NSError *error;
-    NSArray *objects = [context executeFetchRequest:request error:&error];
-    
-    for(NSManagedObject *object in objects){
-        [context deleteObject:object];
-    }
-}
-
-- (BeaconDataController *)getBeaconListAtLocation:(CLLocation *)location
-{
-    NSManagedObjectContext *context = [self managedObjectContext];
-    double locationLatitude = location.coordinate.latitude;
-    double locationLongitude = location.coordinate.longitude;
-    
-    NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"BeaconList" inManagedObjectContext:context];
-    NSFetchRequest *request = [[NSFetchRequest alloc] init];
-    [request setEntity:entityDesc];
-    
-    NSPredicate *predicate = [NSPredicate predicateWithFormat:@"(%f <= latitude) AND (latitude <= %f) AND (%f <= longitude) AND (longitude <= %f)", (locationLatitude - BEACON_DETECT_RADIUS_GEODETIC), (locationLatitude + BEACON_DETECT_RADIUS_GEODETIC), (locationLongitude - BEACON_DETECT_RADIUS_GEODETIC), (locationLongitude + BEACON_DETECT_RADIUS_GEODETIC)];
-    [request setPredicate:predicate];
-    
-    NSError *error;
-    NSArray *objects = [context executeFetchRequest:request error:&error];
-    BeaconDataController *beaconDataController = [[BeaconDataController alloc] init];
-    
-    for(NSManagedObject *object in objects){
-        Beacon *theBeacon = [[Beacon alloc] initWithManagedObject:object];
-        [beaconDataController addObjectWithObject:theBeacon];
-    }
-    
-    return beaconDataController;
-}
-
-#pragma mark - beacon detect method
-
-- (void)initializeBeaconCoreDataForTest
-{
-    BeaconDataController *beaconList = [[BeaconDataController alloc] init];
-    [beaconList initForTest];
-    
-    NSManagedObjectContext *context = [self managedObjectContext];
-    
-    for(Beacon *beacon in beaconList.masterData){
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineReward *reward, NSError *error){
+        NSLog(@"reward result %@", reward);
         
-        NSManagedObject *newBeacon;
-        newBeacon = [NSEntityDescription insertNewObjectForEntityForName:@"BeaconList" inManagedObjectContext:context];
-        [newBeacon setValue:beacon.beaconId forKey:@"beaconId"];
-        [newBeacon setValue:beacon.shopId forKey:@"shopId"];
-        [newBeacon setValue:beacon.shopName forKey:@"shopName"];
-        [newBeacon setValue:beacon.latitude forKey:@"latitude"];
-        [newBeacon setValue:beacon.longitude forKey:@"longitude"];
-        [newBeacon setValue:beacon.lastScanTime forKeyPath:@"lastScanTime"];
-        
-    }
-    
-    NSError *error;
-    [context save:&error];
-    NSLog(@"Beacon Saved");
+        [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"reward_check_in" label:nil];
+    }];
 }
 
-- (void)initializeBeaconDetector{
-    
-//    [self initializeBeaconCoreDataForTest];
-    
-    // initalize location manager
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-
-    [locationManager startUpdatingLocation];
-}
-
-- (void)startBeaconDetectNearby
-{
-    // scan start
-    for(Beacon *theBeacon in beaconData.masterData){
-        
-        NSLog(@"start to detect beacon %@ last detected time is %@", theBeacon.beaconId, theBeacon.lastScanTime);
-        beaconRegion = [[CLBeaconRegion alloc] initWithProximityUUID:[[NSUUID alloc] initWithUUIDString:theBeacon.beaconId] identifier:theBeacon.shopName];
-        beaconRegion.notifyEntryStateOnDisplay = YES;
-        
-        [locationManager startRangingBeaconsInRegion:beaconRegion];
-    }
-}
-
-- (void)startMonitoringBeaconInBackground
+- (void)startMonitoringInBackground
 {
     //Check if our iOS version supports multitasking I.E iOS 4
     if ([[UIDevice currentDevice] respondsToSelector:@selector(isMultitaskingSupported)]) {
@@ -537,39 +567,62 @@ static int const kGaDispatchPeriod = 30;
 
 }
 
-#pragma mark - location manager
+#pragma mark - 
+#pragma mark alert delegate
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == ALERT_NETWORK_CHECK) {
+        exit(0);
+    }
+}
+
+
+#pragma mark -
+#pragma mark location manager
+- (void)initializeLocationManager
+{
+    // initalize location manager
+    locationManager = [[CLLocationManager alloc] init];
+    locationManager.delegate = self;
+    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    [locationManager startUpdatingLocation];
+}
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
     NSLog(@"fail to update location with error %@", [error localizedDescription]);
+    [locationManager stopUpdatingLocation];
+    [NSTimer scheduledTimerWithTimeInterval:LOCATION_UPDATE_DELAY_TIME target:locationManager selector:@selector(startUpdatingLocation) userInfo:nil repeats:NO];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    NSLog(@"found location");
+    NSLog(@"location updated");
+    [locationManager stopUpdatingLocation];
     CLLocation *currentLocation = [locations lastObject];
     
-    if (!savedLocation) {
-        savedLocation = [[CLLocation alloc] initWithLatitude:0 longitude:0];
+    if (!self.savedLocation) {
+        self.savedLocation = [[CLLocation alloc] initWithLatitude:0 longitude:0];
     }
     
-    if ([MapUtil currentLocation:currentLocation getOutOfPreviousLocation:savedLocation withBoundRadius:BEACON_DETECT_RADIUS_DISTANCE]) {
+    if ([MapUtil currentLocation:currentLocation getOutOfPreviousLocation:self.savedLocation withBoundRadius:LOCATION_UPDATE_RADIUS_DISTANCE]) {
         
 #ifdef DEBUG
-        [Util showLocalNotificationAtDate:[NSDate date] message:[NSString stringWithFormat:@"location updated (%f, %f)", currentLocation.coordinate.latitude, currentLocation.coordinate.longitude]];
+        NSString *message = [NSString stringWithFormat:@"location updated (%f, %f)", currentLocation.coordinate.latitude, currentLocation.coordinate.longitude];
+        NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:[NSNumber numberWithInteger:NOTIFICATION_FOR_TEST], @"type", nil];
+        [Util showLocalNotificationWithUserInfo:userInfo atDate:[NSDate date] message:message];
 #else
 #endif
         
-        savedLocation = currentLocation;
+        self.savedLocation = currentLocation;
         
-        // set beacon data controller
-        beaconData = [[BeaconDataController alloc] init];
-        [beaconData removeAllData];
-        beaconDataWithGPS = [self getBeaconListAtLocation:currentLocation];
-        [beaconData addMasterDataWithArray:[beaconDataWithGPS scannableBeaconList]];
-        
-        [self startBeaconDetectNearby];
+        [self detectFlagListAroundLocation:self.savedLocation];
     }
+
+    [NSTimer scheduledTimerWithTimeInterval:LOCATION_UPDATE_DELAY_TIME target:locationManager selector:@selector(startUpdatingLocation) userInfo:nil repeats:NO];
+    
+//    [locationManager startUpdatingLocation];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
@@ -589,22 +642,17 @@ static int const kGaDispatchPeriod = 30;
     
     if ([beacons count]) {
         
-        NSLog(@"found BLE but does not know exactly");
+        for(CLBeacon *theBeacon in beacons){
+          
+            Flag *flag = [DataUtil getFlagWithFlagId:theBeacon.major];
+            NSLog(@"beacon find with flag %@ %@ %@ %f %d", flag.flagId, flag.shopId, flag.shopName, theBeacon.accuracy, [BeaconUtil isDeviceInRangeOfBeaconCheckInWithBeacon:theBeacon]);
         
-        [locationManager stopUpdatingLocation];
-        
-        for(CLBeacon *beacon in beacons){
-            
-            Beacon *foundBeacon = [beaconData didScanBeaconWithBeaconId:beacon.proximityUUID.UUIDString];
-            
-            if (foundBeacon) {
-                
-                [Util showLocalNotificationAtDate:[NSDate date] message:[NSString stringWithFormat:@"%@\n%@", foundBeacon.shopName, foundBeacon.lastScanTime]];
+            // check in
+            if ([flag canFlagBeCheckedIn] && [BeaconUtil isDeviceInRangeOfBeaconCheckInWithBeacon:theBeacon]) {
+                [self checkInShopWithShopId:flag.shopId inFlagId:flag.flagId];
             }
-        }
-        
-        [locationManager stopRangingBeaconsInRegion:region];
-        [locationManager startUpdatingLocation];
+            
+        };
     }
 }
 
@@ -613,26 +661,81 @@ static int const kGaDispatchPeriod = 30;
 - (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification
 {
     UIApplicationState state = [application applicationState];
+    NSDictionary *userInfo = notification.userInfo;
+    NSInteger notiType = [[userInfo valueForKey:@"type"] integerValue];
     
-    if (state == UIApplicationStateActive) {
+    NSNumber *shopId = [userInfo valueForKey:@"shopId"];
+    NSString *shopName = [userInfo valueForKey:@"shopName"];
+    NSNumber *reward = [userInfo valueForKey:@"reward"];
+    
+    if (notiType == NOTIFICATION_BY_BEACON) {
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Beacon Detected" message:notification.alertBody delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil, nil];
-        [alert show];
-        NSLog(@"beacon detedted in active");
-        DidRewardPopupViewController *popupViewController = [[DidRewardPopupViewController alloc] init];
-        [self.window.rootViewController presentViewController:popupViewController animated:YES completion:nil];
+        [GAUtil sendGADataWithCategory:@"bg_trigger" actionName:@"push_beacon" label:nil value:nil];
         
-    }else if (state == UIApplicationStateBackground){
+        if (self.presentingViewController) {
+            
+            [ViewUtil presentRewardPopUpViewInView:self.presentingViewController shopId:shopId shopName:shopName reward:reward];
+            
+        }else{
+            [ViewUtil presentRewardPopUpViewInView:self.window.rootViewController shopId:shopId shopName:shopName reward:reward];
+        }
+
+        if (state == UIApplicationStateActive) {
+            NSLog(@"beacon detected in active");
+        }else if (state == UIApplicationStateBackground){
+            NSLog(@"beacon detected in background");
+        }else if (state == UIApplicationStateInactive){
+            NSLog(@"beacon detected in inactive");
+        }
         
-        [Util showLocalNotificationAtDate:[NSDate date] message:notification.alertBody];
-        NSLog(@"beacon detected in background");
-        
-    }else if (state == UIApplicationStateInactive){
-        
-        [Util showLocalNotificationAtDate:[NSDate date] message:notification.alertBody];
-        NSLog(@"beacon detected in inactive");
-        
+        return;
     }
+    
+    if (notiType == NOTIFICATION_BY_GPS) {
+        
+        [GAUtil sendGADataWithCategory:@"bg_trigger" actionName:@"push_gps" label:nil value:nil];
+        
+        if (state == UIApplicationStateBackground || state == UIApplicationStateInactive) {
+            if (self.presentingViewController) {
+                [ViewUtil presentItemListViewNavInView:self.presentingViewController withUser:self.user shopId:shopId shopName:shopName withParentPageNumber:NOTIFICATION_VIEW];
+            }else{
+                [ViewUtil presentItemListViewNavInView:self.window.rootViewController withUser:self.user shopId:shopId shopName:shopName withParentPageNumber:NOTIFICATION_VIEW];
+            }            
+        }
+
+        return;
+    }
+    
+}
+
+- (BOOL)checkLaunchApplicationByNotificationWithOptions:(NSDictionary *)launchOptions
+{
+    UILocalNotification *localNotif = [launchOptions objectForKey:UIApplicationLaunchOptionsLocalNotificationKey];
+    
+    if (localNotif) {
+        NSDictionary *userInfo = localNotif.userInfo;
+        NSInteger notiType = [[userInfo valueForKey:@"type"] integerValue];
+        
+        if (notiType == NOTIFICATION_BY_BEACON) {
+            
+            //GA
+            [GAUtil sendGADataWithCategory:@"bg_action" actionName:@"accept_push_beacon" label:nil value:nil];
+            
+            NSNumber *shopId = [userInfo valueForKey:@"shopId"];
+            [self checkUserSessionAndOpenViewType:SALE_INFO_VIEW_PAGE withObject:shopId];
+        }
+        
+        if (notiType == NOTIFICATION_BY_GPS) {
+            
+            //GA
+            [GAUtil sendGADataWithCategory:@"bg_action" actionName:@"accept_push_gps" label:nil value:nil];
+            
+            NSNumber *shopId = [userInfo valueForKey:@"shopId"];
+            [self checkUserSessionAndOpenViewType:SALE_INFO_VIEW_PAGE withObject:shopId];
+        }
+        
+        return YES;
+    }return NO;
 }
 
 
@@ -643,10 +746,27 @@ static int const kGaDispatchPeriod = 30;
     
     // Kakao Talk Link
     if ([KOSession isKakaoLinkCallback:url]) {
-        NSLog(@"kakaoLink callback! query string : %@", [url query]);
+        
+        NSMutableDictionary *paramDic = [Util dictionaryWithURLParameter:url];
+        NSLog(@"kakaoLink callback! query string : %@", paramDic);
+        NSString *method = [paramDic valueForKey:@"method"];
+        NSNumber *shopId = [paramDic valueForKey:@"shopId"];
+        NSNumber *itemId = [paramDic valueForKey:@"itemId"];
+        
+        // GA
+        [GAUtil sendGADataWithCategory:@"kakao_action" actionName:@"accept_kakao_invite" label:method value:nil];
+        
+        
+        if ([method isEqualToString:@"main"]) {
+            [self checkUserSessionAndOpenViewType:TAB_BAR_VIEW_PAGE withObject:nil];
+        }else if ([method isEqualToString:@"shop"]){
+            [self checkUserSessionAndOpenViewType:SALE_INFO_VIEW_PAGE withObject:shopId];
+        }else if ([method isEqualToString:@"item"]){
+            [self checkUserSessionAndOpenViewType:ITEM_DETAIL_VIEW_PAGE withObject:itemId];
+        }else return NO;
+        
         return YES;
-    }
-    
-    return NO;
+    }else return NO;
 }
+
 @end

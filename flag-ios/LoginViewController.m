@@ -17,6 +17,7 @@
 
 #import "FlagClient.h"
 #import "GTLFlagengine.h"
+#import "GoogleAnalytics.h"
 
 @interface LoginViewController ()
 
@@ -45,33 +46,55 @@
     [super viewDidLoad];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+    
+    // GA
+    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_LOGIN_VIEW];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
 #pragma mark -
 #pragma mark IBAction
 
 - (IBAction)loginButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"login_button_tapped" label:@"escape_view" value:nil];
+
+    
     if ([self loginFormCheck]) {
-        NSLog(@"logining");
         [self loginUser];
     }
 }
 
 - (void)loginUser
 {
+    NSDate *startDate = [NSDate date];
+    
     GTLServiceFlagengine *service = [FlagClient flagengineService];
     
     GTLFlagengineUserForm *userForm = [GTLFlagengineUserForm alloc];
     [userForm setEmail:self.emailTextField.text];
     [userForm setPassword:[Util encryptPasswordWithPassword:self.passwordTextField.text]];
     [userForm setIdentifier:self.user.userId];
+    NSLog(@"user info %@", userForm);
     
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGetWithObject:userForm];
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *user, NSError *error){
         
         if (error == nil) {
-            [self changeUserFormWithUser:user];
-            [self restartView];
+            if (user) {
+                [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_user_info" label:nil];
+                NSLog(@"result user info %@", user);
+                [self changeUserFormWithUser:user];
+                [self restartView];                
+            }
         }else{
             [Util showAlertView:nil message:@"로그인에 실패하였습니다\n다시 시도해주세요" title:@"로그인"];
         }
@@ -96,6 +119,10 @@
 
 - (IBAction)joinButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_to_register_view" label:@"escape_view" value:nil];
+
+    
     UIStoryboard *storyboard = [ViewUtil getStoryboard];
     JoinViewController *childViewController = (JoinViewController *)[storyboard instantiateViewControllerWithIdentifier:@"JoinView"];
     
@@ -106,12 +133,20 @@
 
 - (IBAction)backgroundTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"background_tapped" label:@"inside_view" value:nil];
+
+    
     [self.emailTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
 }
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
     if (self.parentPage == SLIDE_MENU_PAGE) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }

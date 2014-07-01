@@ -12,6 +12,9 @@
 
 @property (nonatomic, strong) NSMutableArray *masterData;
 
+- (id)init;
+- (id)initWithArray:(NSArray *)dataArray;
+
 - (NSUInteger)countOfList;
 - (id)objectInListAtIndex:(NSUInteger)index;
 - (void)addObjectWithObject:(id)object;

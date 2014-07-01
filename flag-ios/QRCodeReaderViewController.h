@@ -10,16 +10,18 @@
 #import <AVFoundation/AVFoundation.h>
 
 @class Item;
+@class User;
 @class ItemListViewController;
 
 @interface QRCodeReaderViewController : UIViewController<AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
 
-@property (weak) ItemListViewController *itemListViewController;
 @property (weak, nonatomic) IBOutlet UIView *previewView;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;
 @property (weak, nonatomic) IBOutlet UIButton *stopButton;
 
-@property (nonatomic, strong) Item *theItem;
+@property (weak) ItemListViewController *itemListViewController;
+@property (nonatomic, strong) User *user;
+@property (nonatomic, strong) Item *item;
 
 //- (IBAction)stopButtonTapped:(id)sender;
 

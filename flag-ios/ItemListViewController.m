@@ -12,31 +12,39 @@
 #import "ActivityIndicatorView.h"
 #import "ItemDetailViewController.h"
 #import "SWRevealViewController.h"
+#import "TransitionDelegate.h"
+#import "CollectRewardViewController.h"
 
 #import "ImageDataController.h"
 #import "ItemDataController.h"
 #import "Item.h"
 #import "Shop.h"
+#import "Like.h"
+#import "LikeDataController.h"
 #import "URLParameters.h"
 
 #import "Util.h"
 #import "ViewUtil.h"
+#import "DataUtil.h"
 #import "SVPullToRefresh.h"
 
 #import "GoogleAnalytics.h"
 
 @interface ItemListViewController ()
+
+@property (nonatomic, strong) TransitionDelegate *transitionDelegate;
+
 @end
 
 @implementation ItemListViewController{
     ItemDataController *allItemData;
     ImageDataController *imageData;
     
-    NSURL *itemListUrl;
+    URLParameters *itemListURLParams;
+    
+    CGFloat itemImageWidth;
+    CGFloat itemImageHeight;
 }
-
-CGFloat itemImageWidth = 306.0f;
-CGFloat itemImageHeight = 384.0f;
 
 - (void)awakeFromNib
 {
@@ -52,7 +60,8 @@ CGFloat itemImageHeight = 384.0f;
 - (void)viewDidLayoutSubviews
 {
     [super viewDidLayoutSubviews];
-
+    
+    [self setContentView];
     [self.collectionView setBackgroundColor:UIColorFromRGB(BASE_COLOR)];
 }
 
@@ -60,34 +69,71 @@ CGFloat itemImageHeight = 384.0f;
 {
     [super viewDidLoad];
     
-    [self setContentView];
     [self setContent];
     
-    __weak ItemListViewController *weakSelf = self;
+    self.afterItemScan = NO;
     
-    // setup pull-to-refresh
-//    [self.collectionView addPullToRefreshWithActionHandler:^{
-//        [weakSelf insertRowAtTop];
-//    }];
+    if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+        __weak ItemListViewController *weakSelf = self;
+        
+        // setup pull-to-refresh
+        //    [self.collectionView addPullToRefreshWithActionHandler:^{
+        //        [weakSelf insertRowAtTop];
+        //    }];
+        
+        // setup infinite scrolling
+        [self.collectionView addInfiniteScrollingWithActionHandler:^{
+            [weakSelf insertRowAtBottom];
+        }];
+        
+        [self configureCheckInRewardTutorial];
+
+    }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
     
-    // setup infinite scrolling
-    [self.collectionView addInfiniteScrollingWithActionHandler:^{
-        [weakSelf insertRowAtBottom];
-    }];
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+    
+    if (self.afterItemScan) {
+        [allItemData removeAllData];
+        [self setContent];
+        self.afterItemScan = NO;
+    }
+    
+    [self.collectionView reloadData];
+    
+    
+    // GA
+    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_ITEM_LIST_VIEW];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)setContentView
 {
+    itemImageWidth = 306.0f;
+    itemImageHeight = 384.0f;
+    
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
         // navigation bar
+        self.navigationController.navigationBar.tintColor = UIColorFromRGB(BASE_COLOR);
+        
         UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
         self.navigationItem.leftBarButtonItem = menuButton;
         menuButton.tintColor = UIColorFromRGB(BASE_COLOR);
         
+        UIBarButtonItem *rewardMenuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(rightRevealToggle:)];
+        [rewardMenuButton setTintColor:UIColorFromRGB(0xeb6468)];
+        self.navigationItem.rightBarButtonItem = rewardMenuButton;
+        //        UIBarButtonItem *collectRewardButton = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"BUTTON_TITLE_FIND_SHOP_FOR_REWARD", @"reward") style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(rightRevealToggle:)];
         
         // slide menu
         [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
+        [self.view addGestureRecognizer:self.revealViewController.tapGestureRecognizer];
         
     }else if (self.parentPage == SALE_INFO_VIEW_PAGE){
         
@@ -99,6 +145,21 @@ CGFloat itemImageHeight = 384.0f;
         UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
         self.navigationItem.leftBarButtonItem = menuButton;
         
+    }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
+        
+        self.title = @"스캔아이템";
+        
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
+        self.navigationItem.leftBarButtonItem = backButton;
+        backButton.tintColor = UIColorFromRGB(BASE_COLOR);
+        
+    }else if (self.parentPage == NOTIFICATION_VIEW){
+        
+        [self setTitle:self.shop.name];
+        
+        UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
+        [self.navigationItem setLeftBarButtonItem:backButton];
+        [backButton setTintColor:UIColorFromRGB(BASE_COLOR)];
     }
 }
 
@@ -106,19 +167,27 @@ CGFloat itemImageHeight = 384.0f;
 {
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
-        itemListUrl = [self getURLPathWithRandomItem];
+        itemListURLParams = [self getURLPathWithRandomItem];
         
     }else if (self.parentPage == SALE_INFO_VIEW_PAGE){
         
-        itemListUrl = [self getURLPathWithSaleInfo];
+        itemListURLParams = [self getURLPathWithSaleInfo];
         
     }else if (self.parentPage == SLIDE_MENU_PAGE){
         
-        itemListUrl = [self getURLPathWithMyLikeItem];
+        itemListURLParams = [self getURLPathWithMyLikeItem];
+        
+    }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
+        
+        itemListURLParams = [self getURLPathForScanItemList];
+        
+    }else if (self.parentPage == NOTIFICATION_VIEW){
+        
+        itemListURLParams = [self getURLPathWithSaleInfo];
         
     }
     
-    [self performSelectorInBackground:@selector(getItemListWithURL:) withObject:itemListUrl];
+    [self performSelectorInBackground:@selector(getItemListWithURLParams:) withObject:itemListURLParams];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -132,6 +201,10 @@ CGFloat itemImageHeight = 384.0f;
 #pragma mark pull to refresh delegate
 - (void)insertRowAtTop
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"pull_top_to_refresh" label:@"inside_view" value:nil];
+
+    
     __weak ItemListViewController *weakSelf = self;
     
     int64_t delayInSeconds = 2.0;
@@ -146,13 +219,17 @@ CGFloat itemImageHeight = 384.0f;
 
 - (void)insertRowAtBottom
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"pull_bottom_to_refresh" label:@"inside_view" value:nil];
+
+    
     __weak ItemListViewController *weakSelf = self;
     
     int64_t delayInSeconds = 2.0;
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
 
-        [weakSelf performSelectorInBackground:@selector(getItemListWithURL:) withObject:itemListUrl];
+        [weakSelf performSelectorInBackground:@selector(getItemListWithURLParams:) withObject:itemListURLParams];
         [weakSelf.collectionView.infiniteScrollingView stopAnimating];
 
     });
@@ -161,18 +238,17 @@ CGFloat itemImageHeight = 384.0f;
 
 #pragma mark -
 #pragma mark - server connect
-- (NSURL *)getURLPathWithSaleInfo
+- (URLParameters *)getURLPathWithSaleInfo
 {
     URLParameters *urlParam = [[URLParameters alloc] init];
     [urlParam setMethodName:@"item"];
     [urlParam addParameterWithKey:@"shopId" withParameter:self.shop.shopId];
     [urlParam addParameterWithUserId:self.user.userId];
-    NSURL *url = [urlParam getURLForRequest];
     
-    return url;
+    return urlParam;
 }
 
-- (NSURL *)getURLPathWithRandomItem
+- (URLParameters *)getURLPathWithRandomItem
 {
     NSInteger mark = 0;
     URLParameters *urlParam = [[URLParameters alloc] init];
@@ -180,45 +256,48 @@ CGFloat itemImageHeight = 384.0f;
     [urlParam setMethodName:@"item_init"];
     [urlParam addParameterWithKey:@"mark" withParameter:[NSNumber numberWithInteger:mark]];
     [urlParam addParameterWithUserId:self.user.userId];
-    NSURL *url = [urlParam getURLForRequest];
     
-    return url;
+    return urlParam;
 }
 
 
-- (NSURL *)getURLPathWithMyLikeItem
+- (URLParameters *)getURLPathWithMyLikeItem
 {
+    LikeDataController *likeData = [[LikeDataController alloc] init];
+    likeData = [DataUtil getLikeListWithType:LIKE_ITEM];
+    
     URLParameters *urlParam = [[URLParameters alloc] init];
     
-    [urlParam setMethodName:@"item_user"];
+    [urlParam setMethodName:@"item_list"];
+    for(Like *theLike in likeData.masterData){
+        [urlParam addParameterWithKey:@"ids" withParameter:theLike.objectId];
+    }
     [urlParam addParameterWithUserId:self.user.userId];
-    NSURL *url = [urlParam getURLForRequest];
     
-    return url;
+    return urlParam;
 }
 
-- (void)getItemListWithURL:(NSURL *)url
+- (URLParameters *)getURLPathForScanItemList
 {
-    // Activity Indicator
-//    ActivityIndicatorView *aiView = [ActivityIndicatorView startActivityIndicatorInParentView:self.view];
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"item_reward"];
+    [urlParam addParameterWithKey:@"mark" withParameter:[NSNumber numberWithInteger:0]];
+    [urlParam addParameterWithUserId:self.user.userId];
     
-    NSDate *loadBeforeTime = [NSDate date];
-    
-    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
+    return urlParam;
+}
+
+- (void)getItemListWithURLParams:(URLParameters *)urlParams
+{
+    [FlagClient getDataResultWithURL:[urlParams getURLForRequest] methodName:[urlParams getMethodName] completion:^(NSDictionary *results){
         
-        NSDictionary *results = [FlagClient getURLResultWithURL:url];
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
+        if (results) {
             
             [self setItemDataWithJsonData:results];
-            
-            // GAI Data Load Time
-            [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"data_load" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:loadBeforeTime]] name:@"item_list" label:nil] build]];
-
-            [self.collectionView reloadData];
-//            [aiView stopActivityIndicator];
-            
-        }];
+        }
+        
+        [self.collectionView reloadData];
+        
     }];
 }
 
@@ -241,9 +320,7 @@ CGFloat itemImageHeight = 384.0f;
 {
     NSString *urlString = [Util addImageParameterInImagePath:imagePath width:itemImageWidth height:itemImageHeight];
 
-    [FlagClient setImageFromUrl:urlString imageDataController:imageData itemId:itemId view:self.collectionView completion:^(void){
-        
-    }];
+    [FlagClient getImageWithImageURL:urlString imageDataController:imageData objectId:itemId objectType:IMAGE_ITEM view:self.collectionView completion:^(UIImage *image){}];
 }
 
 #pragma mark - Collection view data source
@@ -280,10 +357,6 @@ CGFloat itemImageHeight = 384.0f;
     }else{
         
         NSString *reward = [NSString stringWithFormat:@"%ld달", (long)theItem.reward];
-//        UIFont *textFont = [UIFont fontWithName:@"System Bold" size:13];
-//        CGRect rewardStringFrame = [reward boundingRectWithSize:CGSizeMake(100, 40) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:textFont} context:nil];
-//        CGRect rewardLabelFrame = CGRectMake(cell.frame.size.width - 13 - rewardStringFrame.size.width, itemRewardLabel.frame.origin.y, rewardStringFrame.size.width, itemRewardLabel.frame.size.height);
-//        itemRewardLabel.frame = rewardLabelFrame;
         itemRewardLabel.text = reward;
 
         if (theItem.rewarded) {
@@ -304,21 +377,16 @@ CGFloat itemImageHeight = 384.0f;
     cell.layer.borderColor = [UIColor colorWithWhite:0 alpha:0.1].CGColor;
     cell.layer.borderWidth = 0.5f;
     
-    
-    // Shadow
-//    CALayer *layer = cell.layer;
-//    layer.shadowOffset = CGSizeMake(0.5f, 0.5f);
-//    layer.shadowColor = [[UIColor blackColor] CGColor];
-//    layer.shadowRadius = 2.0f;
-//    layer.shadowOpacity = 0.3f;
-//    layer.shadowPath = [[UIBezierPath bezierPathWithRect:layer.bounds] CGPath];
-    
     return cell;
 }
 
 #pragma mark - Collection view delegate
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"see_item_image" label:@"escape_view" value:nil];
+
+    
     Item *theItem = (Item *)[allItemData objectInListAtIndex:indexPath.row];
     UIImage *theItemImage = [imageData imageInListWithId:theItem.itemId];
 
@@ -328,9 +396,10 @@ CGFloat itemImageHeight = 384.0f;
     childViewController.user = self.user;
     childViewController.item = theItem;
     childViewController.itemImage = theItemImage;
+    childViewController.parentPage = ITEM_LIST_VIEW_PAGE;
     
-    // GAI event
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"see_item_image" label:@"inside_view" value:nil] build]];
+    childViewController.itemListViewController = self;
+    childViewController.selectedItemIndexpathRow = indexPath.row;
     
     [self.navigationController pushViewController:childViewController animated:YES];
 }
@@ -338,6 +407,10 @@ CGFloat itemImageHeight = 384.0f;
 #pragma mark - IBAction
 - (IBAction)scanButtonTapped:(UIButton *)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"item_scan_click" label:@"inside_view" value:nil];
+
+    
     CGPoint buttonOrigiInCollectionView = [sender convertPoint:CGPointZero toView:self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:buttonOrigiInCollectionView];
     Item *theItem = (Item *)[allItemData objectInListAtIndex:indexPath.row];
@@ -347,8 +420,23 @@ CGFloat itemImageHeight = 384.0f;
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
     if (self.parentPage == SLIDE_MENU_PAGE) {
+        
         [self dismissViewControllerAnimated:YES completion:nil];
+    
+    }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
+    
+        NSLog(@"cancel button tapped");
+        [self dismissViewControllerAnimated:YES completion:nil];
+    
+    }else if (self.parentPage == NOTIFICATION_VIEW){
+        
+        [self dismissViewControllerAnimated:YES completion:nil];
+        
     }
 }
 
@@ -358,25 +446,60 @@ CGFloat itemImageHeight = 384.0f;
     }
 }
 
-#pragma mark - Implementation
-- (void)changeItemRewardToRewardedWithItemId:(NSNumber *)itemId
-{
-    [allItemData didRewardItemWithItemId:itemId];
-}
+//- (IBAction)presentCollectRewardView:(id)sender
+//{
+//    // GA
+//    [GAUtil sendGADataWithUIAction:@"go_to_reward_collection" label:@"escape_view" value:nil];
+//
+//    
+//    UIStoryboard *storyboard = [ViewUtil getStoryboard];
+//    CollectRewardViewController *childViewController = (CollectRewardViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CollectRewardView"];
+//    childViewController.user = self.user;
+//    
+//    childViewController.view.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
+//    [childViewController setTransitioningDelegate:self.transitionDelegate];
+//    childViewController.modalPresentationStyle = UIModalPresentationCustom;
+//    
+//    [self presentViewController:childViewController animated:YES completion:nil];
+//}
 
+#pragma mark - Implementation
 - (void)showItemScanViewWithItem:(Item *)theItem
 {
-    // GAI event
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"scan_item" label:@"inside_view" value:nil] build]];
-    
     // set view
     UIStoryboard *storyborad = [ViewUtil getStoryboard];
     QRCodeReaderViewController *childViewController = (QRCodeReaderViewController *)[storyborad instantiateViewControllerWithIdentifier:@"QRCodeReaderView"];
     
-    childViewController.theItem = theItem;
+    childViewController.user = self.user;
+    childViewController.item = theItem;
     childViewController.itemListViewController = self;
     
     [self.navigationController pushViewController:childViewController animated:YES];
+}
+
+- (void)addItemLikesWithIndexpathRow:(NSInteger)row
+{
+    Item *theItem = [allItemData objectInListAtIndex:row];
+    theItem.likes++;
+    theItem.liked = YES;
+}
+
+- (void)minusItemLikesWithIndexpathRow:(NSInteger)row
+{
+    Item *theItem = [allItemData objectInListAtIndex:row];
+    theItem.likes--;
+    theItem.liked = NO;
+}
+
+#pragma mark -
+#pragma mark notification
+- (void)configureCheckInRewardTutorial
+{
+    if (![DataUtil isUserFirstLaunchApp]) {
+        
+        [ViewUtil presentTutorialInView:self type:TUTORIAL_REWARD_DESCRIPTION];
+        [DataUtil saveUserHistoryAfterAppLaunch];
+    }
 }
 
 @end

@@ -22,6 +22,7 @@
 @property (nonatomic, assign) BOOL rewarded;
 @property (nonatomic, assign) NSInteger likes;
 @property (nonatomic, assign) BOOL  liked;
+@property (nonatomic, assign) BOOL onSale;
 
 - (id)initWithData:(id)data;
 

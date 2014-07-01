@@ -11,11 +11,13 @@
 
 @class User;
 @class Shop;
+@class Flag;
 
 @interface SaleInfoViewController : UITableViewController
 
 @property (nonatomic, strong) User *user;
 @property (nonatomic, strong) Shop *shop;
+@property (nonatomic, strong) Flag *flag;
 @property (nonatomic, assign) NSInteger parentPage;
 @property (nonatomic, strong) NSNumber *shopId;
 

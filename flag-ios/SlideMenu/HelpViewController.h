@@ -12,12 +12,15 @@
 
 @interface HelpViewController : UIViewController<UIAlertViewDelegate>
 
+@property (weak, nonatomic) IBOutlet UILabel *viewDescription;
 @property (weak, nonatomic) IBOutlet UITextField *emailAddressTextField;
-@property (weak, nonatomic) IBOutlet UITextField *contentsTextView;
+@property (weak, nonatomic) IBOutlet UILabel *messageTitle;
+@property (weak, nonatomic) IBOutlet UITextView *messageTextView;
 @property (weak, nonatomic) IBOutlet UIButton *cancelButton;
 @property (weak, nonatomic) IBOutlet UIButton *sendButton;
 
 @property (nonatomic, strong) User *user;
+@property (nonatomic, assign) NSInteger parentPage;
 
 - (IBAction)cancelButtonTapped:(id)sender;
 - (IBAction)sendButtonTapped:(id)sender;

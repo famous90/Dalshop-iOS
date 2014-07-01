@@ -15,6 +15,8 @@
 
 - (id)init;
 
+- (NSString *)getMethodName;
+
 - (void)setMethodName:(NSString *)methodName;
 - (void)addParameterWithKey:(NSString *)key withParameter:(id)param;
 - (void)addParameterWithUserId:(NSNumber *)userId;

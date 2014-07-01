@@ -41,6 +41,8 @@
         _userId = [NSNumber numberWithLongLong:[[data valueForKey:@"userId"] longLongValue]];
         _email = [data valueForKey:@"email"];
         _registered = [[data valueForKey:@"registered"] boolValue];
+        _phoneCertificated = [[data valueForKey:@"phoneCertificated"] boolValue];
+        _additionalProfiled = [[data valueForKey:@"additionalProfiled"] boolValue];
     }
     return self;
 }

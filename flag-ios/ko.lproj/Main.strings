@@ -1,0 +1,282 @@
+
+/* Class = "IBUIButton"; normalTitle = "로그인"; ObjectID = "1Ju-3r-BEF"; */
+"1Ju-3r-BEF.normalTitle" = "로그인";
+
+/* Class = "IBUILabel"; text = "에 동의합니까?"; ObjectID = "208-A7-WaI"; */
+"208-A7-WaI.text" = "에 동의합니까?";
+
+/* Class = "IBUILabel"; text = "진동"; ObjectID = "2vV-sh-zeV"; */
+"2vV-sh-zeV.text" = "진동";
+
+/* Class = "IBUIButton"; normalTitle = "동의! 회원가입"; ObjectID = "3R9-P2-tkA"; */
+"3R9-P2-tkA.normalTitle" = "동의! 회원가입";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "48p-Wl-zZ4"; */
+"48p-Wl-zZ4.text" = "Label";
+
+/* Class = "IBUITextField"; placeholder = "휴대폰 번호"; ObjectID = "4x7-H9-FC1"; */
+"4x7-H9-FC1.placeholder" = "휴대폰 번호";
+
+/* Class = "IBUIButton"; normalTitle = "넘어가기"; ObjectID = "6MO-vo-iwj"; */
+"6MO-vo-iwj.normalTitle" = "넘어가기";
+
+/* Class = "IBUILabel"; text = "2014.02.22"; ObjectID = "6f0-h3-tXZ"; */
+"6f0-h3-tXZ.text" = "2014.02.22";
+
+/* Class = "IBUILabel"; text = "Label\nLabel"; ObjectID = "6hd-ES-ada"; */
+"6hd-ES-ada.text" = "Label\nLabel";
+
+/* Class = "IBUILabel"; text = "로그아웃"; ObjectID = "7EZ-lE-W0k"; */
+"7EZ-lE-W0k.text" = "로그아웃";
+
+/* Class = "IBUIButton"; normalTitle = "회원가입"; ObjectID = "7MM-Br-yEX"; */
+"7MM-Br-yEX.normalTitle" = "회원가입";
+
+/* Class = "IBUILabel"; text = "달샵의"; ObjectID = "7Sp-U2-TB8"; */
+"7Sp-U2-TB8.text" = "달샵의";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "7ZD-yf-fXq"; */
+"7ZD-yf-fXq.text" = "Label";
+
+/* Class = "IBUITextField"; placeholder = "e-mail"; ObjectID = "8CS-b4-w8g"; */
+"8CS-b4-w8g.placeholder" = "e-mail";
+
+/* Class = "IBUIButton"; normalTitle = "동의안함! 취소"; ObjectID = "9BZ-zS-XjU"; */
+"9BZ-zS-XjU.normalTitle" = "동의안함! 취소";
+
+/* Class = "IBUILabel"; text = "개인정보 취급방침"; ObjectID = "9yP-bC-VcV"; */
+"9yP-bC-VcV.text" = "개인정보 취급방침";
+
+/* Class = "IBUILabel"; text = "달 shop"; ObjectID = "A9R-k7-rCo"; */
+"A9R-k7-rCo.text" = "달 shop";
+
+/* Class = "IBUILabel"; text = "000달"; ObjectID = "AhX-ct-drz"; */
+"AhX-ct-drz.text" = "000달";
+
+/* Class = "IBUIButton"; normalTitle = "Button"; ObjectID = "C1K-sV-45q"; */
+"C1K-sV-45q.normalTitle" = "Button";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "C5E-0R-abN"; */
+"C5E-0R-abN.text" = "Label";
+
+/* Class = "IBUITabBarItem"; title = "ITEM"; ObjectID = "Cjv-Qm-dwi"; */
+"Cjv-Qm-dwi.title" = "ITEM";
+
+/* Class = "IBUITableViewSection"; headerTitle = "버전정보"; ObjectID = "DQ4-mT-npW"; */
+"DQ4-mT-npW.headerTitle" = "버전정보";
+
+/* Class = "IBUILabel"; text = "000"; ObjectID = "DRG-WS-aBn"; */
+"DRG-WS-aBn.text" = "000";
+
+/* Class = "IBUILabel"; text = "사용내역"; ObjectID = "EBY-nR-pCO"; */
+"EBY-nR-pCO.text" = "사용내역";
+
+/* Class = "IBUILabel"; text = "00,000원"; ObjectID = "Ett-kD-jEI"; */
+"Ett-kD-jEI.text" = "00,000원";
+
+/* Class = "IBUITextField"; placeholder = "password"; ObjectID = "F07-00-aC0"; */
+"F07-00-aC0.placeholder" = "password";
+
+/* Class = "IBUILabel"; text = "달 shop"; ObjectID = "FPM-Cu-zR7"; */
+"FPM-Cu-zR7.text" = "달 shop";
+
+/* Class = "IBUIButton"; normalTitle = "STOP"; ObjectID = "FhZ-ba-vMp"; */
+"FhZ-ba-vMp.normalTitle" = "STOP";
+
+/* Class = "IBUITableViewSection"; headerTitle = "푸시설정"; ObjectID = "Fv2-4F-30x"; */
+"Fv2-4F-30x.headerTitle" = "푸시설정";
+
+/* Class = "IBUIButton"; normalTitle = "출생년도"; ObjectID = "Gpv-zr-cDH"; */
+"Gpv-zr-cDH.normalTitle" = "출생년도";
+
+/* Class = "IBUIButton"; normalTitle = "서비스 이용약관"; ObjectID = "H0D-Co-hpx"; */
+"H0D-Co-hpx.normalTitle" = "서비스 이용약관";
+
+/* Class = "IBUILabel"; text = "달샵에서 포인트로 모바일 쿠폰을 구매할 수 있습니다. 쿠폰 구매 후 수신을 위한 휴대폰 인증입니다. 그 이외의 용도로는 사용하지 않습니다. 다양한 서비스를 제공받으려면 휴대폰 인증을 해주세요~ "; ObjectID = "I6F-ef-WQz"; */
+"I6F-ef-WQz.text" = "달샵에서 포인트로 모바일 쿠폰을 구매할 수 있습니다. 쿠폰 구매 후 수신을 위한 휴대폰 인증입니다. 그 이외의 용도로는 사용하지 않습니다. 다양한 서비스를 제공받으려면 휴대폰 인증을 해주세요~ ";
+
+/* Class = "IBUILabel"; text = "SMILE MALL"; ObjectID = "IBs-Ge-o2v"; */
+"IBs-Ge-o2v.text" = "SMILE MALL";
+
+/* Class = "IBUITextField"; placeholder = "답변받을 이메일 주소"; ObjectID = "IIw-C1-rL9"; */
+"IIw-C1-rL9.placeholder" = "답변받을 이메일 주소";
+
+/* Class = "IBUILabel"; text = "00,000원"; ObjectID = "IM0-jW-wJ8"; */
+"IM0-jW-wJ8.text" = "00,000원";
+
+/* Class = "IBUITextField"; placeholder = "e-mail"; ObjectID = "IRU-DQ-t6u"; */
+"IRU-DQ-t6u.placeholder" = "e-mail";
+
+/* Class = "IBUILabel"; text = "event message\nevent message\nevent message\nevent message"; ObjectID = "Ihz-iq-5o1"; */
+"Ihz-iq-5o1.text" = "event message\nevent message\nevent message\nevent message";
+
+/* Class = "IBUILabel"; text = "문의내용 :"; ObjectID = "J8M-t7-lAz"; */
+"J8M-t7-lAz.text" = "문의내용 :";
+
+/* Class = "IBUIButton"; normalTitle = "직업"; ObjectID = "JTL-Ul-9hp"; */
+"JTL-Ul-9hp.normalTitle" = "직업";
+
+/* Class = "IBUILabel"; text = "description1\ndescription2"; ObjectID = "JUY-7o-9Ec"; */
+"JUY-7o-9Ec.text" = "description1\ndescription2";
+
+/* Class = "IBUITextView"; text = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda."; ObjectID = "L3q-Ab-6h6"; */
+"L3q-Ab-6h6.text" = "Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.";
+
+/* Class = "IBUITextField"; placeholder = "password"; ObjectID = "LEu-YP-jBq"; */
+"LEu-YP-jBq.placeholder" = "password";
+
+/* Class = "IBUILabel"; text = "아이템스캔"; ObjectID = "LUG-ls-41w"; */
+"LUG-ls-41w.text" = "아이템스캔";
+
+/* Class = "IBUILabel"; text = "E V E N T"; ObjectID = "Ld2-w9-q72"; */
+"Ld2-w9-q72.text" = "E V E N T";
+
+/* Class = "IBUIButton"; normalTitle = "개인정보취급방침"; ObjectID = "Lnc-NL-lJk"; */
+"Lnc-NL-lJk.normalTitle" = "개인정보취급방침";
+
+/* Class = "IBUITableViewSection"; headerTitle = "시스템 설정"; ObjectID = "Mwh-4R-J59"; */
+"Mwh-4R-J59.headerTitle" = "시스템 설정";
+
+/* Class = "IBUILabel"; text = "0달"; ObjectID = "NyI-Yn-ma6"; */
+"NyI-Yn-ma6.text" = "0달";
+
+/* Class = "IBUILabel"; text = "현재버전"; ObjectID = "PeM-NP-9ru"; */
+"PeM-NP-9ru.text" = "현재버전";
+
+/* Class = "IBUITabBarItem"; title = "MAP"; ObjectID = "Q0J-mj-xo7"; */
+"Q0J-mj-xo7.title" = "MAP";
+
+/* Class = "IBUILabel"; text = "level. 00"; ObjectID = "RxG-Ak-uff"; */
+"RxG-Ak-uff.text" = "level. 00";
+
+/* Class = "IBUIButton"; normalTitle = "보내기"; ObjectID = "SWc-jJ-tgb"; */
+"SWc-jJ-tgb.normalTitle" = "보내기";
+
+/* Class = "IBUILabel"; text = "'나'님의 20달"; ObjectID = "Sy1-9a-aap"; */
+"Sy1-9a-aap.text" = "'나'님의 20달";
+
+/* Class = "IBUILabel"; text = "설정"; ObjectID = "TAg-hv-SvL"; */
+"TAg-hv-SvL.text" = "설정";
+
+/* Class = "IBUILabel"; text = "0000달"; ObjectID = "Tne-br-nYC"; */
+"Tne-br-nYC.text" = "0000달";
+
+/* Class = "IBUILabel"; text = "00m"; ObjectID = "UZh-7d-Fzx"; */
+"UZh-7d-Fzx.text" = "00m";
+
+/* Class = "IBUILabel"; text = "reward"; ObjectID = "Vfn-1h-dEy"; */
+"Vfn-1h-dEy.text" = "reward";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "Wdx-ek-7Do"; */
+"Wdx-ek-7Do.text" = "Label";
+
+/* Class = "IBUILabel"; text = "오픈소스 라이센스"; ObjectID = "XVU-kK-p38"; */
+"XVU-kK-p38.text" = "오픈소스 라이센스";
+
+/* Class = "IBUITextField"; placeholder = "confirm password"; ObjectID = "Y7j-B5-nMn"; */
+"Y7j-B5-nMn.placeholder" = "confirm password";
+
+/* Class = "IBUILabel"; text = "달 shop"; ObjectID = "YhR-hW-hgP"; */
+"YhR-hW-hgP.text" = "달 shop";
+
+/* Class = "IBUITableViewSection"; headerTitle = "사용자 동의사항"; ObjectID = "Yj8-9Y-gpE"; */
+"Yj8-9Y-gpE.headerTitle" = "사용자 동의사항";
+
+/* Class = "IBUILabel"; text = "99%"; ObjectID = "YjW-TU-1zN"; */
+"YjW-TU-1zN.text" = "99%";
+
+/* Class = "IBUILabel"; text = "최신버전"; ObjectID = "ZMC-Bc-Zm0"; */
+"ZMC-Bc-Zm0.text" = "최신버전";
+
+/* Class = "IBUILabel"; text = "적 립 !"; ObjectID = "ZRd-cL-pXE"; */
+"ZRd-cL-pXE.text" = "적 립 !";
+
+/* Class = "IBUILabel"; text = "Label\nLabel"; ObjectID = "ZcT-Zv-huI"; */
+"ZcT-Zv-huI.text" = "Label\nLabel";
+
+/* Class = "IBUILabel"; text = "달샵에서는 사용자들에게 최대한 알맞은 쇼핑 정보를 제공하려 노력하고 있습니다. 가장 기본적인 정보와 달샵의 알고리즘을 이용하여 더 좋은 추천을 해드리겠습니다.  그 이외의 용도로는 사용하지 않습니다. 달샵은 여러분의 개인정보를 매우 소중히 여깁니다. "; ObjectID = "alI-M6-BUi"; */
+"alI-M6-BUi.text" = "달샵에서는 사용자들에게 최대한 알맞은 쇼핑 정보를 제공하려 노력하고 있습니다. 가장 기본적인 정보와 달샵의 알고리즘을 이용하여 더 좋은 추천을 해드리겠습니다.  그 이외의 용도로는 사용하지 않습니다. 달샵은 여러분의 개인정보를 매우 소중히 여깁니다. ";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "aux-GR-JAL"; */
+"aux-GR-JAL.text" = "Label";
+
+/* Class = "IBUITabBarItem"; title = "SHOP"; ObjectID = "b3k-f4-RYT"; */
+"b3k-f4-RYT.title" = "SHOP";
+
+/* Class = "IBUILabel"; text = "Label"; ObjectID = "bCF-tB-qc7"; */
+"bCF-tB-qc7.text" = "Label";
+
+/* Class = "IBUILabel"; text = "CHECK IN 리워드!\n00달이 적립되었습니다 :-)"; ObjectID = "bwj-G8-hyq"; */
+"bwj-G8-hyq.text" = "CHECK IN 리워드!\n00달이 적립되었습니다 :-)";
+
+/* Class = "IBUILabel"; text = "shop name\nshop name"; ObjectID = "cGs-Pj-rYz"; */
+"cGs-Pj-rYz.text" = "shop name\nshop name";
+
+/* Class = "IBUILabel"; text = "현재 보유 달"; ObjectID = "dh0-2W-3cY"; */
+"dh0-2W-3cY.text" = "현재 보유 달";
+
+/* Class = "IBUIButton"; normalTitle = "취소"; ObjectID = "eAS-vR-DGb"; */
+"eAS-vR-DGb.normalTitle" = "취소";
+
+/* Class = "IBUILabel"; text = "이용약관"; ObjectID = "ecI-1Q-1Kw"; */
+"ecI-1Q-1Kw.text" = "이용약관";
+
+/* Class = "IBUILabel"; text = "'-'없이 번호만 입력해주세요"; ObjectID = "g0Z-zN-wPy"; */
+"g0Z-zN-wPy.text" = "'-'없이 번호만 입력해주세요";
+
+/* Class = "IBUILabel"; text = "현금환급"; ObjectID = "gzI-xB-aaO"; */
+"gzI-xB-aaO.text" = "현금환급";
+
+/* Class = "IBUIButton"; normalTitle = "Button"; ObjectID = "jUZ-2p-AnT"; */
+"jUZ-2p-AnT.normalTitle" = "Button";
+
+/* Class = "IBUILabel"; text = "My smile"; ObjectID = "k2l-Wo-XeQ"; */
+"k2l-Wo-XeQ.text" = "My smile";
+
+/* Class = "IBUIButton"; normalTitle = "인증번호 받기"; ObjectID = "l0T-Xh-Ufa"; */
+"l0T-Xh-Ufa.normalTitle" = "인증번호 받기";
+
+/* Class = "IBUIButton"; normalTitle = "재발송"; ObjectID = "lGH-4r-dSp"; */
+"lGH-4r-dSp.normalTitle" = "재발송";
+
+/* Class = "IBUILabel"; text = "과"; ObjectID = "mXE-AP-gLI"; */
+"mXE-AP-gLI.text" = "과";
+
+/* Class = "IBUILabel"; text = "회원탈퇴"; ObjectID = "mvX-nB-pms"; */
+"mvX-nB-pms.text" = "회원탈퇴";
+
+/* Class = "IBUILabel"; text = "소리"; ObjectID = "nDT-QB-wQ4"; */
+"nDT-QB-wQ4.text" = "소리";
+
+/* Class = "IBUILabel"; text = "이메일 :"; ObjectID = "o2X-vp-TeK"; */
+"o2X-vp-TeK.text" = "이메일 :";
+
+/* Class = "IBUILabel"; text = "GORGIO ARMANI"; ObjectID = "oMK-g0-xxT"; */
+"oMK-g0-xxT.text" = "GORGIO ARMANI";
+
+/* Class = "IBUIButton"; normalTitle = "확인"; ObjectID = "qIg-r6-6tN"; */
+"qIg-r6-6tN.normalTitle" = "확인";
+
+/* Class = "IBUILabel"; text = "S A L E !"; ObjectID = "rIp-uV-tms"; */
+"rIp-uV-tms.text" = "S A L E !";
+
+/* Class = "IBUITableViewSection"; headerTitle = "공지사항"; ObjectID = "sEf-UD-h31"; */
+"sEf-UD-h31.headerTitle" = "공지사항";
+
+/* Class = "IBUILabel"; text = "리 워 드"; ObjectID = "tc1-Z9-9Gk"; */
+"tc1-Z9-9Gk.text" = "리 워 드";
+
+/* Class = "IBUILabel"; text = "25000원"; ObjectID = "uXa-sI-zSj"; */
+"uXa-sI-zSj.text" = "25000원";
+
+/* Class = "IBUIBarButtonItem"; title = "보내기"; ObjectID = "vby-lQ-3pU"; */
+"vby-lQ-3pU.title" = "보내기";
+
+/* Class = "IBUITextField"; placeholder = "인증번호"; ObjectID = "x6j-Y6-ME0"; */
+"x6j-Y6-ME0.placeholder" = "인증번호";
+
+/* Class = "IBUILabel"; text = "shop name\nshop name"; ObjectID = "xiT-IP-zTZ"; */
+"xiT-IP-zTZ.text" = "shop name\nshop name";
+
+/* Class = "IBUILabel"; text = "공지사항"; ObjectID = "zkP-Z7-6bm"; */
+"zkP-Z7-6bm.text" = "공지사항";

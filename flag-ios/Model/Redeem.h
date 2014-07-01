@@ -10,10 +10,12 @@
 
 @interface Redeem : NSObject
 
-@property (nonatomic, strong) NSNumber *userId;
-@property (nonatomic, strong) NSNumber *targetId;
-@property (nonatomic, strong) NSString *targetName;
-@property (nonatomic, assign) NSInteger redeem;
-@property (nonatomic, assign) NSTimeInterval createdAt;
+@property (nonatomic, strong) NSNumber *redeemId;
+@property (nonatomic, strong) NSString *imageUrl;
+@property (nonatomic, strong) NSString *name;
+@property (nonatomic, assign) NSInteger price;
+@property (nonatomic, strong) NSString *vendor;
+
+- (id)initWithData:(id)data;
 
 @end

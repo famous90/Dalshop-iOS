@@ -13,5 +13,7 @@
 - (BOOL)didRewardItemWithItemId:(NSNumber *)itemId;
 - (NSArray *)getItemListFromList;
 - (NSArray *)getScanListFromList;
+- (void)sortItemListAlongScanItem;
+- (NSArray *)getItemIds;
 
 @end

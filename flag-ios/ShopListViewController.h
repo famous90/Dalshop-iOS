@@ -12,7 +12,7 @@
 @class User;
 @class FlagDataController;
 
-@interface ShopListViewController : UITableViewController <CLLocationManagerDelegate>
+@interface ShopListViewController : UITableViewController
 
 @property (nonatomic, strong) User *user;
 //@property (nonatomic, strong) FlagDataController *flagData;

@@ -50,6 +50,15 @@
     return url;
 }
 
++ (BOOL)isContainedSubString:(NSString *)subString inString:(NSString *)string
+{
+    NSRange range = NSMakeRange(0, [subString length]);
+    NSString *stringWithRange = [string substringWithRange:range];
+    
+    if ([subString isEqualToString:stringWithRange]) {
+        return YES;
+    }else return NO;
+}
 
 // TEXT FIELD
 
@@ -119,7 +128,7 @@
 }
 
 
-// PUSH
+// NOTIFICATION
 
 + (void)showLocalNotificationAtDate:(NSDate *)date message:(NSString *)message
 {
@@ -129,6 +138,19 @@
         localNotification.timeZone = [NSTimeZone defaultTimeZone];
         localNotification.repeatInterval = 0;
         localNotification.alertBody = message;
+        [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
+    }
+}
+
++ (void)showLocalNotificationWithUserInfo:(NSDictionary *)userInfo atDate:(NSDate *)date message:(NSString *)message
+{
+    UILocalNotification *localNotification = [[UILocalNotification alloc] init];
+    if (localNotification) {
+        localNotification.fireDate = date;
+        localNotification.timeZone = [NSTimeZone defaultTimeZone];
+        localNotification.repeatInterval = 0;
+        localNotification.alertBody = message;
+        localNotification.userInfo = userInfo;
         [[UIApplication sharedApplication] scheduleLocalNotification:localNotification];
     }
 }
@@ -143,4 +165,80 @@
     
     return list;
 }
+
+
+// DISTANCE
++ (NSString *)distanceFromLocation:(CLLocation *)location1 toLocation:(CLLocation *)location2
+{
+    CLLocationDistance metersForDistance = [location1 distanceFromLocation:location2];
+    
+    if (metersForDistance < 1000.0f) {
+        return [NSString stringWithFormat:@"%.0fm", metersForDistance];
+    }else{
+        return [NSString stringWithFormat:@"%.1fkm", metersForDistance/1000];
+    }
+}
+
++ (BOOL)IsWithInRangeOfErrorDistance:(NSInteger)distance fromLocation:(CLLocation *)fromLocation toLocation:(CLLocation *)toLocation
+{
+    CLLocationDistance theDistance = [fromLocation distanceFromLocation:toLocation];
+    
+    if (theDistance > distance) {
+        return NO;
+    }else return YES;
+}
+
+
+// URL
++ (NSMutableDictionary *)dictionaryWithURLParameter:(NSURL *)url
+{
+    NSString *query = [url query];
+    NSArray *pairs = [query componentsSeparatedByString:@"&"];
+    NSMutableDictionary *kvPairs = [NSMutableDictionary dictionary];
+    
+    if ([pairs count]) {
+        for (int i=0; i<[pairs count]-1; i++) {
+            NSString *pair = [pairs objectAtIndex:i];
+            NSArray *bits = [pair componentsSeparatedByString:@"="];
+            NSString *key = [[bits objectAtIndex:0] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            NSString *value = [[bits objectAtIndex:1] stringByReplacingPercentEscapesUsingEncoding:NSUTF8StringEncoding];
+            [kvPairs setObject:value forKey:key];
+        }
+    }
+    return kvPairs;
+}
+
+
+// NUMBER
++ (BOOL)isCorrectPhoneNumberForm:(NSString *)number
+{
+    if ([number isEqual:(id)[NSNull null]]) {
+        NSLog(@"phone number null");
+        return NO;
+    }else if ([number length] == 0){
+        NSLog(@"phone number no length");
+        return NO;
+    }else if ([number length] < 9){
+        NSLog(@"phone number too short");
+        return NO;
+    }else if ([number rangeOfString:@"-"].location != NSNotFound){
+        NSLog(@"phone number dash contained");
+        return NO;
+    }else if ([number characterAtIndex:0] != '0'){
+        NSLog(@"phone number not start with 0");
+        return NO;
+    }
+    
+    return YES;
+}
+
++ (NSString *)addNationalCodeToNumber:(NSString *)number
+{
+    NSRange range = NSMakeRange(0, 1);
+    NSString *numberWithNationalCode = [number stringByReplacingCharactersInRange:range withString:@"+82"];
+    NSLog(@"number with national code %@", numberWithNationalCode);
+    
+    return numberWithNationalCode;
+}
+
 @end

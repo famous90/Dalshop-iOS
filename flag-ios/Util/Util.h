@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
+#import <CoreLocation/CoreLocation.h>
 
 @class URLParameters;
 
@@ -17,6 +18,7 @@
 + (NSString *)getFileContentWithFileName:(NSString *)fileName;
 + (NSString *)changeStringFirstSpaceToLineBreak:(NSString *)string;
 + (NSString *)addImageParameterInImagePath:(NSString *)url width:(CGFloat)width height:(CGFloat)height;
++ (BOOL)isContainedSubString:(NSString *)subString inString:(NSString *)string;
 
 
 // TEXT FIELD
@@ -33,11 +35,26 @@
 + (void)showAlertView:(id<UIAlertViewDelegate>)delegate message:(NSString *)message title:(NSString*)title;
 
 
-//  PUSH
+// NOTIFICATION
 + (void)showLocalNotificationAtDate:(NSDate *)date message:(NSString *)message;
++ (void)showLocalNotificationWithUserInfo:(NSDictionary *)userInfo atDate:(NSDate *)date message:(NSString *)message;
 
 
 // FILE
 + (NSArray *)getListFromPropertyListFile:(NSString *)fileName;
+
+
+// DISTANCE
++ (NSString *)distanceFromLocation:(CLLocation *)location1 toLocation:(CLLocation *)location2;
++ (BOOL)IsWithInRangeOfErrorDistance:(NSInteger)distance fromLocation:(CLLocation *)fromLocation toLocation:(CLLocation *)toLocation;
+
+
+// URL
++ (NSMutableDictionary *)dictionaryWithURLParameter:(NSURL *)url;
+
+
+// NUMBER
++ (BOOL)isCorrectPhoneNumberForm:(NSString *)number;
++ (NSString *)addNationalCodeToNumber:(NSString *)number;
 
 @end

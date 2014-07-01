@@ -18,6 +18,8 @@
     #import "FlagClient.h"
 #endif
 
+#import "GAUtil.h"
+#import "DelegateUtil.h"
 
 // DEVICE INFO 
 
@@ -27,29 +29,63 @@
 
 // GOOGLE APP ENGINE
 
-#define kMyClientID @"602934081594-5magguboridnh714tiu4qf9l7b2f7bdh.apps.googleusercontent.com"
-#define kMyClientSecret @"X1RUk35DSxwbz7FhjNBxUnnb"
+#define kMyClientID @"620366918607-pa0gce2ri0s3i5q6o96kt3l8j22q3gb4.apps.googleusercontent.com"
+#define kMyClientSecret @"LaiMlKKOx7v1DQM2q4vwX8K4"
 #define BASE_URL @"https://genuine-evening-455.appspot.com/_ah/api/flagengine/v1";
 
 
 // BEACON
-#define BEACON_COOL_TIME    86400.0f
-#define BEACON_DETECT_RADIUS_DISTANCE   100
-#define BEACON_DETECT_RADIUS_GEODETIC   0.002
+#define BEACON_UUID                     @"7ED18560-4686-43C7-A8BB-7621E22B1CC8"
+#define BEACON_IDENTIFIER               @"TANKERS Beacon"
+#define BEACON_DETECT_RADIUS_GEOMETIC   0.01
+#define LOCATION_UPDATE_RADIUS_DISTANCE 100
+
+#ifdef DEBUG
+#define BEACON_COOL_TIME                30.0
+#else
+#define BEACON_COOL_TIME                259200.0
+#endif
+
+
+// APP DELEGATE
+
+#ifdef DEBUG
+#define LOCATION_UPDATE_DELAY_TIME  5
+#else
+#define LOCATION_UPDATE_DELAY_TIME  300
+#endif
 
 
 // GOOGLE ANALYTICS
 
-#define GAI_SCREEN_NAME_FLAG_VIEW           @"Flag Screen"
-#define GAI_SCREEN_NAME_MAP_VIEW            @"Map Screen"
-#define GAI_SCREEN_NAME_SHOP_INFO_VIEW      @"Shop Info Screen"
-#define GAI_SCREEN_NAME_SALE_INFO_VIEW      @"Sale Info Screen"
-#define GAI_SCREEN_NAME_ITEM_LIST_VIEW      @"Item List Screen"
-#define GAI_SCREEN_NAME_QRCODE_READER_VIEW  @"QRCode Read Screen"
-//#define GAI_SCREEN_NAME_MALL_SHOP_VIEW 
-#define GAI_SCREEN_NAME_SHOP_LIST_VIEW      @"Shop List Screen"
-#define GAI_SCREEN_NAME_MY_PAGE_VIEW        @"My Page Screen"
-#define GAI_SCREEN_NAME_SLIDE_MENU          @"Slide Menu Screen"
+#define GAI_SCREEN_NAME_FLAG_VIEW               @"Flag Screen"
+#define GAI_SCREEN_NAME_MAP_VIEW                @"Map Screen"
+#define GAI_SCREEN_NAME_SHOP_INFO_VIEW          @"Shop Info Screen"
+#define GAI_SCREEN_NAME_SALE_INFO_VIEW          @"Sale Info Screen"
+#define GAI_SCREEN_NAME_ITEM_LIST_VIEW          @"Item List Screen"
+#define GAI_SCREEN_NAME_ITEM_DETAIL_VIEW        @"Item Detail Screen"
+#define GAI_SCREEN_NAME_QRCODE_READER_VIEW      @"QRCode Read Screen"
+#define GAI_SCREEN_NAME_SHOP_LIST_VIEW          @"Shop List Screen"
+#define GAI_SCREEN_NAME_SELECT_REWARD_TYPE_VIEW @"Select Reward Collection Type Screen"
+#define GAI_SCREEN_NAME_MY_PAGE_VIEW            @"My Page Screen"
+
+#define GAI_SCREEN_NAME_SLIDE_MENU              @"Slide Menu Screen"
+#define GAI_SCREEN_NAME_USER_POLIVY_VIEW        @"User Policy Screen"
+
+#define GAI_SCREEN_NAME_LOGIN_VIEW              @"Login Screen"
+#define GAI_SCREEN_NAME_REGISTER_VIEW           @"Register Screen"
+#define GAI_SCREEN_NAME_PHONE_CERTIFICATION_VIEW    @"Phone Certification Screen"
+
+#define GAI_SCREEN_NAME_HELP_VIEW               @"Help Screen"
+#define GAI_SCREEN_NAME_ADDITIONAL_INFO_VIEW    @"Additional Info Screen"
+#define GAI_SCREEN_NAME_SETTING_VIEW            @"Setting Screen"
+#define GAI_SCREEN_NAME_REDEEM_LIST_VIEW        @"Redeem List Screen"
+
+#define GAI_SCREEN_NAME_CHECKIN_POPUP_VIEW      @"CheckIn Popup Screen"
+#define GAI_SCREEN_NAME_EVENT_POPUP_VIEW        @"Event Popup Screen"
+#define GAI_SCREEN_NAME_TUTORIAL_VIEW           @"Tutorial Screen"
+
+
 
 
 // BASE VALUE
@@ -77,10 +113,17 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 // MAP TAG
 
 #define ZOOM_LEVEL_FOR_CURRENT_LOCATION 15
-#define ZOOM_LEVEL                      15
+#define ZOOM_LEVEL                      16
+#define ZOOM_LEVEL_FOR_SELECT_SHOP      17
 #define BASE_LATITUDE       37.46
 #define BASE_LONGITUDE      126.96
 #define FLAG_LIST_RADIUS    1500
+#define RADIUS_FLAG_LIST_THETA  0.025
+
+#define LATITUDE_CHECKIN_SPOT_HONG  37.554346
+#define LONGITUDE_CHECKIN_SPOT_HONG 126.922545
+#define LATITUDE_CHECKIN_SPOT_AP    37.5193287
+#define LONGITUDE_CHECKIN_SPOT_AP   127.0231451
 
 
 // MAP MARKER STATUS
@@ -106,6 +149,14 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 #define TAB_BAR_VIEW_PAGE       7
 #define LOGIN_VIEW_PAGE         8
 #define SLIDE_MENU_PAGE         9
+#define INITIALIZE_VIEW_PAGE    10
+#define ITEM_DETAIL_VIEW_PAGE   11
+#define COLLECT_REWARD_SELECT_VIEW_PAGE 12
+#define JOIN_VIEW_PAGE          13
+#define PHONE_CERTIFICATION_VIEW_PAGE   14
+#define REDEEM_VIEW_PAGE        15
+#define NOTIFICATION_VIEW       16
+
 
 // SHOP CATEGORY
 
@@ -128,5 +179,48 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 
 // REWARD TYPE
 
-#define REWARD_CHECHIN  10
+#define REWARD_SHOP 1
+#define REWARD_ITEM 2
+
+
+// REWARD TYPE
+
+#define REWARD_CHECKIN  10
 #define REWARD_SCAN     11
+
+
+// DISTANCE TAG
+
+#define SCAN_REWARD_DISTANCE_ERROR_RANGE    100
+
+
+// TEXT TYPE TAG
+#define POLICY_FOR_USER_AGREEMENT   1
+#define POLICY_FOR_USER_INFO        2
+
+
+// NOTIFICATION TYPE TAG
+#define NOTIFICATION_BY_GPS         1
+#define NOTIFICATION_BY_BEACON      2
+#define NOTIFICATION_FOR_TEST        3
+
+
+// SEX
+#define MALE    2
+#define FEMALE  1
+
+
+// TUTORIAL TYPE
+#define TUTORIAL_REWARD_DESCRIPTION     1
+
+
+// IMAGE TYPE
+#define IMAGE_SHOP_LOGO     1
+#define IMAGE_SHOP_EVENT    2
+#define IMAGE_ITEM          3
+#define IMAGE_REDEEM_ITEM   4
+
+
+// ALERT TAG
+#define ALERT_NETWORK_CHECK         10
+#define ALERT_RECOMMAND_SHOP_NEARBY 11

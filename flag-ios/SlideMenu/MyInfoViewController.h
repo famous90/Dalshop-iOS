@@ -14,7 +14,7 @@
 @class User;
 @class AbstractActionSheetPicker;
 
-@interface MyInfoViewController : UIViewController<UIActionSheetDelegate, CLLocationManagerDelegate>
+@interface MyInfoViewController : UIViewController<UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *lineImageView1;
 @property (weak, nonatomic) IBOutlet UIImageView *lineImageView2;
@@ -30,6 +30,7 @@
 @property (nonatomic, strong) AbstractActionSheetPicker *picker;
 
 @property (nonatomic, strong) User *user;
+@property (nonatomic, assign) NSInteger parentPage;
 
 - (IBAction)manButtonTapped:(id)sender;
 - (IBAction)womanButtonTapped:(id)sender;

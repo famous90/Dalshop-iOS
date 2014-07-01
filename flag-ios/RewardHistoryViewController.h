@@ -13,5 +13,6 @@
 @interface RewardHistoryViewController : UITableViewController
 
 @property (nonatomic, strong) User *user;
+@property (nonatomic, assign) NSInteger parentPage;
 
 @end

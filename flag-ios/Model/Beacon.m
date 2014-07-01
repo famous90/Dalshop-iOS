@@ -14,11 +14,13 @@
 {
     self = [super init];
     if (self) {
-        _beaconId = [data valueForKey:@"beaconId"];
+        _beaconId = [data valueForKey:@"id"];
         _shopId = [data valueForKey:@"shopId"];
-        _shopName = [data valueForKey:@"shopName"];
+        _shopName = [data valueForKey:@"name"];
         _latitude = [data valueForKey:@"lat"];
         _longitude = [data valueForKey:@"lon"];
+        _flagId = [data valueForKey:@"flagId"];
+        _createdAt = [data valueForKey:@"createdAt"];
         _lastScanTime = [[NSDate alloc] init];
     }
     return self;

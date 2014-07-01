@@ -17,7 +17,12 @@
 @property (nonatomic, strong) NSNumber *shopId;
 @property (nonatomic, strong) NSString *shopName;
 @property (nonatomic, assign) NSInteger shopType;
+@property (nonatomic, strong) NSDate *lastScanTime;
     
 - (id)initWithData:(id)data;
+- (id)initWithCoreData:(id)data;
+- (NSDate *)getCreatedAtByNSDate;
+- (void)setCreatedAtWithDate:(NSDate *)date;
+- (BOOL)canFlagBeCheckedIn;
 
 @end

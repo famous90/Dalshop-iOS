@@ -8,6 +8,8 @@
 
 #import "Shop.h"
 
+#import "DataUtil.h"
+
 @implementation Shop
 
 - (id)initWithData:(id)data
@@ -23,10 +25,12 @@
         _description = [data valueForKey:@"description"];
         _type = [[data valueForKey:@"type"] integerValue];
         _reward = [[data valueForKey:@"reward"] longValue];
-        _rewarded= [[data valueForKey:@"rewarded"] boolValue];
-        _liked = [[data valueForKey:@"liked"] boolValue];
+        _rewarded= [DataUtil isObjectRewarded:self.shopId type:REWARD_CHECKIN];
+        _liked = [DataUtil isObjectLiked:self.shopId type:LIKE_SHOP];
         _likes = [[data valueForKey:@"likes"] longValue];
+        _onSale = [[data valueForKey:@"onSale"] boolValue];
     }
+
     return self;
 }
 

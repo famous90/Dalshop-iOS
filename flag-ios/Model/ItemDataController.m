@@ -36,4 +36,21 @@
     return [dataSet filteredArrayUsingPredicate:resultPredicate];
 }
 
+- (void)sortItemListAlongScanItem
+{
+    NSSortDescriptor *scanSorter = [[NSSortDescriptor alloc] initWithKey:@"rewardable" ascending:NO];
+    [self.masterData sortUsingDescriptors:[NSArray arrayWithObject:scanSorter]];
+}
+
+- (NSArray *)getItemIds
+{
+    NSMutableSet *noDuplicateSet = [[NSMutableSet alloc] init];
+    
+    for(NSDictionary *object in self.masterData){
+        [noDuplicateSet addObject:[object valueForKey:@"itemId"]];
+    }
+    
+    return [noDuplicateSet allObjects];
+}
+
 @end

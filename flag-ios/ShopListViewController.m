@@ -9,9 +9,10 @@
 #import "AppDelegate.h"
 #import "ShopListViewController.h"
 #import "SaleInfoViewController.h"
-#import "MallShopViewController.h"
 #import "ActivityIndicatorView.h"
 #import "SWRevealViewController.h"
+#import "CollectRewardViewController.h"
+#import "TransitionDelegate.h"
 
 #import "User.h"
 #import "FlagDataController.h"
@@ -23,6 +24,7 @@
 
 #import "Util.h"
 #import "ViewUtil.h"
+#import "DataUtil.h"
 
 #import "FlagClient.h"
 #import "GoogleAnalytics.h"
@@ -30,17 +32,17 @@
 @interface ShopListViewController ()
 
 @property (nonatomic, weak) AppDelegate *appDelegate;
+@property (nonatomic, strong) TransitionDelegate *transitionDelegate;
 
 @end
 
 @implementation ShopListViewController{
     ShopDataController *shopData;
+    FlagDataController *flagData;
+    FlagDataController *orderedFlagData;
     ImageDataController *imageData;
     
-    BOOL shopFirstTapped;
-    
-    CLLocationManager *locationManager;
-    CLLocation *location;
+    CLLocation *applicationLocation;
 }
 
 - (void)awakeFromNib
@@ -60,7 +62,10 @@
 {
     [super viewWillAppear:animated];
     
-    self.appDelegate.timeCriteria = [NSDate date];
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+    
+    // GA
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_SHOP_LIST_VIEW];
     [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
@@ -69,6 +74,15 @@
 {
     [super viewDidLoad];
     
+    
+    [self configureViewContent];
+    [self initializeContent];
+    
+    [self performSelectorInBackground:@selector(getShopListWithLocation:) withObject:applicationLocation];
+}
+
+- (void)configureViewContent
+{
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
         UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
@@ -77,15 +91,26 @@
         menuButton.tintColor = UIColorFromRGB(BASE_COLOR);
         [self.tableView addGestureRecognizer:self.revealViewController.panGestureRecognizer];
         
+        UIBarButtonItem *rewardMenuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(rightRevealToggle:)];
+        [rewardMenuButton setTintColor:UIColorFromRGB(0xeb6468)];
+        self.navigationItem.rightBarButtonItem = rewardMenuButton;
+//        UIBarButtonItem *collectRewardButton = [[UIBarButtonItem alloc] initWithTitle:@"달따기" style:UIBarButtonItemStyleBordered target:self action:@selector(presentCollectRewardSelectView:)];
+//        self.navigationItem.rightBarButtonItem = collectRewardButton;
+        
+        
     }
-    
-    shopFirstTapped = NO;
+}
+
+- (void)initializeContent
+{
+    self.transitionDelegate = [[TransitionDelegate alloc] init];
     
     shopData = [[ShopDataController alloc] init];
+    flagData = [[FlagDataController alloc] init];
     imageData = [[ImageDataController alloc] init];
     
-//    [self performSelectorInBackground:@selector(getShopList) withObject:nil];
-    [self initializeLocationManager];
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    applicationLocation = delegate.savedLocation;
 }
 
 #pragma mark
@@ -95,32 +120,29 @@
     // Activity Indicator
     ActivityIndicatorView *aiView = [ActivityIndicatorView startActivityIndicatorInParentView:self.tableView];
     
-    NSDate *loadBeforeTime = [NSDate date];
+    URLParameters *urlParams = [self urlParamsToGetShopListWithLocation:theLocation];
     
-//    NSArray *shopIdList = [self.flagData shopIdListInFlagList];
-    
+    [FlagClient getDataResultWithURL:[urlParams getURLForRequest] methodName:[urlParams getMethodName] completion:^(NSDictionary *results){
+        
+        if (results) {
+            [self setFlagDataWithJsonData:results];
+            [self setShopDataWithJsonData:results];
+        }
+        
+        [aiView stopActivityIndicator];
+        
+    }];
+}
+
+- (URLParameters *)urlParamsToGetShopListWithLocation:(CLLocation *)theLocation
+{
     URLParameters *urlParam = [[URLParameters alloc] init];
     [urlParam setMethodName:@"shop_init"];
     [urlParam addParameterWithKey:@"lat" withParameter:[NSNumber numberWithDouble:theLocation.coordinate.latitude]];
     [urlParam addParameterWithKey:@"lon" withParameter:[NSNumber numberWithDouble:theLocation.coordinate.longitude]];
     [urlParam addParameterWithUserId:self.user.userId];
     
-    NSURL *url = [urlParam getURLForRequest];
-    
-    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
-        
-        NSDictionary *results = [FlagClient getURLResultWithURL:url];
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-       
-            [self setShopDataWithJsonData:results];
-            
-            // GAI Data Load Time
-            [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"data_load" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:loadBeforeTime]] name:@"shop_list" label:nil] build]];
-            
-            [aiView stopActivityIndicator];
-        }];
-    }];
+    return urlParam;
 }
 
 - (void)setShopDataWithJsonData:(NSDictionary *)results
@@ -132,14 +154,39 @@
         
         if (![theShop.logoUrl isEqual:(id)[NSNull null]]) {
             
-//            NSString *imageUrl = [Util addImageParameterInImagePath:theShop.logoUrl width:88.0f height:88.0f];
-            NSString *imageUrl = theShop.logoUrl;
-            [FlagClient setImageFromUrl:imageUrl imageDataController:imageData itemId:theShop.shopId view:self.tableView completion:^{
-            }];
-//            UIImage *shopLogoImage = [FlagClient getImageWithImagePath:theShop.logoUrl];
-//            [imageData addImageWithImage:shopLogoImage withId:theShop.shopId];
+            [self getImageDataWithImageURL:theShop.logoUrl objectId:theShop.shopId];
+
         }
     }
+    
+    [self.tableView reloadData];
+}
+
+- (void)getImageDataWithImageURL:(NSString *)imageUrl objectId:(NSNumber *)objectId
+{
+    if ([DataUtil isImageCachedWithObjectId:objectId imageUrl:imageUrl inListType:IMAGE_SHOP_LOGO]) {
+        
+        UIImage *image = [DataUtil getImageWithObjectId:objectId inListType:IMAGE_SHOP_LOGO];
+        [imageData addImageWithImage:image withId:objectId];
+        
+    }else{
+        
+        [FlagClient getImageWithImageURL:imageUrl imageDataController:imageData objectId:objectId objectType:IMAGE_SHOP_LOGO view:self.tableView completion:^(UIImage *image){
+            [DataUtil insertImageWithImage:image imageUrl:imageUrl objectId:objectId inListType:IMAGE_SHOP_LOGO];
+        }];
+    }
+}
+
+- (void)setFlagDataWithJsonData:(NSDictionary *)results
+{
+    NSArray *flags = [results objectForKey:@"flags"];
+    for(id object in flags){
+        Flag *theFlag = [[Flag alloc] initWithData:object];
+        [flagData addObjectWithObject:theFlag];
+    }
+    
+    NSArray *sortedFlags = [flagData sortFlagsByDistanceFromCurrentLocation];
+    orderedFlagData = [[FlagDataController alloc] initWithArray:sortedFlags];
     
     [self.tableView reloadData];
 }
@@ -161,9 +208,10 @@
     static NSString *CellIdentifier = @"ShopCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier forIndexPath:indexPath];
     
-//    Flag *theFlag = (Flag *)[self.flagData objectInListAtIndex:indexPath.row];
-//    Shop *theShop = (Shop *)[shopData objectInlistWithObjectId:theFlag.shopId];
-    Shop *theShop = (Shop *)[shopData objectInListAtIndex:indexPath.row];
+    Flag *theFlag = (Flag *)[orderedFlagData objectInListAtIndex:indexPath.row];
+    Shop *theShop = (Shop *)[shopData objectInlistWithObjectId:theFlag.shopId];
+//    Shop *theShop = (Shop *)[shopData objectInListAtIndex:indexPath.row];
+//    Flag *theFlag = (Flag *)[flagData objectWithShopId:theShop.shopId];
     UIImage *shopLogo = (UIImage *)[imageData imageInListWithId:theShop.shopId];
     
     if (theShop) {
@@ -172,32 +220,44 @@
         UILabel *shopDescriptionLabel = (UILabel *)[cell viewWithTag:602];
         UILabel *shopCheckinRewardLabel = (UILabel *)[cell viewWithTag:603];
         UIImageView *shopLogoImageView = (UIImageView *)[cell viewWithTag:604];
-        UILabel *shopSaleLabel = (UILabel *)[cell viewWithTag:605];
         UILabel *shopDistanceLabel = (UILabel *)[cell viewWithTag:606];
         UIImageView *shopCellBgImageView = (UIImageView *)[cell viewWithTag:607];
-        UIImageView *shopCheckInImageView = (UIImageView *)[cell viewWithTag:608];
-//        UIImageView *shopSaleImageView = (UIImageView *)[cell viewWithTag:609];
+        UILabel *shopFirstFeatureLabel = (UILabel *)[cell viewWithTag:608];
+        UILabel *shopSecondFeatureLabel = (UILabel *)[cell viewWithTag:609];
         UIView *cellInnerDivisionLine = [[UIView alloc] initWithFrame:CGRectMake(6, 65, 308, 0.5f)];
-
-//        CLLocation *shopLocation = [[CLLocation alloc] initWithLatitude:[theFlag.lat floatValue] longitude:[theFlag.lon floatValue]];
+        CLLocation *shopLocation = [[CLLocation alloc] initWithLatitude:[theFlag.lat floatValue] longitude:[theFlag.lon floatValue]];
         
         shopNameLabel.text = [Util changeStringFirstSpaceToLineBreak:theShop.name];
         shopDescriptionLabel.text = theShop.description;
         shopCheckinRewardLabel.text = [NSString stringWithFormat:@"%ld달", (long)theShop.reward];
-shopLogoImageView.image = shopLogo;
+        shopLogoImageView.image = shopLogo;
         [shopLogoImageView setContentMode:UIViewContentModeScaleAspectFit];
-        shopSaleLabel.text = [NSString stringWithFormat:@"%d%%SALE", (rand() % 99)];
-        [shopDistanceLabel setHidden:YES];
-        if (theShop.reward == 0) {
-            shopCheckInImageView.hidden = YES;
+
+        [shopSecondFeatureLabel setText:@"S A L E !"];
+        [shopSecondFeatureLabel setBackgroundColor:UIColorFromRGB(0xEB6468)];
+        
+        if (theShop.reward != 0) {
+            
+            [shopFirstFeatureLabel setText:@"리 워 드"];
+            [shopFirstFeatureLabel setBackgroundColor:UIColorFromRGB(0xF4D12A)];
+            [shopFirstFeatureLabel setHidden:NO];
+            
+            [shopSecondFeatureLabel setHidden:!theShop.onSale];
+            
+        }else{
+
+            [shopFirstFeatureLabel setText:@"S A L E !"];
+            [shopFirstFeatureLabel setBackgroundColor:UIColorFromRGB(0xEB6468)];
+            [shopFirstFeatureLabel setHidden:!theShop.onSale];
+            
+            [shopSecondFeatureLabel setHidden:YES];
         }
-//        shopDistanceLabel.text = [NSString stringWithFormat:@"%dm", (rand() % 200)];
-//        if (self.currentLocation) {
-//            CLLocationDistance distance = [shopLocation distanceFromLocation:self.currentLocation];
-//            shopDistanceLabel.text = [NSString stringWithFormat:@"%.0fm", distance];
-//        }else{
-//            shopDistanceLabel.text = @"?m";
-//        }
+
+        if (applicationLocation) {
+            shopDistanceLabel.text = [Util distanceFromLocation:shopLocation toLocation:applicationLocation];
+        }else{
+            shopDistanceLabel.text = @"?m";
+        }
         
         [cell setBackgroundColor:UIColorFromRGB(BASE_COLOR)];
         cellInnerDivisionLine.backgroundColor = UIColorFromRGBWithAlpha(BASE_COLOR, 0.5f);
@@ -218,45 +278,26 @@ shopLogoImageView.image = shopLogo;
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // GAI event
-    if (!shopFirstTapped) {
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.appDelegate.timeCriteria]] name:@"pick_shop" label:nil] build]];
-        shopFirstTapped = YES;
-    }
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"pick_shop" label:@"escape_view" value:nil] build]];
+    // GA
+    [GAUtil sendGADataWithUIAction:@"pick_shop" label:@"escape_view" value:nil];
     
-    BOOL isMall = NO;
+    
     UIStoryboard *storyboard = [ViewUtil getStoryboard];
-//    Flag *theFlag = (Flag *)[self.flagData objectInListAtIndex:indexPath.row];
-//    Shop *theShop = (Shop *)[shopData objectInlistWithObjectId:theFlag.shopId];
-    Shop *theShop = (Shop *)[shopData objectInListAtIndex:indexPath.row];
-    
-    // IF SHOP IS MALL
-    if (isMall) {
-        
-        MallShopViewController *childViewController = (MallShopViewController *)[storyboard instantiateViewControllerWithIdentifier:@"MallShopView"];
-        
-        childViewController.user = self.user;
-        childViewController.parentPage = SHOP_LIST_VIEW_PAGE;
-        childViewController.shopId = theShop.shopId;
-        childViewController.shopName = theShop.name;
-        childViewController.title = theShop.name;
+    Flag *theFlag = (Flag *)[orderedFlagData objectInListAtIndex:indexPath.row];
+    Shop *theShop = (Shop *)[shopData objectInlistWithObjectId:theFlag.shopId];
+//    Shop *theShop = (Shop *)[shopData objectInListAtIndex:indexPath.row];
+//    Flag *theFlag = (Flag *)[flagData objectWithShopId:theShop.shopId];
 
-        [self.navigationController pushViewController:childViewController animated:YES];
-        
-    // IF SHOP IS NOT MALL
-    }else{
-        
-        SaleInfoViewController *childViewController = (SaleInfoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"SaleInfoView"];
-        
-        childViewController.user = self.user;
-        childViewController.shopId = theShop.shopId;
-        childViewController.shop = theShop;
-        childViewController.parentPage = SHOP_LIST_VIEW_PAGE;
-        childViewController.title = theShop.name;
-        
-        [self.navigationController pushViewController:childViewController animated:YES];
-    }
+    SaleInfoViewController *childViewController = (SaleInfoViewController *)[storyboard instantiateViewControllerWithIdentifier:@"SaleInfoView"];
+    
+    childViewController.user = self.user;
+    childViewController.shopId = theShop.shopId;
+    childViewController.shop = theShop;
+    childViewController.flag = theFlag;
+    childViewController.parentPage = SHOP_LIST_VIEW_PAGE;
+    childViewController.title = theShop.name;
+    
+    [self.navigationController pushViewController:childViewController animated:YES];
 }
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
@@ -275,46 +316,31 @@ shopLogoImageView.image = shopLogo;
     return 2.0f;
 }
 
-
-#pragma mark - implementation
-- (void)initializeLocationManager
-{
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
-    [locationManager startUpdatingLocation];
-}
-
-#pragma mark -
-#pragma mark CLLocation
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    CLLocation *currentLocation = [locations objectAtIndex:0];
-    
-    if (!currentLocation) {
-        currentLocation = [[CLLocation alloc] initWithLatitude:BASE_LATITUDE longitude:BASE_LONGITUDE];
-    }
-    location = currentLocation;
-    [self performSelectorInBackground:@selector(getShopListWithLocation:) withObject:location];
-    
-    [manager stopUpdatingLocation];
-}
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"fail to error %@", error.localizedDescription);
-    
-    location = [[CLLocation alloc] initWithLatitude:BASE_LATITUDE longitude:BASE_LONGITUDE];
-    
-    [manager stopUpdatingLocation];
-}
-
 #pragma mark - IBAction
 
 - (IBAction)cancel:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+//- (IBAction)presentCollectRewardSelectView:(id)sender
+//{
+//    // GA
+//    [GAUtil sendGADataWithUIAction:@"go_to_reward_collection" label:@"escape_view" value:nil];
+//
+//    
+//    UIStoryboard *storyboard = [ViewUtil getStoryboard];
+//    CollectRewardViewController *childViewController = (CollectRewardViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CollectRewardView"];
+//    childViewController.user = self.user;
+//    
+//    childViewController.view.backgroundColor = UIColorFromRGBWithAlpha(0x000000, 0.7);
+//    [childViewController setTransitioningDelegate:self.transitionDelegate];
+//    childViewController.modalPresentationStyle = UIModalPresentationCustom;
+//    
+//    [self presentViewController:childViewController animated:YES completion:nil];
+//}
 @end

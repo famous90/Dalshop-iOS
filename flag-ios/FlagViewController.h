@@ -18,11 +18,11 @@
 @property (nonatomic, strong) ShopInfoViewController *shopInfoViewController;
 @property (weak, nonatomic) IBOutlet UIView *mapView;
 @property (weak, nonatomic) IBOutlet UIView *shopInfoView;
-@property (weak, nonatomic) IBOutlet UIBarButtonItem *menuButton;
 
 @property (nonatomic, strong) User *user;
+@property (nonatomic, strong) NSNumber *objectIdForFlag;
+@property (nonatomic, assign) NSInteger parentPage;
 //@property (nonatomic, weak) CLLocation *currentLocation;
 
 - (IBAction)findCurrentPositionButtonTapped:(id)sender;
-- (IBAction)showMyPageTapped:(id)sender;
 @end

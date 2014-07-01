@@ -19,6 +19,11 @@
     return self;
 }
 
+- (NSString *)getMethodName
+{
+    return self.methodName;
+}
+
 - (void)setMethodName:(NSString *)methodName
 {
     _methodName = methodName;
@@ -65,7 +70,6 @@
         }
     }
     
-    NSLog(@"url %@", url);
     return [NSURL URLWithString:url];
 }
 

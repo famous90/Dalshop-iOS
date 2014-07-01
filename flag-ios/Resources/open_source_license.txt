@@ -1,0 +1,802 @@
+THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN THIS APPLICATION.
+
+
+============
+
+The MIT License (MIT)
+
+Copyright (c) 2013 Blanche Faur
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+============
+
+ Copyright (c) 2013 Joan Lluch <joan.lluch@sweetwilliamsl.com>
+ 
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is furnished
+ to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be included in all
+ copies or substantial portions of the Software.
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+
+ Early code inspired on a similar class by Philip Kluz (Philip.Kluz@zuui.org)
+
+
+============
+
+Copyright (C) 2012 Sam Vermette
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+============
+
+Copyright (c) 2011, Tim Cinel (see AUTHORS)
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+============
+
+This Google Cloud Platform License Agreement (the “Agreement”) is made and entered into by and between Google and the business entity agreeing to these terms (“Customer”).  "Google” means either (i) Google Ireland Limited, with offices at Gordon House, Barrow Street, Dublin 4, Ireland, if Customer's billing address is in any country within Europe, the Middle East, or Africa ("EMEA"), (ii) Google Asia Pacific Pte. Ltd., with offices at 8 Marina View Asia Square 1 #30-01 Singapore 018960, if Customer's billing address is in any country within the Asia Pacific region ("APAC"), or (iii) Google Inc., with offices at 1600 Amphitheatre Parkway, Mountain View, California 94043, if Customer's billing address is in any country in the world other than those in EMEA and APAC. 
+
+This Agreement is effective as of the date Customer clicks the "I Accept" button below (the "Effective Date").  If you are accepting on behalf of Customer, you represent and warrant that: (i) you have full legal authority to bind Customer to this Agreement; (ii) you have read and understand this Agreement; and (iii) you agree, on behalf of Customer, to this Agreement.  If you do not have the legal authority to bind Customer, please do not click the "I Accept" button below.  This Agreement governs Customer's access to and use of the Service. For an offline variant of this Agreement, you may contact Google at http://www.google.com/enterprise/cloud/contact.html for more information.
+
+1. Licenses.
+
+1.1 From Google to Customer. Subject to this Agreement, Google grants to Customer a worldwide, non-sublicensable, non-transferable, non-exclusive, terminable, limited license during the License Term to: (a) use the Services, (b) integrate the Services into any Application and provide the Services, solely as integrated into the Application, to users of the Application, and (c) use any Software provided by Google as part of the Services.
+
+1.2 From Customer to Google. By submitting, posting, generating, or displaying any Application and/or Customer Data on or through the Services, Customer gives Google a worldwide, non-sublicensable, non-transferable, non-exclusive, terminable, limited license to use any Application and/or Customer Data for the sole purpose of enabling Google to provide, maintain, protect, and improve the Services in accordance with the Agreement.
+
+2. Provision of the Services.
+
+2.1 Console. Google will provide the Services to Customer. As part of receiving the Services Customer will have access to the Admin Console, through which Customer may administer the Services.
+
+2.2 Facilities and Data Transfer. All facilities used to store and process an Application and Customer Data will adhere to reasonable security standards no less protective than the security standards at facilities where Google processes and stores its own information of a similar type. Google has implemented at least industry standard systems and procedures to ensure the security and confidentiality of an Application and Customer Data, protect against anticipated threats or hazards to the security or integrity of an Application and Customer Data, and protect against unauthorized access to or use of an Application and Customer Data. Google may process and store an Application and Customer Data in the United States or any other country in which Google or its agents maintain facilities.  By using the Services, Customer consents to this processing and storage of an Application and Customer Data. The parties agree that Google is merely a data processor.
+
+2.3 Accounts. Customer must have an Account and a Token (if applicable) to use the Services, and is responsible for the information it provides to create the Account, the security of the Token and its passwords for the Account, and for any use of its Account and the Token. If Customer becomes aware of any unauthorized use of its password, its Account or the Token, Customer will notify Google as promptly as possible.
+
+2.4 Privacy Policies.  The Services are subject to Google’s Privacy Policy. Changes to the Privacy Policy will be made as stated in the applicable policy. In addition, Google is enrolled in the U.S. Department of Commerce Safe Harbor Program and will remain enrolled in this program or another replacement program (or will adopt a compliance solution which achieves compliance with the terms of Article 25 of Directive 95/46/EC) throughout the Term of the Agreement.
+
+2.5 New Applications and Services. Google may: (i) make new applications, tools, features or functionality available from time to time through the Services and (ii) add new services to the “Services” definition from time to time (by adding them at the URL set forth under that definition), the use of which may be contingent upon Customer’s agreement to additional terms.
+
+2.6 Modifications.
+
+a. To the Services. Subject to Section 9.4 (Termination for Convenience), Google may make commercially reasonable Updates to the Services from time to time. If Google makes a material change to the Services, Google will inform Customer, provided that Customer has subscribed with Google to be informed about such change.
+
+b. To the Agreement. Google may make changes to this Agreement, including pricing from time to time. Unless otherwise noted by Google, material changes to the Agreement will become effective 30 days after they are posted, except if the changes apply to new functionality in which case they will be effective immediately. If Customer does not agree to the revised Agreement, please stop using the Services. Google will post any modification to this Agreement to the Terms URL.
+
+c. Service Specific Terms. The Service Specific Terms are hereby incorporated by reference into the Agreement.
+
+3. Payment Terms.
+
+3.1 Free Quota. Certain Services are provided to Customer without charge up to the Fee Threshold, as applicable.
+
+3.2 Online Billing. Google will issue an electronic bill to Customer for all charges accrued above the Fee Threshold based on (i) Customer’s use of the Services during the License Term (including, if any, the relevant Fee for TSS set forth in the Fees definition below); (ii) any Reserved Units selected; (iii) any Committed Purchases selected; and/or (iv) any Package Purchases selected. For use above the Fee Threshold, Customer will be responsible for all Fees up to the amount set in the Account and will pay all Fees in U.S. Dollars or in such other currency as agreed to in writing by the parties. Customer will pay all Fees in accordance with the payment terms applicable to the Fees. Google's measurement of Customer’s use of the Services is final.
+
+3.3 Taxes. Customer is responsible for any Taxes, and Customer will pay Google for the Services without any reduction for Taxes.  If Google is obligated to collect or pay Taxes, the Taxes will be invoiced to Customer, unless Customer provides Google with a timely and valid tax exemption certificate authorized by the appropriate taxing authority. In some states the sales tax is due on the total purchase price at the time of sale and must be invoiced and collected at the time of the sale.  If Customer is required by law to withhold any Taxes from its payments to Google, Customer must provide Google with an official tax receipt or other appropriate documentation to support such withholding.
+
+3.4 Invoice Disputes & Refunds. To the fullest extent permitted by law, Customer waives all claims relating to Fees unless claimed within sixty days after charged (this does not affect any Customer rights with its credit card issuer). Refunds (if any) are at the discretion of Google and will only be in the form of credit for the Services. Nothing in this Agreement obligates Google to extend credit to any party.
+
+3.5 Delinquent Payments. Late payments may bear interest at the rate of 1.5% per month (or the highest rate permitted by law, if less). Google reserves the right to suspend Customer’s Account for any late payments.
+
+4. Customer Obligations.
+
+4.1 Compliance. Customer is solely responsible for its Applications, Projects, and Customer Data and for making sure its Applications, Projects, and Customer Data comply with the Acceptable Use Policy. Google reserves the right to review the Application, Project, and Customer Data to ensure Customer’s compliance with the Acceptable Use Policy. Customer is responsible for ensuring all End Users comply with Customer’s obligations under the Agreement.
+
+4.2 Privacy. Customer will protect the privacy and legal rights of its End Users under all applicable laws and regulations, which includes a legally adequate privacy notice communicated from Customer. Customer may have the ability to access, monitor, use, or disclose Customer Data submitted by End Users through the Services. Customer will obtain and maintain any required consents from End Users to allow Customer’s access, monitoring, use and disclosure of Customer Data. Further, Customer will notify its End Users that any Customer Data provided as part of the Services will be made available to a third party (i.e. Google) as part of Google providing the Services.
+
+4.3 Restrictions. Customer will not, and will not allow third parties under its control to: (a) copy, modify, create a derivative work of, reverse engineer, decompile, translate, disassemble, or otherwise attempt to extract the source code of the Services or any component thereof (subject to Section 4.4 below and except to the extent such restriction is expressly prohibited by applicable law); (b) use the Services for High Risk Activities; (c) sublicense, resell, or distribute the Services or any component thereof separate from any integrated Application; (d) use the Services to create, train, or improve (directly or indirectly) a substantially similar product or service, including any other machine translation engine; (e) create multiple Applications, Accounts, or Projects to simulate or act as a single Application, Account, or Project (respectively) or otherwise access the Services in a manner intended to avoid incurring Fees; (f) unless otherwise set forth in the Service Specific Terms, use the Services to operate or enable any telecommunications service or in connection with any Application that allows End Users to place calls or to receive calls from any public switched telephone network; or (g) process or store any Customer Data that is subject to the International Traffic in Arms Regulations maintained by the Department of State. Unless otherwise specified in writing by Google, Google does not intend uses of the Services to create obligations under HIPAA, and makes no representations that the Services satisfy HIPAA requirements. If Customer is (or becomes) a Covered Entity or Business Associate, as defined in HIPAA, Customer agrees not to use the Services for any purpose or in any manner involving Protected Health Information (as defined in HIPAA) unless Customer has received prior written consent to such use from Google.
+
+4.4 Third Party Components. Third party components (which may include open source software) of the Services may be subject to separate license agreements. To the limited extent a third party license expressly supersedes this Agreement, that third party license instead governs Customer’s agreement with Google for the specific included third party components of the Services, or use of the Services (as may be applicable).
+
+4.5 Documentation. Google may provide Documentation for Customer’s use of the Services. The Documentation may specify restrictions (e.g. attribution or HTML restrictions) on how the Applications may be built or the Services may be used and Customer will comply with any such restrictions specified.
+
+4.6 DMCA Policy. Google provides information to help copyright holders manage their intellectual property online, but Google cannot determine whether something is being used legally or not without their input. Google responds to notices of alleged copyright infringement and terminates accounts of repeat infringers according to the process set out in the U.S. Digital Millennium Copyright Act. If Customer thinks somebody is violating Customer’s or its End Users’ copyrights and wants to notify Google, Customer can find information about submitting notices, and Google's policy about responding to notices at http://www.google.com/dmca.html.
+
+4.7 Application and No Multiple Accounts, Bills, Tokens. Any Application must have material value independent from the Services. Google has no obligation to provide multiple bills, Tokens (if applicable), or Accounts to Customer under the Agreement.
+
+5. Suspension and Removals.
+
+5.1 Suspension/Removals. If Customer becomes aware that any Application, Project (including an End User’s use of a Project), or Customer Data violates the Acceptable Use Policy, Customer will immediately suspend the Application or Project (if applicable), remove the applicable Customer Data or suspend access to an End User (as may be applicable). If Customer fails to suspend or remove as noted in the prior sentence, Google may specifically request that Customer do so. If Customer fails to comply with Google’s request to do so within twenty-four hours, then Google may suspend Google accounts of the applicable End Users, disable the Project or Application, and/or disable the Account (as may be applicable) until such violation is corrected.
+
+5.2 Emergency Security Issues. Despite the foregoing, if there is an Emergency Security Issue, then Google may automatically suspend the offending End User account, Application, Project, or the Account. Suspension will be to the minimum extent required, and of the minimum duration, to prevent or terminate the Emergency Security Issue.  If Google suspends an End User account, Application, Project, or the Account, for any reason, without prior notice to Customer, at Customer’s request, Google will provide Customer the reason for the suspension as soon as is reasonably possible.
+
+6. Intellectual Property Rights; Brand Features.
+
+6.1 Intellectual Property Rights.  Except as expressly set forth herein, this Agreement does not grant either party any rights, implied or otherwise, to the other’s content or any of the other’s intellectual property. As between the parties, Customer owns all Intellectual Property Rights in Customer Data and the Application or Project (if applicable) and Google owns all Intellectual Property Rights in the Services and Software.
+
+6.2 Brand Features Limitation.  If Customer wants to display Google Brand Features in connection with its use of the Services, Customer must obtain written permission from Google through the process specified in the Trademark Guidelines. For the purpose of providing the Services, Customer permits Google to display any Customer Brand Features that may appear in Customer’s use of the Services. Any use of a party’s Brand Features will inure to the benefit of the party holding Intellectual Property Rights to those Brand Features. A party may revoke the other party’s right to use its Brand Features pursuant to this Agreement with written notice to the other and a reasonable period to stop the use.
+
+6.3 Customer Feedback. If Customer provides Google feedback or suggestions about the Services, then Google may use that information without obligation to Customer, and Customer hereby irrevocably assigns to Google all right, title, and interest in that feedback or those suggestions.
+
+7. Technical Support Services
+
+7.1 By Customer. Customer is responsible for technical support of its Applications and Projects.
+
+7.2 By Google.  Subject to payment of applicable support Fees, Google will provide TSS to Customer during the License Term in accordance with the TSS Guidelines. Certain TSS levels include a minimum recurring Fee as described in the “Fees” definition below. If Customer downgrades its TSS level during any calendar month, Google may continue to provide TSS at the same level and TSS Fees before the downgrade for the remainder of that month.
+
+7.3 Deprecation Policy. Google will announce if it intends to discontinue or make backwards incompatible changes to the Services specified at the URL in the next sentence. Google will use commercially reasonable efforts to continue to operate those Services versions and features identified at https://developers.google.com/cloud/terms/deprecation without these changes for at least one year after that announcement (or in the case of Google App Engine, until the later of: one year after that announcement or April 20, 2015), unless (as Google determines in its reasonable good faith judgment):
+
+(i) required by law or third party relationship (including if there is a change in applicable law or relationship), or
+
+(ii) doing so could create a security risk or substantial economic or material technical burden.
+
+The above policy is the “Deprecation Policy.”
+
+8. Confidential Information. The recipient will not disclose the Confidential Information, except to Affiliates, employees, agents or professional advisors who need to know it and who have agreed in writing (or in the case of professional advisors are otherwise bound) to keep it confidential. The recipient will ensure that those people and entities use the received Confidential Information only to exercise rights and fulfill obligations under this Agreement, while using reasonable care to keep it confidential.  The recipient may also disclose Confidential Information to the extent required by applicable Legal Process; provided that the recipient uses commercially reasonable efforts to: (i) promptly notify the other party of such disclosure before disclosing; and (ii) comply with the other party’s reasonable requests regarding its efforts to oppose the disclosure. Notwithstanding the foregoing, subsections (i) and (ii) above will not apply if the recipient determines that complying with (i) and (ii) could: (a) result in a violation of Legal Process; (b) obstruct a governmental investigation; and/or (c) lead to death or serious physical harm to an individual. As between the parties, Customer is responsible for responding to all third party requests concerning its use and its End Users’ use of the Services.
+
+9. Term and Termination.
+
+9.1 Agreement Term. This Agreement will remain in effect for the License Term.
+
+9.2 Termination for Breach. Either party may terminate this Agreement for breach if: (i) the other party is in material breach of the Agreement and fails to cure that breach within thirty days after receipt of written notice; (ii) the other party ceases its business operations or becomes subject to insolvency proceedings and the proceedings are not dismissed within ninety days; or (iii) the other party is in material breach of this Agreement more than two times notwithstanding any cure of such breaches.
+
+9.3 Termination for Inactivity. Google reserves the right to terminate the Services for inactivity, if, for a period exceeding ninety days, Customer: (a) has failed to access the Admin Console; (b) a Project has no active virtual machine or storage resources or an Application has not served any requests; and (c) no electronic bills are being generated.
+
+9.4 Termination for Convenience. Customer may stop using the Services at any time. Customer may terminate this Agreement for its convenience at any time on prior written notice and upon termination, must cease use of the applicable Services. Google may terminate this Agreement for its convenience at any time without liability to Customer. Subject to Section 7.3, Google may discontinue any Services or any portion or feature for any reason at any time without liability to Customer.
+
+9.5 Effect of Termination. If the Agreement expires or is terminated, then: (i) the rights granted by one party to the other will immediately cease; (ii) all Fees (including Taxes) owed by Customer to Google are immediately due upon receipt of the final electronic bill; (iii) Customer will delete the Software, any Application, Instance, Project, and any Customer Data; and (iv) upon request, each party will use commercially reasonable efforts to return or destroy all Confidential Information of the other party.
+
+10. Publicity. Customer is permitted to state publicly that it is a customer of the Services, consistent with the Trademark Guidelines. Google may include Customer’s name or Brand Features in a list of Google customers, online or in promotional materials.   Google may also verbally reference Customer as a customer of the Google products or services that are the subject of this Agreement.  This section is subject to the “Brand Features Limitation” section of the Agreement. For clarification, neither party needs to seek approval from the other if the party is repeating a public statement that is substantially similar to a public statement that has been previously approved.
+
+11. Representations. Each party represents that: (a) it has full power and authority to enter into the Agreement; and (b) it will comply with all laws and regulations applicable to its provision, or use, of the Services, as applicable. Google warrants that it will provide the Services in accordance with the applicable SLA (if any).
+
+12. Disclaimer. EXCEPT AS EXPRESSLY PROVIDED FOR HEREIN, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, GOOGLE AND ITS SUPPLIERS DO NOT MAKE ANY OTHER WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING WITHOUT LIMITATION WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR USE AND NONINFRINGEMENT. GOOGLE AND ITS SUPPLIERS ARE NOT RESPONSIBLE OR LIABLE FOR THE DELETION OF OR FAILURE TO STORE ANY CUSTOMER DATA AND OTHER COMMUNICATIONS MAINTAINED OR TRANSMITTED THROUGH USE OF THE SERVICES. CUSTOMER IS SOLELY RESPONSIBLE FOR SECURING AND BACKING UP ITS APPLICATION, PROJECT, AND CUSTOMER DATA. NEITHER GOOGLE NOR ITS SUPPLIERS, WARRANTS THAT THE OPERATION OF THE SOFTWARE OR THE SERVICES WILL BE ERROR-FREE OR UNINTERRUPTED. NEITHER THE SOFTWARE NOR THE SERVICES ARE DESIGNED, MANUFACTURED, OR INTENDED FOR HIGH RISK ACTIVITIES.
+
+13. Limitation of Liability.
+
+13.1 Limitation on Indirect Liability. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, NEITHER PARTY, NOR GOOGLE’S SUPPLIERS, WILL BE LIABLE UNDER THIS AGREEMENT FOR LOST REVENUES OR INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, EVEN IF THE PARTY KNEW OR SHOULD HAVE KNOWN THAT SUCH DAMAGES WERE POSSIBLE AND EVEN IF DIRECT DAMAGES DO NOT SATISFY A REMEDY.
+
+13.2 Limitation on Amount of Liability.  TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, NEITHER PARTY, NOR GOOGLE’S SUPPLIERS, MAY BE HELD LIABLE UNDER THIS AGREEMENT FOR MORE THAN THE AMOUNT PAID BY CUSTOMER TO GOOGLE DURING THE TWELVE MONTHS PRIOR TO THE EVENT GIVING RISE TO LIABILITY.
+
+13.3 Exceptions to Limitations.  These limitations of liability do not apply to breaches of confidentiality obligations, violations of a party’s Intellectual Property Rights by the other party, or indemnification obligations. 
+
+14. Indemnification.
+
+14.1 By Customer. Unless prohibited by applicable law, Customer will indemnify, defend, and hold harmless Google from and against all liabilities, damages, and costs (including settlement costs and reasonable attorneys’ fees) arising out of a third party claim: (i) regarding any Application, Project, Instance, Customer Data or Customer Brand Features; or (ii) regarding Customer’s, or its End Users’, use of the Services in violation of the Acceptable Use Policy.
+
+14.2 By Google.  Google will indemnify, defend, and hold harmless Customer from and against all liabilities, damages, and costs (including settlement costs and reasonable attorneys’ fees) arising out of a third party claim that Google’s technology used to provide the Services (excluding any open source software) or any Google Brand Feature infringes or misappropriates any patent, copyright, trade secret or trademark of such third party.  Notwithstanding the foregoing, in no event will Google have any obligations or liability under this Section arising from: (i) use of any Service or Google Brand Features in a modified, unauthorized, or unintended form or in combination with materials not furnished by Google, (ii) Customer’s violation of this Agreement, (iii) use of non-current versions of the Services or Google Brand Features, and (iv) any Customer Data.
+
+14.3 Possible Infringement.
+
+a. Repair, Replace, or Modify.  If Google reasonably believes the Services infringe a third party’s Intellectual Property Rights, then Google may, at its sole option and expense: (a) obtain the right for Customer to continue using the Services; (b) provide a non-infringing functionally equivalent replacement; or (c) modify the Services so that they no longer infringe. 
+
+b. Suspension or Termination.  If Google does not believe the foregoing options are commercially reasonable, then Google may suspend or terminate Customer’s use of the impacted Services.
+
+14.4 General.  As a condition to indemnification for a claim, the party seeking indemnification must promptly notify the other party of the claim in writing and cooperate with the other party in defending the claim.  The indemnifying party has full control and authority over the defense, except that: (a) any settlement requiring the party seeking indemnification to admit liability or to pay any money will require that party’s prior written consent, such consent not to be unreasonably withheld or delayed; and (b) the other party may join in the defense with its own counsel at its own expense. Notwithstanding the foregoing, if the indemnified party settles without the prior written consent of the indemnifying party, the indemnifying party has no obligation of contribution.  THE INDEMNITIES ABOVE ARE THE ONLY REMEDY UNDER THIS AGREEMENT FOR VIOLATION OF A THIRD PARTY’S INTELLECTUAL PROPERTY RIGHTS.
+
+15. Federal Agency Users. The Services were developed solely at private expense and are commercial computer software and related documentation within the meaning of the applicable Federal Acquisition Regulation and agency supplements thereto.
+
+16. Miscellaneous.
+
+16.1 Notices.  All notices must be in writing and addressed to the other party’s legal department and primary point of contact.  The email address for notices being sent to Google’s Legal Department is legal-notices@google.com. Notice will be treated as given on receipt as verified by written or automated receipt or by electronic log (as applicable).
+
+16.2 Assignment. Neither party may assign any part of this Agreement without the written consent of the other, except to an Affiliate where: (a) the assignee has agreed in writing to be bound by the terms of this Agreement; (b) the assigning party remains liable for obligations under the Agreement if the assignee defaults on them; and (c) the assigning party has notified the other party of the assignment.  Any other attempt to assign is void.
+
+16.3 Change of Control.  If a party experiences a change of Control (for example, through a stock purchase or sale, merger, or other form of corporate transaction): (a) that party will give written notice to the other party within thirty days after the change of Control; and (b) the other party may immediately terminate this Agreement any time between the change of Control and thirty days after it receives that written notice.
+
+16.4 Force Majeure.  Neither party will be liable for failure or delay in performance to the extent caused by circumstances beyond its reasonable control.
+
+16.5 No Agency.  This Agreement does not create any agency, partnership or joint venture between the parties.
+
+16.6 No Waiver.  Neither party will be treated as having waived any rights by not exercising (or delaying the exercise of) any rights under this Agreement.
+
+16.7 Severability.  If any term (or part of a term) of this Agreement is invalid, illegal, or unenforceable, the rest of the Agreement will remain in effect.
+
+16.8 No Third-Party Beneficiaries.  This Agreement does not confer any benefits on any third party unless it expressly states that it does.
+
+16.9 Equitable Relief.  Nothing in this Agreement will limit either party’s ability to seek equitable relief.
+
+16.10 Governing Law.
+
+a. For City, County, and State Government Entities. If Customer is a city, county or state government entity, then the parties agree to remain silent regarding governing law and venue.
+
+b. For Federal Government Entities. If Customer is a federal government entity then the following applies: ALL CLAIMS ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE SERVICES WILL BE GOVERNED BY THE LAWS OF THE UNITED STATES OF AMERICA, EXCLUDING ITS CONFLICT OF LAWS RULES. SOLELY TO THE EXTENT PERMITTED BY FEDERAL LAW: (I) THE LAWS OF THE STATE OF CALIFORNIA (EXCLUDING CALIFORNIA’S CONFLICT OF LAWS RULES) WILL APPLY IN THE ABSENCE OF APPLICABLE FEDERAL LAW; AND (II) FOR ALL CLAIMS ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE SERVICES, THE PARTIES CONSENT TO PERSONAL JURISDICTION IN, AND THE EXCLUSIVE VENUE OF, THE COURTS IN SANTA CLARA COUNTY, CALIFORNIA.
+
+c. For All Other Entities. If Customer is any entity not set forth in Section 16.10(a) or (b) then the following applies: ALL CLAIMS ARISING OUT OF OR RELATING TO THIS AGREEMENT OR THE SERVICES WILL BE GOVERNED BY CALIFORNIA LAW, EXCLUDING THAT STATE’S CONFLICT OF LAWS RULES, AND WILL BE LITIGATED EXCLUSIVELY IN THE FEDERAL OR STATE COURTS OF SANTA CLARA COUNTY, CALIFORNIA, USA; THE PARTIES CONSENT TO PERSONAL JURISDICTION IN THOSE COURTS.
+
+16.11 Amendments. Any amendment must be in writing, signed by both parties, and expressly state that it is amending this Agreement.
+
+16.12 Survival. The following Sections will survive expiration or termination of this Agreement: 6.1 (Intellectual Property Rights), 8 (Confidential Information), 9.5 (Effects of Termination), 13 (Limitation of Liability), 14 (Indemnification) and 16 (Miscellaneous).
+
+16.13 Entire Agreement. This Agreement sets out all terms agreed between the parties and supersedes all other agreements between the parties relating to its subject matter. In entering into this Agreement, neither party has relied on, and neither party will have any right or remedy based on, any statement, representation or warranty (whether made negligently or innocently), except those expressly set out in this Agreement. The terms located at a URL referenced in this Agreement and the Documentation are hereby incorporated by this reference. After the Effective Date, Google may provide Customer with an updated URL in place of any URL in this Agreement.
+
+16.14 Conflicting Terms. If there is a conflict between the documents that make up this Agreement, the documents will control in the following order: the Agreement, and the terms located at any URL.
+
+16.15 Definitions.
+
+“Acceptable Use Policy” or “AUP” means the acceptable use policy set forth here for the Services: developers.google.com/cloud/terms/aup.
+
+“Account” means Customer’s Google account (either gmail.com address or an email address provided under the “Google Apps” product line), subject to those terms of service, as may be applicable.
+
+“Admin Console” means the online console(s) and/or tool(s) provided by Google to Customer for administering the Services.
+
+"Affiliate" means any entity that directly or indirectly Controls, is Controlled by, or is under common Control with a party.
+
+“Application(s)” means any web or other application Customer creates using the Services, including any source code written by Customer to be used with the Services, or hosted in an Instance.
+
+“Brand Features” means the trade names, trademarks, service marks, logos, domain names, and other distinctive brand features of each party, respectively, as secured by such party from time to time.
+
+“Committed Purchase(s)” have the meaning set forth in the Service Specific Terms.
+
+“Confidential Information” means information that one party (or an Affiliate) discloses to the other party under this Agreement, and which is marked as confidential or would normally under the circumstances be considered confidential information. It does not include information that the recipient already rightfully knew, that becomes public through no fault of the recipient, that was independently developed by the recipient, or that was lawfully given to the recipient by a third party. Customer Data is considered Customer’s Confidential Information.
+
+“Control” means control of greater than fifty percent of the voting rights or equity interests of a party.
+
+“Customer Data” means content provided, transmitted, or displayed via the Services by Customer or its End Users; but excluding any data provided as part of the Account.
+
+“Documentation” means the Google documentation (as may be updated from time to time) in the form generally made available by Google to its customers for use with the following Services: (a) Google App Engine, set forth here: https://developers.google.com/appengine/; (b) Google Cloud SQL, set forth here: https://developers.google.com/cloud-sql; (c) Google Cloud Storage, set forth here: https://developers.google.com/storage; (d) Google Prediction API, set forth here: https://developers.google.com/prediction; (e) Google BigQuery Service, set forth here: https://developers.google.com/bigquery/; (f) Google Compute Engine, set forth here:  https://developers.google.com/compute/; and (g) Google Cloud Datastore, set forth here: https://developers.google.com/datastore/.
+
+“Emergency Security Issue” means either: (a) Customer’s or its End User’s use of the Services in violation of the Acceptable Use Policy, which could disrupt: (i) the Services; (ii) other Customers’ or its End Users’ use of the Services; or (iii) the Google network or servers used to provide the Services; or (b) unauthorized third party access to the Services.   
+
+“End Users” means the individuals Customer permits to use the Services, Application, or Project.
+
+“Fee Threshold” means the threshold (as may be updated from time to time), as applicable for certain Services, as set forth here: https://developers.google.com/cloud/pricing/.
+
+“Fees” means the applicable fees for each Service and any applicable Taxes. The Fees for each Service are set forth here: https://developers.google.com/cloud/pricing/.
+
+“High Risk Activities” means uses such as the operation of nuclear facilities, air traffic control, or life support systems, where the use or failure of the Services could lead to death, personal injury, or environmental damage.
+
+“HIPAA” means the Health Insurance Portability and Accountability Act of 1996 as it may be amended from time to time, and any regulations issued thereunder.
+
+“Instance” means a virtual machine instance, configured and managed by Customer, which runs on the Services. Instances are more fully described in the Documentation.
+
+“Intellectual Property Rights” means current and future worldwide rights under patent law, copyright law, trade secret law, trademark law, moral rights law, and other similar rights.
+
+“Legal Process” means a request for disclosure of data made pursuant to law, governmental regulation, court order, subpoena, warrant, governmental regulatory or agency request, or other valid legal authority, legal procedure, or similar process.
+
+“License Term” means the term of the Agreement, which will begin on the Effective Date and continue until the Agreement is terminated as set forth herein.
+
+“Package Purchase” has the meaning set forth in the Service Specific Terms.
+
+“Privacy Policy” means Google’s privacy policy located at: http://www.google.com/policies/privacy/.
+
+“Project” means a grouping of computing, storage, and API resources for Customer, and via which Customer may use the Services. Projects are more fully described in the Documentation.
+
+“Reserved Unit Term” has the meaning set forth in the Service Specific Terms.
+
+“Reserved Units” have the meaning set forth in the Service Specific Terms.
+
+“Services” mean, as applicable: (a) Google App Engine; (b) Google Cloud SQL; (c) Google Cloud Storage; (d) Google Prediction API; (e) Google BigQuery Service; (f) Google Compute Engine; and (g) Google Cloud Datastore, and such other services as set forth here: https://developers.google.com/cloud/services (including any associated application program interfaces; and (h) TSS. The Services do not include Google Translate API.
+
+“Service Specific Terms” means the terms specific to one or more Services set forth here:https://developers.google.com/cloud/terms/service-terms, except the terms relating to (a) Google Translate API; and (b) Fees for Google Cloud Datastore, do not apply.
+
+“SLA” means the Service Level Agreement as applicable to: (a) Google App Engine set forth here: https://developers.google.com/appengine/sla; (b) Google Cloud Storage set forth here: https://developers.google.com/storage/sla; (c) Google Prediction API set forth here: https://developers.google.com/prediction/sla; (d) Google BigQuery Service set forth here https://developers.google.com/bigquery/sla; (e) Google Cloud SQL set forth here: https://developers.google.com/cloud-sql/sla; (f) Google Compute Engine set forth here: https://developers.google.com/compute/sla; or (g) Google Cloud Datastore set forth here: https://developers.google.com/datastore/sla.
+
+“Software” means any downloadable tools, software development kits or other such proprietary computer software provided by Google in connection with the Services, which may be downloaded by Customer, and any updates Google may make to such Software from time to time.
+
+“Taxes” means any duties, customs fees, or taxes (other than Google’s income tax) associated with the purchase of the Services, including any related penalties or interest.
+
+“Terms URL” means the following URL set forth here: https://developers.google.com/cloud/terms/.
+
+“Token” means an alphanumeric key that is uniquely associated with Customer’s Account.
+
+“Trademark Guidelines” means Google’s Guidelines for Third Party Use of Google Brand Features, located at the following URL: http://www.google.com/permissions/guidelines.html.
+
+“TSS” means the technical support service provided by Google to the administrators pursuant to the TSS Guidelines.
+
+“TSS Guidelines” means Google’s technical support services guidelines then in effect for the Services. TSS Guidelines are at the following URL: http://support.google.com/enterprise/terms (under Google Cloud Platform Services).
+
+“Updates” means the periodic software updates provided by Google to Customer from time to time. Updates are designed to improve, enhance and further develop the Services and may take the form of bug fixes, enhanced functions, new software modules and completely new versions.
+
+==========
+
+GOOGLE ANALYTICS TERMS OF SERVICE
+
+These Google Analytics Terms of Service (this "Agreement") are entered into by Google Inc. ("Google") and the entity executing this Agreement ("You"). This Agreement governs Your use of the standard Google Analytics (the "Service"). BY CLICKING THE "I ACCEPT" BUTTON, COMPLETING THE REGISTRATION PROCESS, OR USING THE SERVICE, YOU ACKNOWLEDGE THAT YOU HAVE REVIEWED AND ACCEPT THIS AGREEMENT AND ARE AUTHORIZED TO ACT ON BEHALF OF, AND BIND TO THIS AGREEMENT, THE OWNER OF THIS ACCOUNT. In consideration of the foregoing, the parties agree as follows:
+
+1. Definitions.
+
+"Account" refers to the billing account for the Service. All Profiles linked to a single Property will have their Hits aggregated before determining the charge for the Service for that Property.
+
+"Confidential Information" includes any proprietary data and any other information disclosed by one party to the other in writing and marked "confidential" or disclosed orally and, within five business days, reduced to writing and marked "confidential". However, Confidential Information will not include any information that is or becomes known to the general public, which is already in the receiving party's possession prior to disclosure by a party or which is independently developed by the receiving party without the use of Confidential Information.
+
+"Customer Data" or “Google Analytics Data" means the data you collect, process or store using the Service concerning the characteristics and activities of Visitors.
+
+"Documentation" means any accompanying documentation made available to You by Google for use with the Processing Software, including any documentation available online.
+
+"GATC" means the Google Analytics Tracking Code, which is installed on a Property for the purpose of collecting Customer Data, together with any fixes, updates and upgrades provided to You.
+
+"Hit" means the base unit that the Google Analytics system processes. A Hit may be a call to the Google Analytics system by various libraries, including, Javascript (e.g., analytics.js), Silverlight, Flash, and Mobile. A Hit may currently be a page view, a transaction, item, or event, social interaction, or user timing. Hits may also be delivered to the Google Analytics system without using one of the various libraries by other Google Analytics-supported protocols and mechanisms the Service makes available to You.
+
+"Processing Software" means the Google Analytics server-side software and any upgrades, which analyzes the Customer Data and generates the Reports.
+
+"Profile" means the collection of settings that together determine the information to be included in, or excluded from, a particular Report. For example, a Profile could be established to view a small portion of a web site as a unique Report. There can be multiple Profiles established under a single Property.
+
+"Property" means any web page, app, or other property under Your control that sends data to Google Analytics. Each Property includes a default Profile that measures all pages within the Property.
+
+"Privacy Policy" means the privacy policy on a Property.
+
+"Report" means the resulting analysis shown at www.google.com/analytics for a Profile.
+
+"Servers" means the servers controlled by Google (or its wholly owned subsidiaries) on which the Processing Software and Customer Data are stored.
+
+"Software" means the GATC and the Processing Software.
+
+"Third Party" means any third party (i) to which You provide access to Your Account or (i) for which You use the Service to collect information on the third party's behalf.
+
+"Visitors" means visitors to Your Properties.
+
+The words "include" and "including" mean "including but not limited to."
+
+2. Fees and Service.
+
+Subject to Section 15, the Service is provided without charge to You for up to 10 million Hits per month per account. Google may change its fees and payment policies for the Service from time to time including the addition of costs for geographic data, the importing of cost data from search engines, or other fees charged to Google or its wholly-owned subsidiaries by third party vendors for the inclusion of data in the Service reports. The changes to the fees or payment policies are effective upon Your acceptance of those changes which will be posted at www.google.com/analytics. Unless otherwise stated, all fees are quoted in U.S. Dollars. Any outstanding balance becomes immediately due and payable upon termination of this Agreement and any collection expenses (including attorneys' fees) incurred by Google will be included in the amount owed, and may be charged to the credit card or other billing mechanism associated with Your AdWords account.
+
+3. Member Account, Password, and Security.
+
+To register for the Service, You must complete the registration process by providing Google with current, complete and accurate information as prompted by the registration form, including Your e-mail address (username) and password. You will protect Your passwords and take full responsibility for Your own, and third party, use of Your accounts. You are solely responsible for any and all activities that occur under Your Account. You will notify Google immediately upon learning of any unauthorized use of Your Account or any other breach of security. Google's (or its wholly-owned subsidiaries') support staff may, from time to time, log in to the Service under Your customer password in order to maintain or improve service, including to provide You assistance with technical or billing issues.
+
+4. Nonexclusive License.
+
+Subject to the terms and conditions of this Agreement, (a) Google grants You a limited, revocable, non-exclusive, non-sublicensable license to install, copy and use the GATC solely as necessary for You to use the Service on Your Properties or Third Party's Properties; and (b) You may remotely access, view and download Your Reports stored at www.google.com/analytics. You will not (and You will not allow any third party to) (i) copy, modify, adapt, translate or otherwise create derivative works of the Software or the Documentation; (ii) reverse engineer, decompile, disassemble or otherwise attempt to discover the source code of the Software, except as expressly permitted by the law in effect in the jurisdiction in which You are located; (iii) rent, lease, sell, assign or otherwise transfer rights in or to the Software, the Documentation or the Service; (iv) remove any proprietary notices or labels on the Software or placed by the Service; (v) use, post, transmit or introduce any device, software or routine which interferes or attempts to interfere with the operation of the Service or the Software; or (vi) use data labeled as belonging to a third party in the Service for purposes other than generating, viewing, and downloading Reports. You will comply with all applicable laws and regulations in Your use of and access to the Documentation, Software, Service and Reports.
+
+5. Confidentiality.
+
+Neither party will use or disclose the other party's Confidential Information without the other's prior written consent except for the purpose of performing its obligations under this Agreement or if required by law, regulation or court order; in which case, the party being compelled to disclose Confidential Information will give the other party as much notice as is reasonably practicable prior to disclosing the Confidential Information.
+
+6. Information Rights and Publicity.
+
+Google and its wholly owned subsidiaries may retain and use, subject to the terms of its privacy policy (located at www.google.com/privacy.html), information collected in Your use of the Service. Google will not share Your Customer Data or any Third Party's Customer Data with any third parties unless Google (i) has Your consent for any Customer Data or any Third Party's consent for the Third Party's Customer Data; (ii) concludes that it is required by law or has a good faith belief that access, preservation or disclosure of Customer Data is reasonably necessary to protect the rights, property or safety of Google, its users or the public; or (iii) provides Customer Data in certain limited circumstances to third parties to carry out tasks on Google's behalf (e.g., billing or data storage) with strict restrictions that prevent the data from being used or shared except as directed by Google. When this is done, it is subject to agreements that oblige those parties to process Customer Data only on Google's instructions and in compliance with this Agreement and appropriate confidentiality and security measures.
+
+7. Privacy.
+
+You will not (and will not allow any third party to) use the Service to track, collect or upload any data that personally identifies an individual (such as a name, email address or billing information), or other data which can be reasonably linked to such information by Google. You will have and abide by an appropriate Privacy Policy and will comply with all applicable laws, policies, and regulations relating to the collection of information from Visitors. You must post a Privacy Policy and that Privacy Policy must provide notice of Your use of cookies that are used to collect data. You must disclose the use of Google Analytics, and how it collects and processes data. This can be done by displaying a prominent link to the site “How Google uses data when you use our partners' sites or apps”, (located at www.google.com/policies/privacy/partners/, or any other URL Google may provide from time to time). You must not circumvent any privacy features (e.g., an opt-out) that are part of the Service.
+
+You may participate in an integrated version of Google Analytics and any DoubleClick product or service or any other Google display ads product or service ("Google Analytics for Display Advertisers"). If You use Google Analytics for Display Advertisers, You will comply with the Google Analytics for Display Advertisers Policy (available at support.google.com/analytics/bin/answer.py?hl=en&topic=2611283&answer=2700409) and, as set forth in the policy, disclose in Your Privacy Policy (i) Your use of Google Analytics for Display Advertisers and its features You use, and (ii) how Visitors can opt-out from Google Analytics for Display Advertisers. Your access to and use of any DoubleClick or Google display ads data is subject to the applicable terms between You and Google.
+
+8. Indemnification.
+
+To the extent permitted by applicable law, You will indemnify, hold harmless and defend Google and its wholly owned subsidiaries, at Your expense, from any and all third-party claims, actions, proceedings, and suits brought against Google or any of its officers, directors, employees, agents or affiliates, and all related liabilities, damages, settlements, penalties, fines, costs or expenses (including, reasonable attorneys' fees and other litigation expenses) incurred by Google or any of its officers, directors, employees, agents or affiliates, arising out of or relating to (i) Your breach of any term or condition of this Agreement, (ii) Your use of the Service, (iii) Your violations of applicable laws, rules or regulations in connection with the Service, (iv) any representations and warranties made by You concerning any aspect of the Service, the Software or Reports to any Third Party; (v) any claims made by or on behalf of any Third Party pertaining directly or indirectly to Your use of the Service, the Software or Reports; (vi) violations of Your obligations of privacy to any Third Party; and (vii) any claims with respect to acts or omissions of any Third Party in connection with the Service, the Software or Reports. Google will provide You with written notice of any claim, suit or action from which You must indemnify Google. You will cooperate as fully as reasonably required in the defense of any claim. Google reserves the right, at its own expense, to assume the exclusive defense and control of any matter subject to indemnification by You.
+
+9. Third Parties.
+
+If You use the Service on behalf of the Third Party or a Third Party otherwise uses the Service through Your Account, whether or not You are authorized by Google to do so, then You represent and warrant that (a) You are authorized to act on behalf of, and bind to this Agreement, the Third Party to all obligations that You have under this Agreement, (b) Google may share with the Third Party any Customer Data that is specific to the Third Party's Properties, and (c) You will not disclose Third Party's Customer Data to any other party without the Third Party's consent.
+
+10. DISCLAIMER OF WARRANTIES.
+
+TO THE FULLEST EXTENT PERMITTED BY APPLICABLE LAW, EXCEPT AS EXPRESSLY PROVIDED FOR IN THIS AGREEMENT, GOOGLE MAKES NO OTHER WARRANTY OF ANY KIND, WHETHER EXPRESS, IMPLIED, STATUTORY OR OTHERWISE, INCLUDING WITHOUT LIMITATION WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR USE AND NONINFRINGEMENT.
+
+11. LIMITATION OF LIABILITY.
+
+TO THE EXTENT PERMITTED BY APPLICABLE LAW, GOOGLE WILL NOT BE LIABLE FOR YOUR LOST REVENUES OR INDIRECT, SPECIAL, INCIDENTAL, CONSEQUENTIAL, EXEMPLARY, OR PUNITIVE DAMAGES, EVEN IF THE GOOGLE OR ITS SUBSIDIARIES AND AFFILIATES HAVE BEEN ADVISED OF, KNEW OR SHOULD HAVE KNOWN THAT SUCH DAMAGES WERE POSSIBLE AND EVEN IF DIRECT DAMAGES DO NOT SATISFY A REMEDY. GOOGLE'S (AND ITS WHOLLY OWNED SUBSIDIARIES' TOTAL CUMULATIVE LIABILITY TO YOU OR ANY OTHER PARTY FOR ANY LOSS OR DAMAGES RESULTING FROM CLAIMS, DEMANDS, OR ACTIONS ARISING OUT OF OR RELATING TO THIS AGREEMENT WILL NOT EXCEED $500 (USD).
+
+12. Proprietary Rights Notice.
+
+The Service, which includes the Software and all Intellectual Property Rights therein are, and will remain, the property of Google (and its wholly owned subsidiaries). All rights in and to the Software not expressly granted to You in this Agreement are reserved and retained by Google and its licensors without restriction, including, Google's (and its wholly owned subsidiaries') right to sole ownership of the Software and Documentation. Without limiting the generality of the foregoing, You agree not to (and not to allow any third party to): (a) sublicense, distribute, or use the Service or Software outside of the scope of the license granted in this Agreement; (b) copy, modify, adapt, translate, prepare derivative works from, reverse engineer, disassemble, or decompile the Software or otherwise attempt to discover any source code or trade secrets related to the Service; (c) rent, lease, sell, assign or otherwise transfer rights in or to the Software or the Service; (d) use, post, transmit or introduce any device, software or routine which interferes or attempts to interfere with the operation of the Service or the Software; (e) use the trademarks, trade names, service marks, logos, domain names and other distinctive brand features or any copyright or other proprietary rights associated with the Service for any purpose without the express written consent of Google; (f) register, attempt to register, or assist anyone else to register any trademark, trade name, serve marks, logos, domain names and other distinctive brand features, copyright or other proprietary rights associated with Google (or its wholly owned subsidiaries) other than in the name of Google (or its wholly owned subsidiaries, as the case may be); or (g) remove, obscure, or alter any notice of copyright, trademark, or other proprietary right appearing in or on any item included with the Service.
+
+13. U.S. Government Rights.
+
+If the use of the Service is being acquired by or on behalf of the U.S. Government or by a U.S. Government prime contractor or subcontractor (at any tier), in accordance with 48 C.F.R. 227.7202-4 (for Department of Defense (DOD) acquisitions) and 48 C.F.R. 2.101 and 12.212 (for non-DOD acquisitions), the Government's rights in the Software, including its rights to use, modify, reproduce, release, perform, display or disclose the Software or Documentation, will be subject in all respects to the commercial license rights and restrictions provided in this Agreement.
+
+14. Term and Termination.
+
+Either party may terminate this Agreement at any time with notice. Upon any termination of this Agreement, Google will stop providing, and You will stop accessing the Service; and You will delete all copies of the GATC from all Properties and certify thereto in writing to Google within 3 business days of such termination. In the event of any termination (a) You will not be entitled to any refunds of any usage fees or any other fees, and (b) any (i) outstanding balance for Service rendered through the date of termination, and (ii) other unpaid payment obligations during the remainder of the Initial Term will be immediately due and payable in full and (c) all of Your historical Report data will no longer be available to You.
+
+15. Modifications to Terms of Service and Other Policies.
+
+Google may modify these terms or any additional terms that apply to the Service to, for example, reflect changes to the law or changes to the Service. You should look at the terms regularly. Google will post notice of modifications to these terms at www.google.com/analytics or policies referenced in these terms at the applicable URL for such policies. Changes will not apply retroactively and will become effective no sooner than 14 days after they are posted. If You do not agree to the modified terms for the Service, You should discontinue Your use Google Analytics. No amendment to or modification of this Agreement will be binding unless (i) in writing and signed by a duly authorized representative of Google, (ii) You accept updated terms online, or (iii) You continue to use the Service after Google has posted updates to the Agreement or to any policy governing the Service.
+
+16. Miscellaneous, Applicable Law and Venue.
+
+Google will be excused from performance in this Agreement to the extent that performance is prevented, delayed or obstructed by causes beyond its reasonable control. This Agreement (including any amendment agreed upon by the parties in writing) represents the complete agreement between You and Google concerning its subject matter, and supersedes all prior agreements and representations between the parties. If any provision of this Agreement is held to be unenforceable for any reason, such provision will be reformed to the extent necessary to make it enforceable to the maximum extent permissible so as to effect the intent of the parties, and the remainder of this Agreement will continue in full force and effect. This Agreement will be governed by and construed under the laws of the state of California without reference to its conflict of law principles. In the event of any conflicts between foreign law, rules, and regulations, and California law, rules, and regulations, California law, rules and regulations will prevail and govern. Each party agrees to submit to the exclusive and personal jurisdiction of the courts located in Santa Clara County, California. The United Nations Convention on Contracts for the International Sale of Goods and the Uniform Computer Information Transactions Act do not apply to this Agreement. The Software is controlled by U.S. Export Regulations, and it may be not be exported to or used by embargoed countries or individuals. Any notices to Google must be sent to: Google Inc., 1600 Amphitheatre Parkway, Mountain View, CA 94043, USA, with a copy to Legal Department, via first class or air mail or overnight courier, and are deemed given upon receipt. A waiver of any default is not a waiver of any subsequent default. You may not assign or otherwise transfer any of Your rights in this Agreement without Google's prior written consent, and any such attempt is void. The relationship between Google and You is not one of a legal partnership relationship, but is one of independent contractors. This Agreement will be binding upon and inure to the benefit of the respective successors and assigns of the parties hereto. The following sections of this Agreement will survive any termination thereof: 1, 4, 5, 6 (except the last two sentences), 7, 8, 9, 10, 11, 12, 14, and 16.
+
+===========
+
+
+1. Your relationship with Google.
+
+1.1 Use of the Service is Subject to these Terms. Your use of any of the Google Maps/Google Earth APIs (referred to in this document as the "Maps API(s)" or the "Service") is subject to the terms of a legal agreement between you and Google (the "Terms"). "Google” means either (a) Google Ireland Limited, with offices at Gordon House, Barrow Street, Dublin 4, Ireland, if Customer's billing address is in any country within Europe, the Middle East, or Africa ("EMEA"); (b) Google Asia Pacific Pte. Ltd., with offices at 8 Marina View Asia Square 1 #30-01 Singapore 018960, if Customer's billing address is in any country within the Asia Pacific region ("APAC"); or (c) Google Inc., with offices at 1600 Amphitheatre Parkway, Mountain View, California 94043, USA, if Customer's billing address is in any country in the world other than those in EMEA and APAC. 
+
+1.2 The Terms include Google's Legal Notices and Privacy Policy. 
+
+(a) Unless otherwise agreed in writing with Google, the Terms will include the following: 
+(i) the terms and conditions set forth in this document (the "Maps APIs Terms");
+(ii) the Legal Notices; and
+(iii) the Privacy Policy.
+
+(b) Before you use the Maps API(s), you should read each of the documents comprising the Terms, and print or save a local copy for your records.
+
+1.3 Use of Other Google Services and Additional Terms. If you use the Maps API(s) in conjunction with any other Google products or services, including any other Google API(s), (collectively, the Service and all other Google products and services are referred to as the "Google Services"), your agreement with Google will also include the terms applicable to those Google Services. All of these are referred to as the "Additional Terms." If Additional Terms apply, they will be accessible to you either within or through your use of the applicable Google Services. If there is any contradiction between the Additional Terms and the Maps APIs Terms, then the Maps APIs Terms will take precedence only as they relate to the Maps API(s), and not to any other Google Services.
+
+1.4 Precedence of Maps APIs Terms. If there is any contradiction between the Maps APIs Terms and other Maps API(s)-related documents (including but not limited to the Maps APIs Documentation), then the Maps APIs Terms will take precedence.
+
+1.5 Changes to the Terms. Google reserves the right to make changes to the Terms from time to time. When these changes are made, Google will make a new copy of the Terms available at http://developers.google.com/maps/terms (or such successor URLs that Google may designate from time to time). You understand and agree that if you use the Service after the date on which the Terms have changed, Google will treat your use as acceptance of the updated Terms. If a modification is unacceptable to you, you may terminate this agreement by ceasing use of the Maps API(s).
+
+2. Accepting the Terms.
+
+2.1 Clicking to Accept or Using the Maps API(s). In order to use the Maps API(s) you must agree to the Terms. You can accept the Terms by:
+
+(a) clicking to accept or agree to the Terms, where this option is made available to you by Google in the user interface for the Service; or
+(b) using the Maps API(s). In this case, you understand and agree that Google will treat your use of the Maps API(s) as acceptance of the Terms from that point onwards.
+
+2.2 U.S. Law Restrictions. You may not use the Maps API(s) and may not accept the Terms if you are a person barred from using the Service under the laws of the United States.
+
+2.3 Authority to Accept the Terms. You represent that you have full power, capacity and authority to accept these Terms. If you are accepting on behalf of your employer or another entity, you represent that you have full legal authority to bind your employer or such entity to these Terms. If you don't have the legal authority to bind, please ensure that an authorized person from your entity consents to and accepts these Terms.
+
+3. Privacy and Personal Information.
+
+3.1 Google's Privacy Policy. For information about Google's data protection practices, please read Google's privacy policy at http://www.google.com/privacy.html. This policy explains how Google treats your personal information and protects your privacy when you use the Service.
+
+3.2 Use of Your Data under Google's Privacy Policy. You agree to the use of your data in accordance with Google's privacy policy.
+
+3.3 Your Privacy Policy. You must post and abide by an appropriate privacy policy in, and will comply with all applicable laws relating to the collection of information from visitors to, Your Maps API Implementation in accordance with the specific requirements of Section 9.3 (End User Terms and Privacy Policy) below.
+
+4. Provision of the Service by Google.
+
+4.1 Google's Subsidiaries and Affiliates. Google has subsidiaries and affiliated legal entities around the world ("Subsidiaries and Affiliates"). Sometimes, these companies will be providing the Service to you on behalf of Google itself. You acknowledge and agree that Subsidiaries and Affiliates will be entitled to provide the Service to you.
+
+4.2 Limits on Your Use of the Service. You acknowledge and agree that Google may impose or adjust the limit on the number of transactions you may send or receive through the Service; such fixed upper limits may be set by Google at any time, at Google's discretion. For further information, see Section 10.1.1(i) below.
+
+4.3 Advertising.
+
+(a) In Places Results. Google reserves the right to include advertising in the places results provided to you through the Maps API(s). By using the Maps API(s) to obtain places results, you agree to display such advertising in the form provided to you by Google.
+
+(b) In Maps Images. Google also reserves the right to include advertising in the maps images provided to you through the Maps API(s), subject to the following provisions. In this Section, “Ads Notice” means a notice from Google that it will include advertising in a particular Maps API. The Ads Notice may be provided on relevant Google websites, including the Google Geo Developers Blog (or such successor URLs that Google may designate from time to time) and the applicable Google Maps API Groups.
+(i) New Maps API(s) and Major Version Upgrades of Existing Maps API(s) launched with an Ads Notice. A “major version” of a Maps API is denoted by a new “whole number” in the version name (for example, a “major version” change occurs if API v4.5 is replaced by v5.0). By using the maps images in these new or major version upgrades of the Maps API(s), you agree to display the advertising included in those maps images in the form provided to you by Google. 
+
+(ii) Maps API(s) and Major Version Upgrades of Existing Maps API(s) launched without an Ads Notice. For any Maps API that Google has launched (or launches in the future) without an Ads Notice, Google will not include advertising in that API’s maps images unless Google provides you with an Ads Notice at least 90 days beforehand (the "Ads Notice Period").
+
+(iii) Maps API Implementations that Incorporated the Maps API(s) before April 8, 2011. If your Maps API implementation incorporated a major version of a Maps API before April 8, 2011, you have a limited right to opt out of advertising in the maps images provided through that major version of that Maps API by providing written notice to Google during the Ads Notice Period; your notice must state that you refuse to accept advertising in the maps images and must be provided to Google in accordance with Google's notice requirements (as specified in Google's Ads Notice).
+
+(c) Opting Out of Ads. You may at any time opt out of advertising in the places results and the maps images by either:
+(i) contacting the Google Maps API for Business sales team to obtain a Google enterprise license; or
+
+(ii) terminating your use of the Service.
+
+4.4 Changes to the Service; Deprecation Policy.
+Google will announce if it intends to discontinue or make backwards incompatible changes to this API or Service. Google will use commercially reasonable efforts to continue to operate those Google Maps API versions and features identified at http://developers.google.com/maps/maps-api-list without these changes until the later of: (i) one year after the announcement or (ii) April 20, 2015, unless (as Google determines in its reasonable good faith judgment):
+
+required by law or third party relationship (including if there is a change in applicable law or relationship), or
+doing so could create a security risk or substantial economic or material technical burden.
+The above policy is the "Deprecation Policy."
+
+
+5. Your Google Account.
+
+5.1 Signing Up for a Google Account. In order to access the Service, you must have a Google Account. You agree that any information you give to Google in connection with your Google Account or your continued use of the Service will always be accurate, correct, and up to date.
+
+5.2 Account Keys. For certain versions or features of the Maps API(s), Google may require you to obtain and use an alphanumeric key or cryptographic key that is uniquely associated with your Google Account and your Maps API Implementation. You must obtain and use such key (if required by Google for the applicable version or feature of the Maps API(s)) in accordance with these Terms and the Maps APIs Documentation.
+
+5.3 Your Passwords and Account Security. You agree that you will be solely responsible to Google for your use of the Service. If you become aware of any unauthorized use of your password, your account, or your key(s), you agree to notify Google immediately. 
+
+6. Google's Proprietary Rights. You acknowledge and agree that Google (or Google's licensors and their suppliers, as applicable) own all legal right, title and interest in and to the Service and Content, including any intellectual property rights that subsist in the Service and Content (whether those rights happen to be registered or not, and wherever in the world those rights may exist).
+
+7. Permitted Uses. You agree to use the Service only for purposes:
+(a) that are permitted by the Terms (including the Licenses in Section 8);
+
+(b) that are permitted by any applicable third party contract, law, or regulation in the relevant jurisdictions; and
+
+(c) that comply with all applicable policies or guidelines made available by Google, including in the Maps APIs Documentation and the Permission Guidelines for Google Maps and Google Earth.
+
+8. Licenses from Google to You.
+
+8.1 Definitions.
+
+(a) "Brand Features" means the trade names, trademarks, service marks, logos, domain names, and other distinctive brand features of each party, respectively, as secured by such party from time to time.
+(b) "Content" means any content provided through the Service (whether created by Google or its third party licensors), including map and terrain data, photographic imagery, traffic data, places data (including business listings), or any other content.
+(c) "Maps API Implementation" means a software application or website that uses the Maps API(s) to obtain and display Content in conjunction with Your Content, according to these Terms.
+(d) "Your Content" means any content that you provide in your Maps API Implementation, including data, images, video, or software. Your Content does not include the Content.
+
+8.2 Service License. Subject to these Terms (including but not limited to Section 9 (License Requirements) and Section 10 (License Restrictions)), Google gives you a personal, worldwide, royalty-free, non-transferable, non-assignable and non-exclusive license to use the Service as provided by Google, in the manner permitted by the Terms.
+
+8.3 Content License. Subject to these Terms (including but not limited to Section 9 (License Requirements) and Section 10 (License Restrictions)), Google gives you a personal, worldwide, royalty-free, non-transferable, non-assignable, and non-exclusive license to access, use, publicly perform and publicly display the Content in your Maps API Implementation, as the Content is provided in the Service, and in the manner permitted by the Terms. Specifically, you understand the following:
+
+(a) Content (including but not limited to map data, traffic, directions, and places) is provided for planning purposes only. You may find that weather conditions, construction projects, closures, or other events may cause road conditions or directions to differ from the results depicted in the Content. You should exercise judgment in your use of the Content.
+(b) Certain Content is provided under license from third parties, including Tele Atlas B.V. ("Tele Atlas"), and is subject to copyright and other intellectual property rights owned by or licensed to Tele Atlas and/or such third parties. You may be held liable for any unauthorized copying or disclosure of this content. Your use of Tele Atlas map data and certain other Content (including certain business listings Content) is subject to additional restrictions located in the Legal Notices page.
+
+8.4 Brand Features License.
+
+(a) Grant. Subject to these Terms (including but not limited to Section 9 (License Requirements) and Section 10 (License Restrictions)), Google gives you a personal, worldwide, royalty-free, non-transferable, non-assignable, non-sublicenseable, and non-exclusive license to display Google's Brand Features solely for the purpose of promoting or advertising your authorized use of the Service in accordance with this Section and for the purpose of fulfilling your obligations under the Terms.
+
+(b) Restrictions. In using Google Brand Features, you will not:
+(i) display a Google Brand Feature in any manner that implies a relationship or affiliation with, sponsorship, or endorsement by Google, other than your use of the Service, or that can be reasonably interpreted to suggest editorial content has been authored by, or represents the views or opinions of, Google or Google personnel;
+(ii) display a Google Brand Feature in your Maps API Implementation or on your site if your Maps API Implementation or site contains or displays adult content or promotes illegal activities, gambling, or the sale of tobacco or alcohol to persons under 21 years of age;
+(iii) have the Google logo as the largest logo in your Maps API Implementation or on your website (except as displayed in the map image itself);
+(iv) display a Google Brand Feature as the most prominent element in your Maps API Implementation on any page of your website;
+(v) display a Google Brand Feature in a manner that is misleading, defamatory, infringing, libelous, disparaging, obscene or otherwise objectionable to Google;
+(vi) use Google Brand Features to disparage Google, its products, or the Google Services;
+(vii) display a Google Brand Feature in your Maps API Implementation or on a site that violates any law or regulation; or
+(viii) remove, distort or alter any element of a Google Brand Feature (this includes squeezing, stretching, inverting, discoloring, etc.).
+
+(c) No Further License Grant; No Challenges. Except as set forth in this Section, nothing in the Terms will grant or will be deemed to grant you any right, title or interest in or to Google's Brand Features. All use by you of Google's Brand Features (including any goodwill associated therewith) will inure to the benefit of Google. To the maximum extent permitted by applicable law, the following will apply: at no time during or after the Term will you challenge or assist others to challenge the Brand Features of Google or the registration thereof by Google, nor will you attempt to register any Brand Features (including domain names) that are confusingly similar to those of Google in any way (including but not limited to sound, appearance and spelling).
+
+8.5 Proprietary Rights Notices. You agree that you will not remove, obscure, or alter any proprietary rights notices (including copyright and trademark notices, Terms of Use links, or Brand Features) that may be affixed to or provided through the Service. Where such notices are not affixed within the Service, you agree to display such notices according to the Maps APIs Documentation.
+
+8.6 U.S. Government Restricted Rights. If the Service or Content is being used or accessed by or on behalf of the United States government, such use is subject to additional terms located in the "Government End Users" section of our Legal Notices page.
+
+8.7 Determination of Compliance. Google reserves the sole right and discretion to determine whether your use of the Service, Content, and Brand Features is in compliance with these Terms.
+
+9. License Requirements. Google's licenses above are subject to your adherence to the following requirements:
+
+9.1 Free, Public Accessibility to Your Maps API Implementation.
+
+9.1.1 General Rules.
+
+(a) Free Access (No Fees). Your Maps API Implementation must be generally accessible to users without charge and must not require a fee-based subscription or other fee-based restricted access. This rule applies to Your Content and any other content in your Maps API Implementation, whether Your Content or the other content is in existence now or is added later.
+
+(b) Public Access (No Firewall). Your Maps API implementation must not operate (i) only behind a firewall; or (ii) only on an internal network (except during the development and testing phase); or (iii) in a closed community (for example, through invitation-only access).
+
+9.1.2 Exceptions.
+
+(a) Enterprise Agreement with Google. The rules in Section 9.1.1 (Free Access, Public Access) do not apply if you have entered into a separate written agreement with Google (such as a Google Enterprise agreement) or obtained Google's written permission.
+
+(b) Mobile Applications.
+(i) The rule in Section 9.1.1(a) (Free Access) does not apply if your Maps API Implementation is used in a mobile application that is sold for a fee through an online store and is downloadable to a mobile device that can access the online store. 
+
+(ii) The rule in Section 9.1.1(b) (Public Access) does not apply if your Maps API Implementation is an Android application that uses the Google Maps Android API. (However, the rule in Section 9.1.1(b) (Public Access) will continue to apply if your Maps API Implementation is an Android application that uses any other Maps APIs, unless the Maps API Implementation qualifies for the exception in Section 9.1.2(a) (Enterprise Agreement with Google).)
+
+
+9.1.3 Examples.
+
+(a) You can require users to log in to your Maps API Implementation if you do not require users to pay a fee.
+
+(b) You can charge a fee for your Maps API Implementation if it is an Android application downloadable to mobile devices from the Android Market.
+
+(c) If you are a consultant who creates or hosts Maps API Implementations for third party customers, you may charge such customers a fee for your consulting or hosting services (but not for the Maps API Implementations themselves, except as permitted under Section 9.1.2 (Exceptions)).
+9.2 Reporting. You must implement those reporting mechanisms that Google has set forth and may update from time to time in these Terms and in the Maps APIs Documentation. For example, as specified in the Maps API Documentation, you agree to provide reports to Google if your Maps API Implementation enables a device to detect its own location through use of a sensor (including but not limited to GPS, cell triangulation, WiFi or similar functionality) to display the location of the device on a map or to calculate a route.
+
+9.3 End User Terms and Privacy Policy. If you develop a Maps API Implementation for use by other users, you must:
+
+(a) display to the users of your Maps API Implementation the link to Google's Terms of Use as presented through the Service or described in the Maps APIs Documentation;
+
+(b) explicitly state in your Maps API Implementation's terms of use that, by using your Maps API Implementation, your users are agreeing to be bound by Google's Terms of Use; and
+
+(c) protect the privacy and legal rights of those users. 
+
+(i) You must make publicly available, and must abide by, an appropriate privacy policy in your Maps API Implementation. In particular, if your Maps API Implementation enables you or any party to gain access to information about users of the Maps API(s), including but not limited to personally identifiable information (such as user names) or non-personally identifiable usage information (such as location), your privacy policy must describe your use and retention of this information.
+
+(ii) Your privacy policy must notify users that you are using the Maps API(s) and incorporate by reference the Google privacy policy by including a link to the Google privacy policy (currently http://www.google.com/privacy.html), as amended by Google from time to time.
+
+9.4 Attribution. 
+(a) Content provided to you through the Service may contain the trade names, trademarks, service marks, logos, domain names, and other distinctive brand features of Google, its partners, or other third party rights holders of content indexed by Google. When Google provides this attribution, you must display it as provided through the Service or as described in the Maps APIs Documentation and may not delete or in any manner alter these trade names, trademarks, service marks, logos, domain names, and other distinctive brand features.
+
+(b) You agree to include and display the "powered by Google" attribution (and/or any other attribution(s) required by Google as described in the Maps APIs Documentation) conspicuously on the page, in close proximity and adjacent to the Service search box and Google search results. If you use the standard Google search control, or the standard Google search control form, this attribution will be included automatically, and you agree not to modify or obscure this automatically-generated attribution.
+
+(c) You understand and agree that Google has the sole right and discretion to determine whether your attribution(s) are in compliance with the above requirements.
+
+9.5 Responsibility for Breaches. You agree that you are solely responsible for (and that Google has no responsibility to you or to any third party for) any breach of your obligations under the Terms and for the consequences of any such breach (including any loss or damage that Google may suffer).
+
+10. License Restrictions. Except as expressly permitted under the Terms, or unless you have received prior written authorization from Google (or, as applicable, from the provider of particular Content), Google's licenses above are subject to your adherence to all of the restrictions below. 
+
+10.1 Restrictions on How You May Use the Maps API(s). Except as explicitly permitted in Section 8 (Licenses from Google to You) or the Maps APIs Documentation, you must not (nor may you permit anyone else to) do any of the following:
+
+10.1.1. General Restrictions. 
+(a) No Access to Maps API(s) except through the Service. You must not access or use the Maps API(s) or any Content through any technology or means other than those provided in the Service, or through other explicitly authorized means Google may designate. For example, you must not access map tiles or imagery through interfaces or channels (including undocumented Google interfaces) other than the Maps API(s).
+
+(b) No Hiding of Identity. You must not hide or mask from Google the identity of your Maps API Implementation as it uses the Service, including by failing to follow the identification conventions listed in the Maps APIs Documentation.
+
+(c) No Reverse Engineering. You must not attempt to reverse engineer or decompile the Services or any component, or attempt to create a substitute or similar service through use of or access to the Services, unless this is expressly permitted or required by applicable law. 
+
+(d) No Modification of Search Results. You must not modify, reorder, augment or manipulate search results in any way unless you indicate to the user that this has occurred.
+
+(e) No Modification of Links. You must not modify, replace, obscure, or otherwise hinder the functioning of links to Google or third party websites provided in the Content. For the avoidance of doubt, titles for place results must link to the applicable URL provided in the result, unless the title is intended to be selected only for purposes of navigation by an end user accessing your Maps API Implementation from a device with appropriately space-constraining user interface options. In these cases, the title linking to the Google-provided URL must be displayed as the top and primary link on the subsequent landing page or user interface component.
+
+(f) No Violation of Google Policies. You must not violate any policies in the Maps APIs Documentation or violate Google's Software Principles (available at http://www.google.com/intl/en/corporate/software_principles.html or such successor URLs that Google may designate from time to time) and other policies as Google may develop from time to time, including but not limited to the Google policies below, under which you agree not to:
+
+(i) defame, abuse, harass, stalk, threaten or otherwise violate the legal rights (such as rights of privacy and publicity) of others;
+
+(ii) upload, post, transmit or otherwise make available any inappropriate, defamatory, obscene, or unlawful content;
+
+(iii) upload, post, transmit or otherwise make available any content that infringes any patent, trademark, copyright, trade secret or other proprietary right of any party, unless you are the owner of the rights, or have the permission of the owner or other legal justification to use such content;
+
+(iv) upload, post, transmit or otherwise make available messages that promote pyramid schemes, chain letters, or disruptive commercial messages or advertisements;
+
+(v) upload, post, email, transmit or otherwise make available any other content, message, or communication prohibited by applicable law, the Terms or any applicable Service policies or guidelines;
+
+(vi) download any file posted by another that you know, or reasonably should know, cannot legally be distributed in such manner;
+
+(vii) impersonate another person or entity, or falsify or delete any author attributions or labels of the origin or source of Content, or other material;
+
+(viii) restrict or inhibit any other user from using and enjoying the Service or any other Google Services;
+
+(ix) delete, obscure, or fail to display the Terms of Use link as presented through the Service or described in the Maps APIs Documentation;
+
+(x) delete, obscure, or in any manner alter any brand features, logos, warnings, notices (including but not limited to any copyright or other proprietary rights notices), or links that appear in the Service or the Content;
+
+(xi) interfere with or disrupt the Google Services, servers, or networks connected to the Google Services, or disobey any requirements, procedures, policies, or regulations of networks connected to the Google Services;
+
+(xii) use any robot, spider, site search/retrieval application, or other device to retrieve or index any portion of the Google Services or Content or collect information about users for any unauthorized purpose;
+
+(xiii) display content in your Maps API Implementation that falsely expresses or implies that such content is sponsored or endorsed by Google;
+
+(xiv) create user accounts by automated means or under false or fraudulent pretenses, or obtain or attempt to obtain multiple keys for the same URL;
+
+(xv) promote or provide instructional information about illegal activities;
+
+(xvi) promote physical harm or injury against any group or individual; or
+
+(xvii) transmit any malicious code (including but not limited to viruses, worms, defects, and Trojan horses), or any other items of a destructive nature.
+
+(g) No Use of Content without a Google Map. You must not use or display the Content without a corresponding Google map, unless you are explicitly permitted to do so in the Maps APIs Documentation, or through written permission from Google. In any event, you must not use or display the Content on or in conjunction with a non-Google map. For example, you must not use geocodes obtained through the Service in conjunction with a non-Google map. As another example, you must not display Street View imagery alongside a non-Google map, but you may display Street View imagery without a corresponding Google map because the Maps APIs Documentation explicitly permits you to do so.
+
+(h) No Use of Static Maps API(s) outside a Web-Based Application (Except with a Link to Google Maps). You must not use the Static Maps API(s) outside of a web-based application unless:
+
+(i) your platform does not have a web browser; or
+
+(ii) if your platform does have a web browser, you provide a link that shows the location concerned either (x) in the Google Maps native application (if your platform has one); or (y) on the Google Maps website.
+
+(i) No Use Beyond Google's Transaction Limits and Usage Policies. If your Maps API application generates a high volume of transactions, Google reserves the right to set transaction limits, as described in the Documentation here. Google also reserves the right to set other usage policies in the Documentation from time to time. If you want to engage in use outside these transaction limits or usage policies, please contact the Google Maps API for Business sales team for information on licensing options to address your needs.
+
+(j) Geolocation Privacy.
+
+(i) Your Maps API Implementation must notify the user in advance of the type(s) of data that you intend to collect from the user or the user's device. Your Maps API Implementation must not obtain or cache any user's location in any manner except with the user's prior consent. Your Maps API Implementation must let the user revoke the user's consent at any time.
+
+(ii) If your Maps API Implementation provides Google with geolocation data, that geolocation data must not enable Google to identify an individual user. For example, if your Maps API Implementation sends Google Your Content, and Your Content includes geolocation data, Your Content must not also include unique device identifiers associated with individual users.
+
+(iii) If you intend to obtain the user's location and use it with any other data provider's data, you must disclose this fact to the user.
+
+
+10.1.2 Restrictions against Commercial Use.
+
+(a) No Fees. You must not charge users or any other third party any fee for the use of the Maps API Implementation, the Service, or the Content, except as permitted under Section 9.1.2 (Exceptions).
+
+(b) No Direct Marketing. You must not print more than 5,000 copies of sales collateral materials containing a screenshot of the Content for purposes of commercial sales lead generation ("Direct Marketing") or incorporate the Content as a core part of printed matter (such as printed maps or guide books) that you redistribute for a fee. You must contact the Google Maps API for Business sales team to obtain a direct license if you desire to do either of the above.
+
+
+10.1.3 Restrictions against Data Export or Copying.
+
+(a) No Unauthorized Copying, Modification, Creation of Derivative Works, or Display of the Content. You must not copy, translate, modify, or create a derivative work (including creating or contributing to a database) of, or publicly display any Content or any part thereof except as explicitly permitted under these Terms. For example, the following are prohibited: (i) creating server-side modification of map tiles; (ii) stitching multiple static map images together to display a map that is larger than permitted in the Maps APIs Documentation; (iii) creating mailing lists or telemarketing lists based on the Content; or (iv) exporting, writing, or saving the Content to a third party's location-based platform or service.
+
+(b) No Pre-Fetching, Caching, or Storage of Content. You must not pre-fetch, cache, or store any Content, except that you may store: (i) limited amounts of Content for the purpose of improving the performance of your Maps API Implementation if you do so temporarily (and in no event for more than 30 calendar days), securely, and in a manner that does not permit use of the Content outside of the Service; and (ii) any content identifier or key that the Maps APIs Documentation specifically permits you to store. For example, you must not use the Content to create an independent database of "places" or other local listings information.
+
+(c) No Mass Downloads or Bulk Feeds of Content. You must not use the Service in a manner that gives you or any other person access to mass downloads or bulk feeds of any Content, including but not limited to numerical latitude or longitude coordinates, imagery, visible map data, or places data (including business listings). For example, you are not permitted to offer a batch geocoding service that uses Content contained in the Maps API(s).
+
+
+10.2 Restrictions on the Types of Applications that You are Permitted to Build with the Maps API(s). Except as explicitly permitted in Section 8 (Licenses from Google to You) or the Maps APIs Documentation, you must not (nor may you permit anyone else to) do any of the following:
+
+(a) No "Wrapping." You must not create or offer a "wrapper" for the Service, unless you obtain Google's written consent to do so. For example, you are not permitted to: (i) use or provide any part of the Service or Content (such as map imagery, geocoding, directions, places, or terrain data) in an API that you offer to others; or (ii) create a Maps API Implementation that reimplements or duplicates Google Maps/Google Earth. For clarity, you are not "re-implementing or duplicating" Google Maps/Google Earth if your Maps API Implementation provides substantial additional features or content beyond Google Maps/Google Earth, and those additional features or content constitute the primary defining characteristic of your Maps API Implementation.
+
+(b) No Business, Residential, or Telephone Listings Services. You must not display any of the business listings Content provided by the Maps API(s) in any Maps API Implementation that has the primary purpose of making available business, residential address, or telephone directory listings.
+
+(c) No Navigation, Autonomous Vehicle Control, or Enterprise Applications. You must not use the Service or Content with any products, systems, or applications for or in connection with any of the following:
+
+(i) real time navigation or route guidance, including but not limited to turn-by-turn route guidance that is synchronized to the position of a user's sensor-enabled device.
+
+(ii) any systems or functions for automatic or autonomous control of vehicle behavior; or
+
+(iii) enterprise dispatch, fleet management, business asset tracking or similar applications. If you want to engage in enterprise dispatch, fleet management, business asset tracking, or similar applications, please contact the Google Maps API for Business sales team to obtain a Google enterprise license. (If you are offering a non-enterprise implementation, you may use the Google Maps API(s) to track assets such as cars, buses or other vehicles, as long as your tracking application is made available to the public without charge. For example, you may offer a free, public Maps API Implementation that displays real-time public transit or other transportation status information.)
+
+11. Licenses from You to Google.
+
+11.1 Content License. Google claims no ownership over Your Content, and you retain copyright and any other rights you already hold in Your Content. By submitting, posting or displaying Your Content in the Service, you give Google a perpetual, irrevocable, worldwide, royalty-free, and non-exclusive license to reproduce, adapt, modify, translate, publicly perform, publicly display and distribute Your Content through the Service for the sole purpose of enabling Google to provide you with the Service in accordance with Google's privacy policy. 
+
+11.2 Marketing License. You grant to Google a worldwide, royalty-free, non-transferable, and non-exclusive license during the Term to use Your Brand Features and Your Content to publicize or advertise that you are using the Service (for example, by using your marks in presentations, marketing materials, customer lists, financial reports and Web site listings (including links to your website), or by creating marketing or advertising materials that show screenshots of the Service in which Your Content is featured). 
+
+11.3 Authority to Grant Licenses. You represent and warrant to Google that you have all the rights, power and authority necessary to grant the above licenses.
+
+12. Terminating this Agreement.
+
+12.1 The Terms will continue to apply until terminated by either you or Google as set out below. 
+
+12.2 You may terminate your legal agreement with Google by removing the Maps API(s) code from your implementation and discontinuing your use of the Service at any time. You do not need to specifically inform Google when you stop using the Service.
+
+12.3 Google reserves the right to terminate these Terms or discontinue the Service or any portion or feature for any reason and at any time without liability or other obligation to you, except as described under Section 4.4.
+
+12.4 Nothing in this Section will affect Google's rights regarding provision of the Service under Section 4 (Provision of Service By Google) of the Terms. 
+
+12.5 When this legal agreement comes to an end, those Terms that by their nature are intended to continue indefinitely will continue to apply, including but not limited to: Sections 6 (Google's Proprietary Rights); 12.4 and 12.5 (Terminating this Agreement); 13 (Exclusion of Warranties); 14 (Limitation of Liability); 15 (Indemnity); and 19 (General Legal Terms).
+
+13. EXCLUSION OF WARRANTIES.
+
+13.1 NOTHING IN THESE TERMS, INCLUDING SECTIONS 13 AND 14, WILL EXCLUDE OR LIMIT GOOGLE'S WARRANTY OR LIABILITY FOR LOSSES THAT MAY NOT BE LAWFULLY EXCLUDED OR LIMITED BY APPLICABLE LAW. SOME JURISDICTIONS DO NOT ALLOW THE EXCLUSION OF CERTAIN WARRANTIES OR CONDITIONS OR THE LIMITATION OR EXCLUSION OF LIABILITY FOR CERTAIN TYPES OF LOSS OR DAMAGES. ACCORDINGLY, ONLY THE LIMITATIONS THAT ARE LAWFUL IN YOUR JURISDICTION WILL APPLY TO YOU, AND GOOGLE.S LIABILITY WILL BE LIMITED TO THE MAXIMUM EXTENT PERMITTED BY LAW.
+
+13.2 YOU EXPRESSLY UNDERSTAND AND AGREE THAT YOUR USE OF THE SERVICE AND THE CONTENT IS AT YOUR SOLE RISK AND THAT THE SERVICE AND THE CONTENT ARE PROVIDED "AS IS" AND "AS AVAILABLE." IN PARTICULAR, GOOGLE, ITS SUBSIDIARIES AND AFFILIATES, AND ITS LICENSORS AND THEIR SUPPLIERS, DO NOT REPRESENT OR WARRANT TO YOU THAT:
+(a) YOUR USE OF THE SERVICE WILL MEET YOUR REQUIREMENTS;
+(b) YOUR USE OF THE SERVICE WILL BE UNINTERRUPTED, TIMELY, SECURE OR FREE FROM ERROR;
+(c) THE INFORMATION OBTAINED BY YOU AS A RESULT OF YOUR USE OF THE SERVICE WILL BE ACCURATE OR RELIABLE; AND
+(d) DEFECTS IN THE OPERATION OR FUNCTIONALITY OF ANY SOFTWARE PROVIDED TO YOU AS PART OF THE SERVICE WILL BE CORRECTED.
+
+13.3 ANY CONTENT OBTAINED THROUGH THE USE OF THE GOOGLE SERVICES IS DONE AT YOUR OWN DISCRETION AND RISK AND YOU WILL BE SOLELY RESPONSIBLE FOR ANY DAMAGE TO YOUR COMPUTER SYSTEM OR OTHER DEVICE, LOSS OF DATA, OR ANY OTHER DAMAGE OR INJURY THAT RESULTS FROM THE DOWNLOAD OR USE OF ANY SUCH CONTENT.
+
+13.4 NO ADVICE OR INFORMATION, WHETHER ORAL OR WRITTEN, OBTAINED BY YOU FROM GOOGLE, OR THROUGH OR FROM THE SERVICE OR CONTENT, WILL CREATE ANY WARRANTY NOT EXPRESSLY STATED IN THE TERMS.
+
+13.5 GOOGLE, ITS LICENSORS, AND THEIR SUPPLIERS FURTHER EXPRESSLY DISCLAIM ALL WARRANTIES AND CONDITIONS OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE IMPLIED WARRANTIES AND CONDITIONS OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT.
+
+14. LIMITATION OF LIABILITY.
+
+14.1 SUBJECT TO SECTION 13.1, YOU EXPRESSLY UNDERSTAND AND AGREE THAT, TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, GOOGLE, ITS SUBSIDIARIES, AND AFFILIATES, AND GOOGLE'S LICENSORS AND THEIR SUPPLIERS, WILL NOT BE LIABLE TO YOU FOR:
+
+(a) ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, CONSEQUENTIAL OR EXEMPLARY DAMAGES THAT MAY BE INCURRED BY YOU, HOWEVER CAUSED AND UNDER ANY THEORY OF LIABILITY (INCLUDING, BUT NOT BE LIMITED TO: CONTRACT, TORT, COMMON LAW, OR STATUTORY DAMAGES; ANY LOSS OF PROFIT (WHETHER INCURRED DIRECTLY OR INDIRECTLY), ANY LOSS OF GOODWILL OR BUSINESS REPUTATION, ANY LOSS OF DATA, COST OF PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES, OR OTHER INTANGIBLE LOSS); OR
+
+(b) ANY LOSS OR DAMAGE AS A RESULT OF:
+(i) ANY RELIANCE PLACED BY YOU ON THE COMPLETENESS, ACCURACY OR EXISTENCE OF ANY ADVERTISING, OR AS A RESULT OF ANY RELATIONSHIP OR TRANSACTION BETWEEN YOU AND ANY ADVERTISER OR SPONSOR WHOSE ADVERTISING APPEARS ON THE GOOGLE SERVICES;
+(ii) ANY CHANGES THAT GOOGLE MAY MAKE TO THE SERVICE, OR ANY PERMANENT OR TEMPORARY CESSATION IN THE PROVISION OF THE SERVICE (OR ANY FEATURES WITHIN THE SERVICE);
+(iii) THE DELETION OF, CORRUPTION OF, OR FAILURE TO STORE, ANY CONTENT AND OTHER COMMUNICATIONS DATA MAINTAINED OR TRANSMITTED BY OR THROUGH YOUR USE OF THE SERVICE;
+(iv) YOUR FAILURE TO PROVIDE GOOGLE WITH ACCURATE ACCOUNT INFORMATION; OR
+(v) YOUR FAILURE TO KEEP YOUR PASSWORD OR ACCOUNT DETAILS SECURE AND CONFIDENTIAL.
+
+14.2 THE LIMITATIONS ON GOOGLE'S LIABILITY TO YOU IN SECTION 14.1 ABOVE WILL APPLY WHETHER OR NOT GOOGLE, ITS SUBSIDIARIES, AFFILIATES, LICENSORS OR THEIR SUPPLIERS HAVE BEEN ADVISED OF OR SHOULD HAVE BEEN AWARE OF THE POSSIBILITY OF ANY SUCH LOSSES OR DAMAGES.
+
+15. Indemnities.
+
+15.1 You hereby agree to defend, indemnify, and hold Google, its officers, directors, agents, affiliates, strategic partners, licensors and their suppliers ("the Indemnified Parties") harmless from and against any claim or liability arising out of:
+(a) your use of the Maps API(s) in breach of the Terms or applicable policies;
+(b) your Maps API Implementation;
+(c) any use by users of your Maps API Implementation;
+(d) any claim that your Maps API Implementation or Your Content violates any applicable law, including but not limited to any claim that your Maps API Implementation infringes the rights of a third party. 
+
+15.2 You will cooperate as fully as reasonably required in the defense of any claim. Google reserves the right, at its own expense, to assume the exclusive defense and control of any matter subject to indemnification by you. You acknowledge that damages for improper use of the Maps API(s) may be irreparable; therefore, Google is entitled to seek equitable relief, including but not limited to preliminary injunction and injunction, in addition to all other remedies. 
+
+16. Copyright Policies; Content Removal; Termination of Repeat Offenders' Accounts. 
+
+It is Google's policy to respond to notices of alleged copyright infringement that comply with applicable international intellectual property law (including, in the United States, the Digital Millennium Copyright Act) and to terminate the accounts of repeat offenders. Details of Google's policy can be found here.
+
+17. Other Content.
+
+17.1 The Service may include hyperlinks to other websites or content or resources. Google has no control over any web sites or resources that are provided by companies or persons other than Google. You acknowledge and agree that Google is not responsible for the availability of any such external sites or resources, and does not endorse any advertising, products, or other materials on or available from such websites or resources.
+
+17.2 You acknowledge and agree that Google is not liable for any loss or damage that may be incurred by you as a result of the availability of those external sites or resources, or as a result of any reliance placed by you on the completeness, accuracy, or existence of any advertising, products, or other materials on, or available from, such websites or resources.
+
+18. Language of the Terms.
+
+18.1 Where Google has provided you with a translation of the English language version of the Terms, you agree that the translation is provided for your convenience only and that the English language version of the Terms will govern your relationship with Google.
+
+18.2 If there is any contradiction between the English language version of the Terms and a translation of the Terms, the English language version will take precedence.
+
+19. General Legal Terms.
+
+19.1 Notices. You agree that Google may provide you with notices, including those regarding changes to the Terms, by email, regular mail, or postings on the Service.
+
+19.2 No Waiver. You agree that if Google does not exercise or enforce any legal right or remedy available to it under the Terms (or any applicable law), Google will not be deemed to have waived its rights or remedies, and those rights and remedies will still be available to Google. Any waiver of any provision of these Terms will be effective only if Google expressly states in a signed writing that it is waiving a specified Term.
+
+19.3 Severability. If any court of law that has jurisdiction rules that any provision of these Terms is invalid, then that provision will be removed from the Terms without affecting the rest of the Terms. The remaining provisions of the Terms will continue to be valid and enforceable.
+
+19.4 Third Party Beneficiaries. You acknowledge and agree that each member of the group of companies of which Google is the parent, and each of the Indemnified Parties, will be third party beneficiaries to the Terms and that such other companies will be entitled to directly enforce, and rely upon, any provision of the Terms that confers a benefit on (or rights in favor of) them. Other than this, no other person or company will be a third party beneficiary to the Terms.
+
+19.5 Assignment. The Terms may be assigned by Google and will inure to the benefit of Google, its successors, and assigns.
+
+19.6 Governing Law and Jurisdiction; Injunctive Relief. The Terms, and your relationship with Google under the Terms, are governed by the laws of the State of California, USA, without regard to its conflict of laws provisions. You and Google agree to submit to the exclusive, personal jurisdiction of the federal or state courts of Santa Clara County, California, USA, to resolve any legal matter arising from or related to the Terms. Notwithstanding this, you agree that Google will be allowed to apply for injunctive remedies (or an equivalent type of urgent legal relief) in any jurisdiction.
+
+19.7 Complete Agreement. These Terms constitute the whole legal agreement between you and Google in connection with, and govern your use of, the Service and Content. These Terms completely replace and supersede any prior agreements between you and Google, written or oral, in connection with the Service and Content.

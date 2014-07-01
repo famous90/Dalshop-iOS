@@ -13,12 +13,10 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLQueryFlagengine (49 custom class methods, 32 custom properties)
+//   GTLQueryFlagengine (60 custom class methods, 36 custom properties)
 
 #import "GTLQueryFlagengine.h"
 
-#import "GTLFlagengineBeacon.h"
-#import "GTLFlagengineBeaconCollection.h"
 #import "GTLFlagengineBranchItemMatcher.h"
 #import "GTLFlagengineFeedbackMessage.h"
 #import "GTLFlagengineFlag.h"
@@ -27,13 +25,17 @@
 #import "GTLFlagengineItemCollection.h"
 #import "GTLFlagengineLike.h"
 #import "GTLFlagengineNotice.h"
+#import "GTLFlagenginePP.h"
 #import "GTLFlagengineProvider.h"
 #import "GTLFlagengineProviderForm.h"
+#import "GTLFlagengineRedeem.h"
+#import "GTLFlagengineRedeemCollection.h"
 #import "GTLFlagengineRetainForm.h"
 #import "GTLFlagengineReward.h"
 #import "GTLFlagengineRewardCollection.h"
 #import "GTLFlagengineShop.h"
 #import "GTLFlagengineShopCollection.h"
+#import "GTLFlagengineTOU.h"
 #import "GTLFlagengineUploadUrl.h"
 #import "GTLFlagengineUser.h"
 #import "GTLFlagengineUserForm.h"
@@ -42,11 +44,11 @@
 
 @implementation GTLQueryFlagengine
 
-@dynamic barcodeId, beaconId, birth, descriptionProperty, fields, flagId,
+@dynamic barcodeId, birth, descriptionProperty, empty, fields, flagId,
          identifier, ids, imageUrl, itemId, job, lat, liked, likes, logoUrl,
-         lon, mark, name, oldPrice, parentId, price, providerId, reward,
-         rewardable, rewarded, sale, sex, shopId, tag, thumbnailUrl, type,
-         userId;
+         lon, mark, name, oldPrice, onSale, parentId, phone, price, providerId,
+         range, reward, rewardable, rewarded, sale, sex, shopId, tag,
+         thumbnailUrl, type, userId, verificationCode;
 
 + (NSDictionary *)parameterNameMap {
   NSDictionary *map =
@@ -103,6 +105,52 @@
 }
 
 #pragma mark -
+#pragma mark "apps.pps" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForAppsPpsGet {
+  NSString *methodName = @"flagengine.apps.pps.get";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagenginePP class];
+  return query;
+}
+
++ (id)queryForAppsPpsInsertWithObject:(GTLFlagenginePP *)object {
+  if (object == nil) {
+    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  NSString *methodName = @"flagengine.apps.pps.insert";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.bodyObject = object;
+  query.expectedObjectClass = [GTLFlagenginePP class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "apps.tous" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForAppsTousGet {
+  NSString *methodName = @"flagengine.apps.tous.get";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineTOU class];
+  return query;
+}
+
++ (id)queryForAppsTousInsertWithObject:(GTLFlagengineTOU *)object {
+  if (object == nil) {
+    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  NSString *methodName = @"flagengine.apps.tous.insert";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.bodyObject = object;
+  query.expectedObjectClass = [GTLFlagengineTOU class];
+  return query;
+}
+
+#pragma mark -
 #pragma mark "apps.versions" methods
 // These create a GTLQueryFlagengine object.
 
@@ -122,56 +170,6 @@
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
   query.bodyObject = object;
   query.expectedObjectClass = [GTLFlagengineVersion class];
-  return query;
-}
-
-#pragma mark -
-#pragma mark "beacons" methods
-// These create a GTLQueryFlagengine object.
-
-+ (id)queryForBeaconsDeleteWithObject:(GTLFlagengineBeacon *)object {
-  if (object == nil) {
-    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
-    return nil;
-  }
-  NSString *methodName = @"flagengine.beacons.delete";
-  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
-  query.bodyObject = object;
-  return query;
-}
-
-+ (id)queryForBeaconsGetWithBeaconId:(NSString *)beaconId {
-  NSString *methodName = @"flagengine.beacons.get";
-  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
-  query.beaconId = beaconId;
-  query.expectedObjectClass = [GTLFlagengineShop class];
-  return query;
-}
-
-#pragma mark -
-#pragma mark "beacons.get" methods
-// These create a GTLQueryFlagengine object.
-
-+ (id)queryForBeaconsGetAll {
-  NSString *methodName = @"flagengine.beacons.get.all";
-  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
-  query.expectedObjectClass = [GTLFlagengineBeaconCollection class];
-  return query;
-}
-
-#pragma mark -
-#pragma mark "beacons" methods
-// These create a GTLQueryFlagengine object.
-
-+ (id)queryForBeaconsInsertWithObject:(GTLFlagengineBeacon *)object {
-  if (object == nil) {
-    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
-    return nil;
-  }
-  NSString *methodName = @"flagengine.beacons.insert";
-  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
-  query.bodyObject = object;
-  query.expectedObjectClass = [GTLFlagengineBeacon class];
   return query;
 }
 
@@ -198,8 +196,30 @@
   return query;
 }
 
-+ (id)queryForFlagsList {
-  NSString *methodName = @"flagengine.flags.list";
+#pragma mark -
+#pragma mark "flags.list" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForFlagsListAll {
+  NSString *methodName = @"flagengine.flags.list.all";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineFlagCollection class];
+  return query;
+}
+
++ (id)queryForFlagsListByitem {
+  NSString *methodName = @"flagengine.flags.list.byitem";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineFlagCollection class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "flags.list.byitem" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForFlagsListByitemReward {
+  NSString *methodName = @"flagengine.flags.list.byitem.reward";
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
   query.expectedObjectClass = [GTLFlagengineFlagCollection class];
   return query;
@@ -209,6 +229,13 @@
 #pragma mark "flags.list" methods
 // These create a GTLQueryFlagengine object.
 
++ (id)queryForFlagsListByreward {
+  NSString *methodName = @"flagengine.flags.list.byreward";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineFlagCollection class];
+  return query;
+}
+
 + (id)queryForFlagsListByshop {
   NSString *methodName = @"flagengine.flags.list.byshop";
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
@@ -216,8 +243,15 @@
   return query;
 }
 
-+ (id)queryForFlagsListClose {
-  NSString *methodName = @"flagengine.flags.list.close";
++ (id)queryForFlagsListNear {
+  NSString *methodName = @"flagengine.flags.list.near";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineFlagCollection class];
+  return query;
+}
+
++ (id)queryForFlagsListRange {
+  NSString *methodName = @"flagengine.flags.list.range";
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
   query.expectedObjectClass = [GTLFlagengineFlagCollection class];
   return query;
@@ -315,6 +349,27 @@
 #pragma mark "items.list" methods
 // These create a GTLQueryFlagengine object.
 
++ (id)queryForItemsListItem {
+  NSString *methodName = @"flagengine.items.list.item";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineItemCollection class];
+  return query;
+}
+
++ (id)queryForItemsListManager {
+  NSString *methodName = @"flagengine.items.list.manager";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineItemCollection class];
+  return query;
+}
+
++ (id)queryForItemsListReward {
+  NSString *methodName = @"flagengine.items.list.reward";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineItemCollection class];
+  return query;
+}
+
 + (id)queryForItemsListUser {
   NSString *methodName = @"flagengine.items.list.user";
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
@@ -355,20 +410,6 @@
   return query;
 }
 
-#pragma mark -
-#pragma mark "likes.delete" methods
-// These create a GTLQueryFlagengine object.
-
-+ (id)queryForLikesDeleteAll {
-  NSString *methodName = @"flagengine.likes.delete.all";
-  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
-  return query;
-}
-
-#pragma mark -
-#pragma mark "likes" methods
-// These create a GTLQueryFlagengine object.
-
 + (id)queryForLikesInsertWithObject:(GTLFlagengineLike *)object {
   if (object == nil) {
     GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
@@ -406,6 +447,29 @@
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
   query.bodyObject = object;
   query.expectedObjectClass = [GTLFlagengineProvider class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "redeems" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForRedeemsInsertWithObject:(GTLFlagengineRedeem *)object {
+  if (object == nil) {
+    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  NSString *methodName = @"flagengine.redeems.insert";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.bodyObject = object;
+  query.expectedObjectClass = [GTLFlagengineRedeem class];
+  return query;
+}
+
++ (id)queryForRedeemsList {
+  NSString *methodName = @"flagengine.redeems.list";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineRedeemCollection class];
   return query;
 }
 
@@ -487,6 +551,13 @@
   return query;
 }
 
++ (id)queryForShopsListReward {
+  NSString *methodName = @"flagengine.shops.list.reward";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineShopCollection class];
+  return query;
+}
+
 #pragma mark -
 #pragma mark "shops" methods
 // These create a GTLQueryFlagengine object.
@@ -497,6 +568,21 @@
   query.expectedObjectClass = [GTLFlagengineShop class];
   return query;
 }
+
+#pragma mark -
+#pragma mark "shops.recommend" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForShopsRecommendNear {
+  NSString *methodName = @"flagengine.shops.recommend.near";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.expectedObjectClass = [GTLFlagengineShop class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "shops" methods
+// These create a GTLQueryFlagengine object.
 
 + (id)queryForShopsUpdateWithObject:(GTLFlagengineShop *)object {
   if (object == nil) {
@@ -531,6 +617,38 @@
   query.expectedObjectClass = [GTLFlagengineUserInfo class];
   return query;
 }
+
+#pragma mark -
+#pragma mark "userinfos.phone" methods
+// These create a GTLQueryFlagengine object.
+
++ (id)queryForUserinfosPhoneInsertWithObject:(GTLFlagengineUserInfo *)object {
+  if (object == nil) {
+    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  NSString *methodName = @"flagengine.userinfos.phone.insert";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.bodyObject = object;
+  query.expectedObjectClass = [GTLFlagengineUserInfo class];
+  return query;
+}
+
++ (id)queryForUserinfosPhoneTestWithObject:(GTLFlagengineUserInfo *)object {
+  if (object == nil) {
+    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
+    return nil;
+  }
+  NSString *methodName = @"flagengine.userinfos.phone.test";
+  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
+  query.bodyObject = object;
+  query.expectedObjectClass = [GTLFlagengineUserInfo class];
+  return query;
+}
+
+#pragma mark -
+#pragma mark "userInfos" methods
+// These create a GTLQueryFlagengine object.
 
 + (id)queryForUserInfosUpdateWithObject:(GTLFlagengineUserInfo *)object {
   if (object == nil) {
@@ -588,22 +706,6 @@
   GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
   query.bodyObject = object;
   query.expectedObjectClass = [GTLFlagengineUser class];
-  return query;
-}
-
-#pragma mark -
-#pragma mark "usreinfos" methods
-// These create a GTLQueryFlagengine object.
-
-+ (id)queryForUsreinfosInsertWithObject:(GTLFlagengineUserInfo *)object {
-  if (object == nil) {
-    GTL_DEBUG_ASSERT(object != nil, @"%@ got a nil object", NSStringFromSelector(_cmd));
-    return nil;
-  }
-  NSString *methodName = @"flagengine.usreinfos.insert";
-  GTLQueryFlagengine *query = [self queryWithMethodName:methodName];
-  query.bodyObject = object;
-  query.expectedObjectClass = [GTLFlagengineUserInfo class];
   return query;
 }
 

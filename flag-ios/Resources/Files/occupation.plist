@@ -2,21 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <array>
-	<string>자영업</string>
-	<string>판매/영업직</string>
-	<string>기능/작업직</string>
-	<string>사무/기술직</string>
-	<string>경영/관리직</string>
-	<string>자유/전문직</string>
-	<string>농/임/어/축산업</string>
-	<string>초등학생</string>
-	<string>중학생</string>
-	<string>고등학생</string>
-	<string>대학생</string>
-	<string>대학원생</string>
-	<string>전업주부</string>
-	<string>공무원</string>
 	<string>무직</string>
-	<string>기타</string>
+	<string>학생</string>
+	<string>직장인</string>
+	<string>자영업</string>
 </array>
 </plist>

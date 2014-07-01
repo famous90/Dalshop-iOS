@@ -9,14 +9,17 @@
 #import "AppDelegate.h"
 #import "MapViewController.h"
 #import "ItemListViewController.h"
-#import "CustomInfoWindow.h"
 
+#import "Item.h"
+#import "Shop.h"
 #import "Flag.h"
 #import "FlagDataController.h"
 #import "URLParameters.h"
 
 #import "MapUtil.h"
 #import "ViewUtil.h"
+#import "DataUtil.h"
+#import "DelegateUtil.h"
 
 #import "GoogleAnalytics.h"
 #import "GTMHTTPFetcherLogging.h"
@@ -24,34 +27,60 @@
 
 @interface MapViewController ()
 
-@property (nonatomic, weak) AppDelegate *appDelegate;
-
 @end
 
 @implementation MapViewController{
     GMSMapView *mapView_;
     CLLocationManager *locationManager;
     CLLocation *location;
-    BOOL isFirstLoad;
+
     FlagDataController *flagData;
-    BOOL markerFirstTapped;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    isFirstLoad = YES;
     flagData = [[FlagDataController alloc] init];
     
-    markerFirstTapped = NO;
+    [self initializeLocation];
     
-    [self initializeLocationManager];
+    if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+        
+        [self initializeLocation];
+        [self initializeMapViewWithCurrentLocation:location];
+        [self findFlagNearbyWithCurrentLocatoin:location];
+        
+    }else if (self.parentPage == SALE_INFO_VIEW_PAGE){
+        
+        [self initializeMapViewWithCurrentLocation:location];
+        
+        URLParameters *urlParams = [self urlParamsToGetFlagListByShop:self.objectIdForFlag];
+        [self getFlagListByURLParams:urlParams];
+        
+    }else if (self.parentPage == ITEM_DETAIL_VIEW_PAGE){
+        
+        [self initializeMapViewWithCurrentLocation:location];
+        
+        URLParameters *urlParams = [self urlParamsToGetFlagListByItem:self.objectIdForFlag];
+        [self getFlagListByURLParams:urlParams];
+        
+    }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
+        
+        [self initializeMapViewWithCurrentLocation:[MapUtil getProximateCheckInSpotFromLocation:location]];
+        
+        // load check in reward flag list
+        URLParameters *urlParams = [self urlParamsToGetFlagListByRewardAroundLocation:location];
+        [self performSelectorInBackground:@selector(getFlagListByURLParams:) withObject:urlParams];
+
+    }
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -61,41 +90,79 @@
 
 #pragma mark -
 #pragma mark - Implementation
+- (void)getFlagListByURLParams:(URLParameters *)urlParams
+{
+    NSURL *url = [urlParams getURLForRequest];
+    NSString *methodName = [urlParams getMethodName];
+    
+    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *results){
+        
+        if (results) {
+            [self setFlagDataWithJsonData:results];
+        }
+        
+    }];
+}
+
+- (void)setFlagDataWithJsonData:(NSDictionary *)results
+{
+    NSArray *flags = [results objectForKey:@"flags"];
+    
+    if (flags) {
+        
+        [flagData removeAllData];
+        [mapView_ clear];
+        
+        for(id object in flags){
+            Flag *theFlag = [[Flag alloc] initWithData:object];
+            [flagData addObjectWithObject:theFlag];
+        }
+        
+        for(Flag *theFlag in flagData.masterData){
+            [self fixFlagInMapWithFlag:theFlag];
+        }
+        
+        [self.delegate performSelector:@selector(flagListOnMap:) withObject:flagData];
+    }
+}
+
 - (void)showCurrentLocation
 {
-    [locationManager startUpdatingLocation];
-    NSLog(@"find current position");
+    // GA
+    [GAUtil sendGADataWithUIAction:@"show_current_location" label:@"inside_view" value:nil];
+    
+    
+    [self initializeLocation];
+    [self moveCameraPositionToLocation:location];
+    
+    if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+        [self findFlagNearbyWithCurrentLocatoin:location];
+    }
 }
 
 #pragma mark - GMS Delegate
-
-- (void)setMapViewWithCurrentLocation:(CLLocation *)currentLocation
+- (void)initializeMapViewWithCurrentLocation:(CLLocation *)currentLocation
 {
     GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:currentLocation.coordinate.latitude longitude:currentLocation.coordinate.longitude zoom:ZOOM_LEVEL];
     mapView_ = [GMSMapView mapWithFrame:CGRectZero camera:camera];
     mapView_.delegate = self;
     mapView_.myLocationEnabled = YES;
     self.view = mapView_;
-    
-    [self findFlagNearbyWithCurrentLocatoin:currentLocation];
-//    [self performSelectorInBackground:@selector(findFlagNearbyWithCurrentLocatoin:) withObject:currentLocation];
 }
 
-//- (void)mapView:(GMSMapView *)mapView didChangeCameraPosition:(GMSCameraPosition *)position
-//{
-//    CLLocation *changedLocation = [[CLLocation alloc] initWithLatitude:position.target.latitude longitude:position.target.longitude];
-//    
-//    if ([MapUtil isPositionOutOfBounderyAtPreviousPosition:location WithChangedPosition:changedLocation]) {
-//        
-//        location = changedLocation;
-//        [self findFlagNearbyWithCurrentLocatoin:changedLocation];
-//        
-//    }
-//    
-//}
+- (void)moveCameraPositionToLocation:(CLLocation *)cameraPosition
+{
+    GMSCameraPosition *currentPosition = [GMSCameraPosition cameraWithLatitude:cameraPosition.coordinate.latitude longitude:cameraPosition.coordinate.longitude zoom:ZOOM_LEVEL_FOR_CURRENT_LOCATION];
+    [mapView_ setMyLocationEnabled:YES];
+    [mapView_ setCamera:currentPosition];
+}
 
 - (void)mapView:(GMSMapView *)mapView didTapAtCoordinate:(CLLocationCoordinate2D)coordinate
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"tap_map" label:@"inside_view" value:nil];
+
+    
     NSLog(@"tapped : %f, %f", coordinate.latitude, coordinate.longitude);
     
     if (mapView.selectedMarker != nil) {
@@ -108,12 +175,8 @@
 
 - (BOOL)mapView:(GMSMapView *)mapView didTapMarker:(GMSMarker *)marker
 {
-    // GAI event
-    if (!markerFirstTapped) {
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.appDelegate.timeCriteria]] name:@"marker_click" label:nil] build]];
-        markerFirstTapped = YES;
-    }
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"marker_click" label:@"inside_view" value:nil] build]];
+    // GA
+    [GAUtil sendGADataWithUIAction:@"marker_click" label:@"inside_view" value:nil];
     
     
     // check previous selected marker
@@ -126,7 +189,7 @@
     
     // show shop info and change marker
     Flag *selectedFlag = (Flag *)marker.userData;
-    GMSCameraPosition *newCamera = [GMSCameraPosition cameraWithLatitude:marker.position.latitude longitude:marker.position.longitude zoom:ZOOM_LEVEL];
+    GMSCameraPosition *newCamera = [GMSCameraPosition cameraWithLatitude:marker.position.latitude longitude:marker.position.longitude zoom:ZOOM_LEVEL_FOR_SELECT_SHOP];
     
     marker.icon = [UIImage imageNamed:[MapUtil getMapMarkerImageFileNameWithCategory:selectedFlag.shopType status:SELECTED]];
     
@@ -141,131 +204,81 @@
 
 - (void)mapView:(GMSMapView *)mapView idleAtCameraPosition:(GMSCameraPosition *)position
 {
-    CLLocation *changedLocation = [[CLLocation alloc] initWithLatitude:position.target.latitude longitude:position.target.longitude];
+    // GA
+    [GAUtil sendGADataWithUIAction:@"move_position_map" label:@"inside_view" value:nil];
 
-    if ([MapUtil isPositionOutOfBounderyAtPreviousPosition:location WithChangedPosition:changedLocation]) {
-
-        location = changedLocation;
-        [self findFlagNearbyWithCurrentLocatoin:changedLocation];
+    
+    if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+        CLLocation *changedLocation = [[CLLocation alloc] initWithLatitude:position.target.latitude longitude:position.target.longitude];
         
+        if ([MapUtil isPositionOutOfBounderyAtPreviousPosition:location WithChangedPosition:changedLocation]) {
+            
+            location = changedLocation;
+            [self findFlagNearbyWithCurrentLocatoin:changedLocation];
+            
+        }        
     }
 }
 
-#pragma mark - GTL
-//- (GTLServiceFlagengine *)flagengineService
-//{
-//    static GTLServiceFlagengine *service = nil;
-//    if(!service) {
-//        service = [[GTLServiceFlagengine alloc] init];
-//        service.retryEnabled = YES;
-//        [GTMHTTPFetcher setLoggingEnabled:YES];
-//    }
-//
-//    return service;
-//}
+- (void)fixFlagInMapWithFlag:(Flag *)theFlag
+{
+    GMSMarker *marker = [[GMSMarker alloc] init];
+    marker.position = CLLocationCoordinate2DMake([theFlag.lat floatValue], [theFlag.lon floatValue]);
+    marker.icon = [UIImage imageNamed:[MapUtil getMapMarkerImageFileNameWithCategory:theFlag.shopType status:BASE]];
+    marker.userData = theFlag;
+    marker.map = mapView_;
+}
 
 #pragma mark - CLLocation
-- (void)initializeLocationManager
+- (void)initializeLocation
 {
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.distanceFilter = kCLDistanceFilterNone;
-    locationManager.desiredAccuracy = kCLLocationAccuracyBest;
-    
-    [locationManager startUpdatingLocation];
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    CLLocation *currentLocation = [locations objectAtIndex:0];
-    
-    if (!currentLocation){
-        currentLocation = [[CLLocation alloc] initWithLatitude:BASE_LATITUDE longitude:BASE_LONGITUDE];
-    }
+    CLLocation *currentLocation = [DelegateUtil getCurrentLocation];
     location = currentLocation;
-//    [self.delegate performSelector:@selector(setCurrentLocation:) withObject:currentLocation];
-    [self setMapViewWithCurrentLocation:currentLocation];
-    isFirstLoad = NO;
-    
-//    if (isFirstLoad) {
-//    }
-//    GMSCameraPosition *camera = [GMSCameraPosition cameraWithLatitude:[latitude floatValue] longitude:[longitude floatValue] zoom:ZOOM_LEVEL_FOR_CURRENT_LOCATION];
-//    [mapView_ animateToCameraPosition:camera];
-//    self.view = mapView_;
-    
-    [manager stopUpdatingLocation];
-}
-
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
-{
-    NSLog(@"fail");
-    CLLocation *currentLocation = [[CLLocation alloc] initWithLatitude:BASE_LATITUDE longitude:BASE_LONGITUDE];
-    
-    if (isFirstLoad) {
-        [self setMapViewWithCurrentLocation:currentLocation];
-        isFirstLoad = NO;
-    }
-    
-    [manager stopUpdatingLocation];
 }
 
 - (void)findFlagNearbyWithCurrentLocatoin:(CLLocation *)currentLocation
 {
-    NSDate *loadBeforeTime = [NSDate date];
+    [flagData removeAllData];
+    [mapView_ clear];
     
-    NSNumber *lat = [NSNumber numberWithFloat:currentLocation.coordinate.latitude];
-    NSNumber *lon = [NSNumber numberWithFloat:currentLocation.coordinate.longitude];
+    flagData = [DataUtil getFlagListAroundLocation:currentLocation rangeRadius:RADIUS_FLAG_LIST_THETA];
     
-    URLParameters *urlParam = [[URLParameters alloc] init];
-    [urlParam setMethodName:@"flag"];
-    [urlParam addParameterWithKey:@"lat" withParameter:[lat stringValue]];
-    [urlParam addParameterWithKey:@"lon" withParameter:[lon stringValue]];
-    [urlParam addParameterWithUserId:self.user.userId];
-    NSURL *url = [urlParam getURLForRequest];
-    
-    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
-        
-        NSDictionary *results = [FlagClient getURLResultWithURL:url];
+    for(Flag *theFlag in flagData.masterData){
+        [self fixFlagInMapWithFlag:theFlag];
+    }
 
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-        
-            [self setFlagDataWithJsonData:results];
-            
-        }];
-    }];
-//    NSData *jsonDataString = [[NSString stringWithContentsOfURL:[NSURL URLWithString:url] encoding:NSUTF8StringEncoding error:Nil] dataUsingEncoding:NSUTF8StringEncoding];
-//    NSError *error = nil;
-//    NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonDataString options:NSJSONReadingMutableContainers error:&error];
-//    NSLog(@"data response result : %@", results);
-    
-    // GAI Data Load Time
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"data_load" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:loadBeforeTime]] name:@"flag_list" label:nil] build]];
-
+    [self.delegate performSelector:@selector(flagListOnMap:) withObject:flagData];
 }
 
-- (void)setFlagDataWithJsonData:(NSDictionary *)results
+
+#pragma mark - 
+#pragma mark url params
+- (URLParameters *)urlParamsToGetFlagListByRewardAroundLocation:(CLLocation *)theLocation
 {
-    NSArray *flags = [results objectForKey:@"flags"];
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"flag_list_byreward"];
+    [urlParam addParameterWithKey:@"lat" withParameter:[NSNumber numberWithFloat:theLocation.coordinate.latitude]];
+    [urlParam addParameterWithKey:@"lon" withParameter:[NSNumber numberWithFloat:theLocation.coordinate.longitude]];
+    [urlParam addParameterWithUserId:self.user.userId];
     
-    if (flags) {
+    return urlParam;
+}
 
-        [flagData removeAllData];
-        [mapView_ clear];
+- (URLParameters *)urlParamsToGetFlagListByItem:(NSNumber *)itemId
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"flag_list_byitem"];
+    [urlParam addParameterWithKey:@"itemId" withParameter:itemId];
+    
+    return urlParam;
+}
 
-        for(id object in flags){
-            Flag *theFlag = [[Flag alloc] initWithData:object];
-            [flagData addObjectWithObject:theFlag];
-        }
-
-        for(Flag *theFlag in flagData.masterData){
-            GMSMarker *marker = [[GMSMarker alloc] init];
-            marker.position = CLLocationCoordinate2DMake([theFlag.lat floatValue], [theFlag.lon floatValue]);
-            marker.icon = [UIImage imageNamed:[MapUtil getMapMarkerImageFileNameWithCategory:theFlag.shopType status:BASE]];
-            marker.userData = theFlag;
-            marker.map = mapView_;
-        }
-
-        [self.delegate performSelector:@selector(flagListOnMap:) withObject:flagData];
-    }
+- (URLParameters *)urlParamsToGetFlagListByShop:(NSNumber *)shopId
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"flag_list_byshop"];
+    [urlParam addParameterWithKey:@"shopId" withParameter:shopId];
+    
+    return urlParam;
 }
 @end

@@ -32,6 +32,7 @@
 #import "ShopListViewController.h"
 #import "ItemListViewController.h"
 #import "SideMenuViewController.h"
+#import "RightSlideMenuTableViewController.h"
 
 #import "User.h"
 #import "Shop.h"
@@ -640,6 +641,8 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
         }
         else if ( [identifier isEqualToString:SWSegueRightIdentifier] )
         {
+            [self setRightSlideViewWithSegue:segue];
+            
             segue.performBlock = ^(SWRevealViewControllerSegue* rvc_segue, UIViewController* svc, UIViewController* dvc)
             {
                 [self _setRightViewController:dvc animated:NO];
@@ -669,6 +672,7 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     UINavigationController *firstChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:0];
     FlagViewController *firstChildViewController = (FlagViewController *)[firstChildNavController topViewController];
     firstChildViewController.user = self.user;
+    firstChildViewController.parentPage = TAB_BAR_VIEW_PAGE;
     firstChildViewController.title = @"MAP";
     [firstChildNavController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
     
@@ -710,6 +714,12 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor grayColor], NSForegroundColorAttributeName, nil] forState:UIControlStateNormal];
     [[UITabBarItem appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor whiteColor], NSForegroundColorAttributeName, nil] forState:UIControlStateSelected];
     [[UITabBarItem appearance] setTitlePositionAdjustment:UIOffsetMake(0, -3)];
+}
+
+- (void)setRightSlideViewWithSegue:(UIStoryboardSegue *)segue
+{
+    RightSlideMenuTableViewController *rightSlideViewController = (RightSlideMenuTableViewController *)[segue destinationViewController];
+    [rightSlideViewController setUser:self.user];
 }
 
 // Load any defined front/rear controllers from the storyboard
@@ -983,13 +993,19 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
 #pragma mark - Provided acction methods
 
 - (void)revealToggle:(id)sender
-{    
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"left_menu_tapped" label:@"inside_view" value:nil];
+    
     [self revealToggleAnimated:YES];
 }
 
 
 - (void)rightRevealToggle:(id)sender
-{    
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"right_menu_tapped" label:@"inside_view" value:nil];
+    
     [self rightRevealToggleAnimated:YES];
 }
 

@@ -29,6 +29,7 @@
 
 #define USER_AGREEMENT_ROW      0
 #define USER_INFO_POLICY_ROW    1
+#define OPEN_SOURCE_LICENSE_ROW 2
 
 
 // tag
@@ -37,9 +38,18 @@
 
 #import "SettingViewController.h"
 
+#import "AppDelegate.h"
+
 #import "User.h"
 
 #import "Util.h"
+#import "ViewUtil.h"
+#import "DataUtil.h"
+#import "URLParameters.h"
+
+#import "FlagClient.h"
+#import "GTLFlagengine.h"
+#import "GoogleAnalytics.h"
 
 @interface SettingViewController ()
 
@@ -76,12 +86,46 @@
 {
     self.currentVersionLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
     self.newestVersionLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+//    [self getNewestVersion];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+    
+    // GA
+    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_SETTING_VIEW];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
+- (void)getNewestVersion
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"version"];
+    NSURL *url = [urlParam getURLForRequest];
+    NSString *methodName = [urlParam getMethodName];
+    
+    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *result){
+        
+        NSString *newestVersion = [result valueForKey:@"version"];
+        if (newestVersion) {
+            self.newestVersionLabel.text = newestVersion;
+        }else self.newestVersionLabel.text = @"1.0.0";
+        
+    }];
 }
 
 #pragma mark -
 #pragma mark IBAction
 - (IBAction)cancel:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -91,9 +135,15 @@
 #pragma mark table view delegate
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:[NSString stringWithFormat:@"setting_cell_%d_section_%d_row_click", (int)indexPath.section, (int)indexPath.row] label:@"escape_view" value:nil];
+
+    
     if (indexPath.section == VERSION_SECTION) {
         
     }else if (indexPath.section == NOTICE_SECTION){
+        
+        [self getNotice];
         
     }else if (indexPath.section == PUSH_SETTING_SECTION){
         
@@ -101,7 +151,7 @@
         
         if (indexPath.row == LOGOUT_ROW) {
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"로그아웃" message:@"로그아웃합니다\n정말 로그아웃하시겠습니까?" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"로그아웃", nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"로그아웃" message:@"로그아웃을 하면 서비스 이용에 제한이 있을 수 있습니다\n정말 로그아웃하시겠습니까?" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"로그아웃", nil];
             [alert setTag:LOGOUT_TAG];
             [alert show];
             
@@ -129,11 +179,68 @@
             
             childViewController.title = @"개인정보 취급방침";
             textView.text = [Util getFileContentWithFileName:@"user_info_policy"];
+            
+        }else if (indexPath.row == OPEN_SOURCE_LICENSE_ROW){
+            
+            childViewController.title = @"오픈소스 라이센스";
+            textView.text = [Util getFileContentWithFileName:@"open_source_license"];
         }
 
         [self.navigationController pushViewController:childViewController animated:YES];
         
     }
+}
+
+- (void)presentNoticeViewWithNotice:(NSString *)notice
+{
+    UIViewController *childViewController = [[UIViewController alloc] init];
+    UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width)];
+    
+    [childViewController setView:textView];
+    childViewController.title = @"공지사항";
+    textView.text = notice;
+    
+    [self.navigationController pushViewController:childViewController animated:YES];
+}
+
+- (void)getNotice
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"notice"];
+    NSURL *url = [urlParam getURLForRequest];
+    NSString *methodName = [urlParam getMethodName];
+    
+    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *result){
+        NSString *notice = [result valueForKey:@"message"];
+        [self presentNoticeViewWithNotice:notice];
+    }];
+}
+
+- (void)logout
+{
+    [DataUtil deleteUserInfo];
+    
+
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    delegate.user = nil;
+    
+    GTLServiceFlagengine *service = [FlagClient flagengineService];
+    
+    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGuest];
+    
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *object, NSError *error){
+       
+        if (object) {
+            User *user = [[User alloc] init];
+            user.userId = [object identifier];
+            user.reward = [[object reward] integerValue];
+            self.user = user;
+            
+            [DataUtil saveGuestSessionWithUser:user];
+            [ViewUtil presentTabbarViewControllerInView:self withUser:user];
+        }
+        
+    }];
 }
 
 #pragma mark - 
@@ -143,20 +250,37 @@
     if (alertView.tag == LOGOUT_TAG) {
         
         if (buttonIndex == 1) {
-            NSLog(@"logout");
+            // GA
+            [GAUtil sendGADataWithUIAction:@"logout" label:@"escape_view" value:nil];
+
+            
+            [self logout];
         }
         
     }else if (alertView.tag == LEAVE_OUT_TAG){
         
         if (buttonIndex == 1) {
+            // GA
+            [GAUtil sendGADataWithUIAction:@"leave_out" label:@"escape_view" value:nil];
+
+            
             NSLog(@"leave out");
+            [Util showAlertView:nil message:@"죄송합니다\n아직 탈퇴 기능이 완성되지 않았습니다\n얼른 만들어서 탈퇴할 수 있도록... 해드리겠습니다\n그전에는 메뉴의 달샵에게 문의하기로 말씀해주세요\n다시 한 번 죄송합니다(--)(__)" title:@"탈퇴"];
         }
         
     }
 }
-- (IBAction)pushSoundSwitchTapped:(id)sender {
+- (IBAction)pushSoundSwitchTapped:(id)sender
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"push_sound_switch_click" label:@"inside_view" value:nil];
+
 }
 
-- (IBAction)pushVibrationSwitchTapped:(id)sender {
+- (IBAction)pushVibrationSwitchTapped:(id)sender
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"push_vibration_switch_click" label:@"inside_view" value:nil];
+
 }
 @end

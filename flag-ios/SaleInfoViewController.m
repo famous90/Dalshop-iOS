@@ -10,16 +10,23 @@
 #define SALE_INFO_ROW   1
 
 #import "AppDelegate.h"
+#import "TransitionDelegate.h"
+#import "FirstTutorialViewController.h"
+
 #import "SaleInfoViewController.h"
 #import "ItemListViewController.h"
 #import "ActivityIndicatorView.h"
+#import "FlagViewController.h"
 
 #import "User.h"
 #import "Shop.h"
+#import "Flag.h"
 #import "URLParameters.h"
 
+#import "Util.h"
 #import "ViewUtil.h"
 #import "SNSUtil.h"
+#import "DataUtil.h"
 
 #import "FlagClient.h"
 #import "GTLFlagengine.h"
@@ -35,22 +42,22 @@
     UIImage *saleImage;
     CGFloat labelHeight;
     
-    BOOL showItemFirstTapped;
+    NSMutableDictionary *kakaoTalkLinkObjects;
+    
+    CGFloat viewPadding;
+    CGFloat textPadding;
+    CGFloat shopFunctionButtonWidth;
+    CGFloat shopFunctionButtonHeight;
+    CGFloat showEventButtonHeight;
+    CGFloat showEventButtonWidth;
 }
-
-CGFloat viewPadding = 0.0f;
-CGFloat textPadding = 30.0f;
-
-CGFloat shopFunctionButtonWidth = 107.0f;
-CGFloat shopFunctionButtonHeight = 44.0f;
-
-CGFloat showEventButtonHeight = 41.0f;
-CGFloat showEventButtonWidth = 171.0f;
 
 - (void)awakeFromNib
 {
     [super awakeFromNib];
     self.user = [[User alloc] init];
+    self.shop = [[Shop alloc] init];
+    self.flag = [[Flag alloc] init];
 }
 
 - (void)viewDidLayoutSubviews
@@ -62,19 +69,48 @@ CGFloat showEventButtonWidth = 171.0f;
 {
     [super viewWillAppear:animated];
     
-    self.appDelegate.timeCriteria = [NSDate date];
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+
+    // GA
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_SALE_INFO_VIEW];
     [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
-    
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    showItemFirstTapped = NO;
+    kakaoTalkLinkObjects = [[NSMutableDictionary alloc] init];
     
+    [self configureViewContent];
     [self performSelectorInBackground:@selector(getSaleInfo) withObject:nil];
+    
+    [self configureScanRewardTutorial];
+}
+
+- (void)configureViewContent
+{
+    viewPadding = 0.0f;
+    textPadding = 30.0f;
+    
+    shopFunctionButtonWidth = 107.0f;
+    shopFunctionButtonHeight = 44.0f;
+    
+    showEventButtonHeight = 41.0f;
+    showEventButtonWidth = 171.0f;
+    
+    if (self.parentPage == INITIALIZE_VIEW_PAGE) {
+        
+        [self.navigationController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
+        [self setBarCancelButton];
+    }
+}
+
+- (void)setBarCancelButton
+{
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelAndGoMain:)];
+    self.navigationItem.leftBarButtonItem = cancelButton;
 }
 
 #pragma mark -
@@ -87,48 +123,46 @@ CGFloat showEventButtonWidth = 171.0f;
     
     if (self.parentPage == SHOP_INFO_VIEW_PAGE) {
         
-        ActivityIndicatorView *activityIndicatorView = [ActivityIndicatorView startActivityIndicatorInParentView:self.view];
-        
-        // GAI time criteria
-        NSDate *loadBeforeTime = [NSDate date];
-        
-        // Load Data
-        URLParameters *urlParam = [[URLParameters alloc] init];
-        [urlParam setMethodName:@"shop"];
-        [urlParam addParameterWithKey:@"id" withParameter:self.shopId];
-        [urlParam addParameterWithUserId:self.user.userId];
-        NSURL *url = [urlParam getURLForRequest];
-        
-        [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
-            
-            NSDictionary *results = [FlagClient getURLResultWithURL:url];
-            
-            [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-                
-                [self setShopWithJsonData:results];
-                                
-                // GAI Data Load Time
-                [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"data_load" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:loadBeforeTime]] name:@"get_shop" label:nil] build]];
-                
-                [activityIndicatorView stopActivityIndicator];
-                [self.tableView reloadData];
-            }];
-        }];
+        [self getShopSaleInfo];
         
     }else if (self.parentPage == SHOP_LIST_VIEW_PAGE){
-        
-    }
 
-    if (self.shop) {
-        [self getSaleImage];
+        if (self.shop) {
+            [self getSaleImage];
+        }
+
+    }else if (self.parentPage == INITIALIZE_VIEW_PAGE){
+        
+        [self getShopSaleInfo];
     }
     
     [aiView stopActivityIndicator];
 }
 
+- (void)getShopSaleInfo
+{
+    // Load Data
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"shop"];
+    [urlParam addParameterWithKey:@"id" withParameter:self.shopId];
+    [urlParam addParameterWithUserId:self.user.userId];
+    NSURL *url = [urlParam getURLForRequest];
+    NSString *methodName = [urlParam getMethodName];
+    
+    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *results){
+       
+        if (results) {
+            [self setShopWithJsonData:results];
+            [self.tableView reloadData];
+        }
+        
+    }];
+}
+
 - (void)setShopWithJsonData:(NSDictionary *)results
 {
     self.shop = [[Shop alloc] initWithData:results];
+    self.title = self.shop.name;
     
     if (self.shop) {
         [self getSaleImage];
@@ -137,12 +171,26 @@ CGFloat showEventButtonWidth = 171.0f;
 
 - (void)getSaleImage
 {
-    UIImage *shopImage = [FlagClient getImageWithImagePath:self.shop.imageUrl];
-
+    UIImage *shopImage;
+    
+    if ([DataUtil isImageCachedWithObjectId:self.shop.shopId imageUrl:self.shop.imageUrl inListType:IMAGE_SHOP_EVENT]) {
+        
+        shopImage = [DataUtil getImageWithObjectId:self.shop.shopId inListType:IMAGE_SHOP_EVENT];
+        
+    }else{
+        
+        [FlagClient getImageWithImageURL:self.shop.imageUrl imageDataController:nil objectId:self.shop.shopId objectType:IMAGE_SHOP_EVENT view:self.tableView completion:^(UIImage *image){
+            
+            saleImage = [ViewUtil imageWithImage:image scaledToWidth:(self.view.frame.size.width - viewPadding*2)];
+            [DataUtil insertImageWithImage:image imageUrl:self.shop.imageUrl objectId:self.shop.shopId inListType:IMAGE_SHOP_EVENT];
+        }];
+        
+    }
+    
     if (shopImage) {
         saleImage = [ViewUtil imageWithImage:shopImage scaledToWidth:self.view.frame.size.width - viewPadding*2];
+        [self.tableView reloadData];
     }
-    [self.tableView reloadData];
 }
 
 - (void)removeOverlay:(UIView *)overlayView
@@ -232,7 +280,6 @@ CGFloat showEventButtonWidth = 171.0f;
             
             [cell addSubview:saleInfoLabel];
             
-            
             // Show Item Button
             UIButton *showItemButton = [[UIButton alloc] initWithFrame:CGRectMake((cell.frame.size.width - showEventButtonWidth)/2, cell.frame.size.height - showEventButtonHeight, showEventButtonWidth, showEventButtonHeight)];
             [showItemButton setBackgroundColor:UIColorFromRGB(BASE_COLOR)];
@@ -259,6 +306,9 @@ CGFloat showEventButtonWidth = 171.0f;
         
     }else if (indexPath.row ==  SALE_INFO_ROW){
         
+        if (saleImage.size.height == 0) {
+            return 0;
+        }
         CGRect frame = [self.shop.description boundingRectWithSize:CGSizeMake(280, 1000) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName:[UIFont fontWithName:@"Helvetica" size:14]} context:nil];
         
         labelHeight = frame.size.height;
@@ -270,6 +320,10 @@ CGFloat showEventButtonWidth = 171.0f;
 #pragma mark - IBAction
 - (IBAction)cancelButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
     if (self.parentPage == SHOP_INFO_VIEW_PAGE) {
         
         [self dismissViewControllerAnimated:YES completion:nil];
@@ -285,24 +339,49 @@ CGFloat showEventButtonWidth = 171.0f;
     }
 }
 
+- (IBAction)cancelAndGoMain:(id)sender
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
+    [ViewUtil presentTabbarViewControllerInView:self withUser:self.user];
+}
+
 - (IBAction)likeItButtonTapped:(id)sender
 {
-    [self likeItem];
-    NSLog(@"like it button tapped");
+    // GA
+    [GAUtil sendGADataWithUIAction:@"like_shop_click" label:@"inside_view" value:nil];
+
+    if (self.shop.liked) {
+        [self cancelLikeShop];
+    }else{
+        [self likeShop];
+    }
 }
 
 - (IBAction)shareButtonTapped:(id)sender
 {
-    NSLog(@"share button tapped");
+    // GA
+    [GAUtil sendGADataWithUIAction:@"share_shop_click" label:@"inside_view" value:nil];
+
+    
+    [self shareShopSaleEventThroughKakaoTalk];
 }
 
 - (IBAction)showLocationButtonTapped:(id)sender
 {
-    NSLog(@"show location button tapped");
+    // GA
+    [GAUtil sendGADataWithUIAction:@"show_location_click" label:@"inside_view" value:nil];
+
+    
+    [self presentMapView];
 }
 
-- (void)likeItem
+- (void)likeShop
 {
+    NSDate *startDate = [NSDate date];
+    
     GTLServiceFlagengine *service = [FlagClient flagengineService];
     
     GTLFlagengineLike *like = [GTLFlagengineLike alloc];
@@ -315,32 +394,72 @@ CGFloat showEventButtonWidth = 171.0f;
         
         NSLog(@"result object %@", object);
         
+        if (error == nil) {
+            [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"like_shop" label:nil];
+            [DataUtil saveLikeObjectWithObjectId:self.shop.shopId type:LIKE_SHOP];
+            self.shop.likes++;
+            self.shop.liked = YES;
+            [self.tableView reloadData];
+        }
+        
     }];
 }
 
-- (void)shareItemWithKakaoTalk
+- (void)cancelLikeShop
 {
-    NSMutableDictionary *kakaoTalkLinkObjects = [[NSMutableDictionary alloc] init];
-    NSString *message = [NSString stringWithFormat:@"%@\n%@", self.shop.name, self.shop.description];
-    NSString *imageURL = self.shop.imageUrl;
+    URLParameters *urlParams = [self urlParamsToDeleteShopLike];
     
-    [SNSUtil makeKakaoTalkLinkToKakaoTalkLinkObjects:kakaoTalkLinkObjects message:message imageURL:imageURL imageWidth:saleImage.size.width Height:saleImage.size.height execParameter:@{@"method":@"shop", @"shopId":self.shop.shopId}];
+    [FlagClient getDataResultWithURL:[urlParams getURLForRequest] methodName:[urlParams getMethodName] completion:^(NSDictionary *results){
+        
+        if (!results) {
+            [DataUtil deleteLikeObjectWithObjectId:self.shop.shopId type:LIKE_SHOP];
+            self.shop.likes--;
+            self.shop.liked = NO;
+            [self.tableView reloadData];
+        }
+    }];
+}
+
+- (URLParameters *)urlParamsToDeleteShopLike
+{
+    URLParameters *urlParams = [[URLParameters alloc] init];
+    [urlParams setMethodName:@"like"];
+    [urlParams addParameterWithKey:@"itemId" withParameter:self.shop.shopId];
+    [urlParams addParameterWithKey:@"type" withParameter:[NSNumber numberWithInt:LIKE_SHOP]];
+    [urlParams addParameterWithUserId:self.user.userId];
+    
+    return urlParams;
+}
+
+- (void)shareShopSaleEventThroughKakaoTalk
+{
+    NSDictionary *kakaoTalkParams = [[NSDictionary alloc] initWithObjectsAndKeys:@"shop", @"method", self.shop.shopId, @"shopId", nil];
+    NSString *kakaoTalkMessage = [NSString stringWithFormat:@"%@\n%@", @"달샵에서 기가 막힌 세일정보를 발견했어요!", self.shop.description];
+    CGFloat imageWidth  = 150;
+    CGFloat imageHeight = saleImage.size.height * imageWidth / saleImage.size.width;
+    
+    [SNSUtil makeKakaoTalkLinkToKakaoTalkLinkObjects:kakaoTalkLinkObjects message:kakaoTalkMessage imageURL:self.shop.imageUrl imageWidth:imageWidth Height:imageHeight execParameter:kakaoTalkParams];
     [SNSUtil sendKakaoTalkLinkByKakaoTalkLinkObjects:kakaoTalkLinkObjects];
+}
+
+- (void)presentMapView
+{
+    UIStoryboard *storyboard = [ViewUtil getStoryboard];
+    FlagViewController *childViewController = (FlagViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FlagView"];
+    childViewController.user = self.user;
+    childViewController.objectIdForFlag = self.shop.shopId;
+    childViewController.parentPage = SALE_INFO_VIEW_PAGE;
+    
+    [self.navigationController pushViewController:childViewController animated:YES];
 }
 
 #pragma mark - Implementation
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     if ([[segue identifier] isEqualToString:@"ShowItem"]) {
-        // GAI event
-        if (!showItemFirstTapped) {
-            [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.appDelegate.timeCriteria]] name:@"go_to_items" label:nil] build]];
-            showItemFirstTapped = YES;
-        }
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"go_to_items" label:@"escape_view" value:nil] build]];
-
-//        ItemParentViewController *childViewController = (ItemParentViewController *)[segue destinationViewController];
-//        [self setItemParentViewController:childViewController];
+        
+        // GA
+        [GAUtil sendGADataWithUIAction:@"go_to_items" label:@"escape_view" value:nil];
     }
 }
 
@@ -360,6 +479,17 @@ CGFloat showEventButtonWidth = 171.0f;
     [self setItemParentViewController:childViewController];
     
     [self.navigationController pushViewController:childViewController animated:YES];
+}
+
+#pragma mark - 
+#pragma mark notification
+- (void)configureScanRewardTutorial
+{
+    if (![DataUtil getUserActionHistoryForRewardShopWatched]) {
+        NSString *tutorialMessage = @"상품의 바코드를 스캔하세요\n스캔으로 달을 딸 수 있어요!!";
+        [Util showAlertView:nil message:tutorialMessage title:@"서비스소개"];
+        [DataUtil saveUserHistoryForRewardShopWatched];
+    }
 }
 
 @end

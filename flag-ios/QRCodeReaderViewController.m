@@ -13,7 +13,17 @@
 #import "ItemListViewController.h"
 
 #import "Item.h"
+#import "FlagDataController.h"
+#import "Shop.h"
+#import "ShopDataController.h"
 
+#import "Util.h"
+#import "ViewUtil.h"
+#import "DataUtil.h"
+#import "URLParameters.h"
+
+#import "FlagClient.h"
+#import "GTLFlagengine.h"
 #import "GoogleAnalytics.h"
 
 @interface QRCodeReaderViewController ()
@@ -38,6 +48,10 @@
 {
     [super viewWillAppear:animated];
     
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+    
+    // GA
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_QRCODE_READER_VIEW];
     [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
@@ -46,12 +60,12 @@
 {
     [super viewDidLoad];
     
-    self.title = self.theItem.name;
+    self.title = self.item.name;
     _captureSession = nil;
     
     if ([self startReading]) {
         [_stopButton setHidden:NO];
-        [_statusLabel setText:@"Scanning for QR Code"];
+        [_statusLabel setText:@"코드를 스캔해주세요"];
     }
     _isReading = YES;
 }
@@ -111,7 +125,7 @@
             [_audioPlayer play];
         }
         
-        if ([self.theItem isEqualToCodeString:[metadataObj stringValue]]) {
+        if ([self.item isEqualToCodeString:[metadataObj stringValue]]) {
             
             [_statusLabel performSelectorOnMainThread:@selector(setText:) withObject:[metadataObj stringValue] waitUntilDone:NO];
             [self performSelectorOnMainThread:@selector(stopReadingWithCheckBoolean:) withObject:[NSNumber numberWithBool:YES] waitUntilDone:NO];
@@ -136,24 +150,87 @@
     [_previewViewLayer removeFromSuperlayer];
     
     UIAlertView *alert;
+    
+    // correct item scan
     if ([boolean boolValue]) {
         
-        // GAI event
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"scan_success" label:@"inside_view" value:nil] build]];
+        [self findShopOfScanItem];
         
-        alert = [[UIAlertView alloc] initWithTitle:@"match" message:@"상품이 확인되었습니다\n리워드가 적립되었습니다" delegate:self cancelButtonTitle:nil otherButtonTitles:@"확인", nil];
-        alert.tag = MATCH_ALERT_TAG;
-        
+    // not match item scanning
     }else{
         
-        // GAI event
-        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"scan_fail" label:@"inside_view" value:nil] build]];
+        // GA
+        [GAUtil sendGADataWithUIAction:@"scan_fail" label:@"inside_view" value:nil];
+        
         
         alert = [[UIAlertView alloc] initWithTitle:@"match" message:@"일치하는 상품이 아닙니다" delegate:self cancelButtonTitle:nil otherButtonTitles:@"재시도", nil];
         alert.tag = NOT_MATCH_ALERT_TAG;
         
     }
     [alert performSelectorOnMainThread:@selector(show) withObject:nil waitUntilDone:NO];
+}
+
+- (void)findShopOfScanItem
+{
+    NSNumber *hqShopId = self.item.shopId;
+    
+    AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
+    CLLocation *currentLocation = delegate.savedLocation;
+    
+    FlagDataController *flagData = [DataUtil getFlagListAroundLatitude:currentLocation.coordinate.latitude longitude:currentLocation.coordinate.longitude];
+    NSArray *branchShopIds = [flagData shopIdListInFlagList];
+    
+    URLParameters *urlParams = [self urlToGetHQShopIdsWithBranchShopIds:branchShopIds];
+    
+    [FlagClient getDataResultWithURL:[urlParams getURLForRequest] methodName:[urlParams getMethodName] completion:^(NSDictionary *results){
+        
+        if (results) {
+            
+            // GA
+            [GAUtil sendGADataWithUIAction:@"scan_success" label:@"inside_view" value:nil];
+            
+            
+            [self checkItemScanIsRightWithData:results comparingShopId:hqShopId];
+            
+        }else{
+            [self showWrongScanError];
+        }
+    }];
+}
+
+- (URLParameters *)urlToGetHQShopIdsWithBranchShopIds:(NSArray *)shopIds
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"shop_list"];
+    for(NSNumber *shopId in shopIds){
+        [urlParam addParameterWithKey:@"ids" withParameter:shopId];
+    }
+    [urlParam addParameterWithUserId:self.user.userId];
+    
+    return urlParam;
+}
+
+- (void)checkItemScanIsRightWithData:(NSDictionary *)results comparingShopId:(NSNumber *)hqShopId
+{
+    ShopDataController *shopData = [[ShopDataController alloc] init];
+    NSArray *data = [results objectForKey:@"shops"];
+    for(id object in data){
+        Shop *theShop = [[Shop alloc] initWithData:object];
+        [shopData addObjectWithObject:theShop];
+    }
+    NSArray *hqShopIds = [shopData getHQShopIds];
+    
+    for(NSNumber *shopId in hqShopIds){
+        if ([shopId integerValue] == [hqShopId integerValue]) {
+            // find
+//            [self didRedeemRewardItem];
+            [self showRightScanAlert];
+            return;
+        }
+    }
+    
+    // not find
+    [self showWrongScanError];
 }
 
 - (void)loadBeepSound
@@ -173,16 +250,61 @@
 
 - (void)didRedeemRewardItem
 {
+    NSDate *startDate = [NSDate date];
+    
     // 현재 아이템 리워드 얻음
-    [self.itemListViewController changeItemRewardToRewardedWithItemId:self.theItem.itemId];
+    GTLServiceFlagengine *service = [FlagClient flagengineService];
+    
+    GTLFlagengineReward *object = [GTLFlagengineReward alloc];
+    [object setReward:[NSNumber numberWithInteger:self.item.reward]];
+    [object setTargetId:self.item.itemId];
+    [object setTargetName:self.item.name];
+    [object setType:[NSNumber numberWithInt:REWARD_ITEM]];
+    [object setUserId:self.user.userId];
+    
+    GTLQueryFlagengine *query = [GTLQueryFlagengine queryForRewardsInsertWithObject:object];
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error){
+        
+        if (error == nil) {
+            
+            [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_scan_reward" label:nil];
+            [DataUtil saveRewardObjectWithObjectId:self.item.itemId type:REWARD_SCAN];
+            self.itemListViewController.afterItemScan = YES;
+            [self.navigationController popViewControllerAnimated:YES];
+            
+        }else{
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"아이템 스캔" message:@"리워드 적립 중 에러가 발생했습니다\n죄송하지만 다시 스캔해주세요" delegate:self cancelButtonTitle:nil otherButtonTitles:@"재시도", nil];
+            [alert setTag:NOT_MATCH_ALERT_TAG];
+            [alert show];
+            
+            NSLog(@"error occur %@ %@", error, [error localizedDescription]);
+        }
+    }];
+    
 }
 
 #pragma mark - alert delegate
+- (void)showWrongScanError
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"아이템 스캔" message:@"스캔 상품이 올바르지 않네요\n다시 확인 후 스캔해주세요~" delegate:self cancelButtonTitle:nil otherButtonTitles:@"재시도", nil];
+    alert.tag = NOT_MATCH_ALERT_TAG;
+    
+    [alert show];
+}
+
+- (void)showRightScanAlert
+{
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"아이템 스캔" message:@"s(~o~)/\n성공적으로 스캔했습니다\n다른 아이템도 스캔해보세요" delegate:self cancelButtonTitle:nil otherButtonTitles:@"확인", nil];
+    alert.tag = MATCH_ALERT_TAG;
+    
+    [alert show];
+}
+
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
     if (alertView.tag == MATCH_ALERT_TAG) {
         
-        [self didRedeemRewardItem];
         [self.navigationController popViewControllerAnimated:YES];
         
     }else if(alertView.tag == NOT_MATCH_ALERT_TAG){

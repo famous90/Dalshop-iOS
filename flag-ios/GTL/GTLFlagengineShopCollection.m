@@ -13,10 +13,11 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineShopCollection (0 custom class methods, 1 custom properties)
+//   GTLFlagengineShopCollection (0 custom class methods, 2 custom properties)
 
 #import "GTLFlagengineShopCollection.h"
 
+#import "GTLFlagengineFlag.h"
 #import "GTLFlagengineShop.h"
 
 // ----------------------------------------------------------------------------
@@ -25,12 +26,14 @@
 //
 
 @implementation GTLFlagengineShopCollection
-@dynamic shops;
+@dynamic flags, shops;
 
 + (NSDictionary *)arrayPropertyToClassMap {
   NSDictionary *map =
-    [NSDictionary dictionaryWithObject:[GTLFlagengineShop class]
-                                forKey:@"shops"];
+    [NSDictionary dictionaryWithObjectsAndKeys:
+      [GTLFlagengineFlag class], @"flags",
+      [GTLFlagengineShop class], @"shops",
+      nil];
   return map;
 }
 

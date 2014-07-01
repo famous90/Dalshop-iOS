@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineFlag (0 custom class methods, 7 custom properties)
+//   GTLFlagengineFlag (0 custom class methods, 9 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -28,12 +28,14 @@
 
 @interface GTLFlagengineFlag : GTLObject
 @property (retain) NSNumber *createdAt;  // longLongValue
+@property (retain) NSNumber *distance;  // doubleValue
 
 // identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
 @property (retain) NSNumber *identifier;  // longLongValue
 
 @property (retain) NSNumber *lat;  // doubleValue
 @property (retain) NSNumber *lon;  // doubleValue
+@property (retain) NSNumber *reward;  // intValue
 @property (retain) NSNumber *shopId;  // longLongValue
 @property (copy) NSString *shopName;
 @property (retain) NSNumber *shopType;  // intValue

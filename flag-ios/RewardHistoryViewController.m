@@ -34,9 +34,18 @@
 {
     [super viewDidLoad];
 
-    self.title = @"적립 히스토리";
-
+    [self configureViewContent];
     [self getRewardHistory];
+}
+
+- (void)configureViewContent
+{
+    [self setTitle:@"적립 내역"];
+    
+    if (self.parentPage == SLIDE_MENU_PAGE) {
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
+        self.navigationItem.leftBarButtonItem = cancelButton;
+    }
 }
 
 #pragma mark -
@@ -132,4 +141,13 @@
     [tableView deselectRowAtIndexPath:indexPath animated:NO];
 }
 
+
+#pragma mark - IBAction
+- (IBAction)cancelButtonTapped:(id)sender
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
 @end

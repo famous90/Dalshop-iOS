@@ -16,6 +16,8 @@
 @property (nonatomic, strong) NSString *email;
 @property (nonatomic, assign) NSInteger reward;
 @property (nonatomic, assign) BOOL registered;
+@property (nonatomic, assign) BOOL phoneCertificated;
+@property (nonatomic, assign) BOOL additionalProfiled;
 
 - (id)initWithData:(id)data;
 - (id)initWithLoginData:(GTLFlagengineUser *)user;

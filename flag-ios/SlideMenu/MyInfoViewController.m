@@ -5,14 +5,17 @@
 //  Created by Hwang Gyuyoung on 2014. 5. 8..
 //
 //
-#define MINIMUM_BIRTH_YEAR  1900
-#define DEFAULT_BIRTH_YEAR_INDEX  87
+#define MINIMUM_BIRTH_YEAR          1900
+#define DEFAULT_BIRTH_YEAR_INDEX    87
 
 #import "MyInfoViewController.h"
 
 #import "User.h"
 
 #import "Util.h"
+#import "ViewUtil.h"
+#import "DataUtil.h"
+#import "NSDate+Utils.h"
 #import "AbstractActionSheetPicker.h"
 #import "ActionSheetStringPicker.h"
 #import "URLParameters.h"
@@ -27,17 +30,13 @@
 @end
 
 @implementation MyInfoViewController{
-    BOOL isMan;
-    BOOL isWoman;
+    NSInteger sex;
     
     NSInteger birthYearIndex;
     NSMutableArray *birthYearData;
     
     NSInteger occupationIndex;
     NSArray *occupationData;
-    
-    CLLocationManager *locationManager;
-    CLLocation *currentLocation;
 }
 
 - (void)awakeFromNib
@@ -47,24 +46,29 @@
     self.user = [[User alloc] init];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+    
+    // GA
+    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_ADDITIONAL_INFO_VIEW];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self initializeLocation];
     [self setContenView];
-    [self getUserInfo];
-
-}
-
-- (void)initializeLocation
-{
-    currentLocation = [[CLLocation alloc] init];
-    locationManager = [[CLLocationManager alloc] init];
-    locationManager.delegate = self;
-    locationManager.desiredAccuracy = kCLLocationAccuracyHundredMeters;
     
-    [locationManager startUpdatingLocation];
+    if (self.parentPage == SLIDE_MENU_PAGE) {
+        [self getUserInfo];
+    }else if (self.parentPage == PHONE_CERTIFICATION_VIEW_PAGE){
+        [self setUserInfoByDefault];
+    }
 }
 
 - (void)setContenView
@@ -111,43 +115,36 @@
 
 - (void)getUserInfo
 {
+    URLParameters *urlparams = [self urlParamsToGetUserInfo];
+    
+    [FlagClient getDataResultWithURL:[urlparams getURLForRequest] methodName:[urlparams getMethodName] completion:^(NSDictionary *result){
+        
+        if (result) {
+            [self setUserInfoWithData:result];
+        }else{
+            [self setUserInfoByDefault];
+        }
+    }];
+}
+
+- (URLParameters *)urlParamsToGetUserInfo
+{
     URLParameters *urlParam = [[URLParameters alloc] init];
     [urlParam setMethodName:@"user_info"];
     [urlParam addParameterWithUserId:self.user.userId];
-    NSURL *url = [urlParam getURLForRequest];
     
-    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
-        
-        NSDictionary *result = [FlagClient getURLResultWithURL:url];
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            
-            if (result) {
-                [self setUserInfoWithData:result];
-            }else{
-                [self setUserInfoByDefault];
-            }
-            
-        }];
-    }];
+    return urlParam;
 }
 
 - (void)setUserInfoWithData:(id)data
 {
-    isMan = [[data valueForKey:@"sex"] boolValue];
-    isWoman = !isMan;
+    sex = [[data valueForKey:@"sex"] integerValue];
     
-    NSString *birthStr = [data valueForKey:@"birth"];
-    NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
-    [formatter setNumberStyle:NSNumberFormatterDecimalStyle];
-    NSNumber *birth = [formatter numberFromString:birthStr];
-    birthYearIndex = [birth integerValue] - MINIMUM_BIRTH_YEAR;
+    NSNumber *birth = [data valueForKey:@"birth"];
+    NSInteger birthYear = [NSDate breakDownTimeInterval:[birth floatValue]/1000 toCalendarComponent:NSYearCalendarUnit];
+    birthYearIndex = birthYear - MINIMUM_BIRTH_YEAR;
 
     occupationIndex = [[data valueForKey:@"job"] integerValue];
-    
-    CGFloat lat = [[data valueForKey:@"lat"] floatValue];
-    CGFloat lon = [[data valueForKey:@"lon"] floatValue];
-    currentLocation = [[CLLocation alloc] initWithLatitude:lat longitude:lon];
     
     [self setContentConfigureWithUserInfo];
 }
@@ -161,8 +158,7 @@
 
 - (void)setUserInfoByDefault
 {
-    isMan = YES;
-    isWoman = !isMan;
+    sex = MALE;
     birthYearIndex = DEFAULT_BIRTH_YEAR_INDEX;
     occupationIndex = 0;
     
@@ -179,38 +175,56 @@
 #pragma mark Implementation
 - (void)setManAndWomanButton
 {
+    BOOL isMan;
+    if (sex == MALE) {
+        isMan = YES;
+    }else isMan = NO;
+    
     [self.manButton setSelected:isMan];
-    [self.womanButton setSelected:isWoman];
+    [self.womanButton setSelected:!isMan];
 }
 
 #pragma mark - 
 #pragma mark IBAction
 - (IBAction)manButtonTapped:(id)sender
 {
-    if (!isMan && !isWoman) {
-        isMan = YES;
-    }else{
-        isMan = !isMan;
-        isWoman = !isWoman;
-    }
+    // GA
+    [GAUtil sendGADataWithUIAction:@"sex_click" label:@"inside_view" value:nil];
+
     
+    [self changeSexToSex:MALE];
     [self setManAndWomanButton];
 }
 
 - (IBAction)womanButtonTapped:(id)sender
 {
-    if (!isMan && !isWoman) {
-        isWoman = YES;
-    }else{
-        isMan = !isMan;
-        isWoman = !isWoman;
+    // GA
+    [GAUtil sendGADataWithUIAction:@"sex_click" label:@"inside_view" value:nil];
+
+    
+    [self changeSexToSex:FEMALE];
+    [self setManAndWomanButton];
+}
+
+- (void)changeSexToSex:(NSInteger)theSex
+{
+    if (sex == theSex) {
+        return;
     }
     
-    [self setManAndWomanButton];
+    if (sex == MALE) {
+        sex = FEMALE;
+    }else{
+        sex = MALE;
+    }
 }
 
 - (IBAction)birthYearButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"birth_year_click" label:@"inside_view" value:nil];
+
+    
     [ActionSheetStringPicker showPickerWithTitle:@"출생년도선택" rows:birthYearData initialSelection:birthYearIndex target:self successAction:@selector(birthYearWasSelected:element:) cancelAction:@selector(actionPickerCancelled:) origin:sender];
 }
 
@@ -223,11 +237,15 @@
 - (void)birthYearWasSelected:(NSNumber *)selectedIndex element:(id)element
 {
     birthYearIndex = [selectedIndex integerValue];
-    [self.birthYearButton setTitle:[NSString stringWithFormat:@"%ld년생", birthYearIndex + MINIMUM_BIRTH_YEAR] forState:UIControlStateNormal];
+    [self.birthYearButton setTitle:[NSString stringWithFormat:@"%ld년생", (long)(birthYearIndex + MINIMUM_BIRTH_YEAR)] forState:UIControlStateNormal];
 }
 
 - (IBAction)occupationButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"occupation_click" label:@"inside_view" value:nil];
+
+    
     [ActionSheetStringPicker showPickerWithTitle:@"직업선택" rows:occupationData initialSelection:occupationIndex target:self successAction:@selector(occupationWasSelected:element:) cancelAction:@selector(actionPickerCancelled:) origin:sender];
 }
 
@@ -245,36 +263,61 @@
 
 - (IBAction)saveButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"update_user_info" label:@"inside_view" value:nil];
+
+    
     [self sendUserInfo];
 }
 
 - (void)sendUserInfo
 {
+    NSDate *startDate = [NSDate date];
+    
     GTLServiceFlagengine *service = [FlagClient flagengineService];
     
     GTLFlagengineUserInfo *userInfo = [GTLFlagengineUserInfo alloc];
     [userInfo setUserId:self.user.userId];
-    [userInfo setBirth:[NSNumber numberWithInteger:birthYearIndex + MINIMUM_BIRTH_YEAR]];
-    [userInfo setSex:[NSNumber numberWithBool:isMan]];
+    NSTimeInterval year = [NSDate generateTimeIntervalFromYear:(long)(birthYearIndex + MINIMUM_BIRTH_YEAR)];
+    [userInfo setBirth:[NSNumber numberWithDouble:year*1000]];
+    [userInfo setSex:[NSNumber numberWithInteger:sex]];
     [userInfo setJob:[NSNumber numberWithInteger:occupationIndex]];
-    [userInfo setLat:[NSNumber numberWithFloat:currentLocation.coordinate.latitude]];
-    [userInfo setLon:[NSNumber numberWithFloat:currentLocation.coordinate.longitude]];
     
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUserInfosUpdateWithObject:userInfo];
-    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id result, NSError *error){
+    NSLog(@"userinfo %@", userInfo);
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUserInfo *result, NSError *error){
+        
         if (error == nil) {
+        
+            [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"send_user_info" label:nil];
+            [DataUtil saveUserAdditionalInfoEntered];
             [Util showAlertView:nil message:@"정보 업데이트를 완료하였습니다" title:@"나의 정보"];
-            [self dismissViewControllerAnimated:YES completion:nil];
+            if (self.parentPage == SLIDE_MENU_PAGE) {
+                [self dismissViewControllerAnimated:YES completion:nil];
+            }else if (self.parentPage == PHONE_CERTIFICATION_VIEW_PAGE){
+                [ViewUtil presentTabbarViewControllerInView:self withUser:self.user];
+            }
+        
         }else{
+        
+            NSLog(@"user info update error %@ %@", error, [error localizedDescription]);
             [Util showAlertView:nil message:@"업데이트에 실패하였습니다" title:@"나의 정보"];
+        
         }
+        
     }];
     
 }
 
 - (IBAction)cancel:(id)sender
 {
-    [self dismissViewControllerAnimated:YES completion:nil];
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
+    if (self.parentPage == SLIDE_MENU_PAGE) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }
 }
 
 #pragma mark Implementation
@@ -283,26 +326,15 @@
     NSLog(@"Delegate has been informed that ActionSheetPicker was cancelled");
 }
 
-#pragma mark -
-#pragma mark location manager delegate
-- (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
+- (void)didUpdateAdditionalUserInfo
 {
-    NSLog(@"fail to update location with error %@", [error localizedDescription]);
-}
-
-- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
-{
-    CLLocation *location = [locations lastObject];
+    [DataUtil saveUserAdditionalInfoEntered];
+    [Util showAlertView:nil message:@"추가정보를 업데이트하였습니다" title:@"나의정보"];
     
-    if (location) {
-        
-        currentLocation = [location mutableCopy];
-        [locationManager stopUpdatingLocation];
-        
-    }else{
-        
-        currentLocation = [[CLLocation alloc] initWithLatitude:0 longitude:0];
-        
+    if (self.parentPage == SLIDE_MENU_PAGE) {
+        [self dismissViewControllerAnimated:YES completion:nil];
+    }else if (self.parentPage == PHONE_CERTIFICATION_VIEW_PAGE){
+        [ViewUtil presentTabbarViewControllerInView:self withUser:self.user];
     }
 }
 @end

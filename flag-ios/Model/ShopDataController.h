@@ -10,7 +10,7 @@
 
 @interface ShopDataController : DataController
 
-- (void)initForTest;
 - (id)objectInlistWithObjectId:(NSNumber *)objectId;
+- (NSArray *)getHQShopIds;
 
 @end

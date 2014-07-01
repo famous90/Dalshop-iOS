@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineItem (0 custom class methods, 14 custom properties)
+//   GTLFlagengineItem (0 custom class methods, 16 custom properties)
 
 #import "GTLFlagengineItem.h"
 
@@ -24,8 +24,8 @@
 
 @implementation GTLFlagengineItem
 @dynamic barcodeId, descriptionProperty, identifier, liked, likes, name,
-         oldPrice, price, reward, rewardable, rewarded, sale, shopId,
-         thumbnailUrl;
+         oldPrice, price, reward, rewardable, rewarded, sale, sex, shopId,
+         thumbnailUrl, type;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

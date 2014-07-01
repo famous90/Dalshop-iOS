@@ -14,5 +14,7 @@
 
 - (Flag *)objectWithFlagId:(NSNumber *)flagId;
 - (NSArray *)shopIdListInFlagList;
+- (Flag *)objectWithShopId:(NSNumber *)shopId;
+- (NSArray *)sortFlagsByDistanceFromCurrentLocation;
 
 @end

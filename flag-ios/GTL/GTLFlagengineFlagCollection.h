@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineFlagCollection (0 custom class methods, 1 custom properties)
+//   GTLFlagengineFlagCollection (0 custom class methods, 2 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -29,5 +29,6 @@
 //
 
 @interface GTLFlagengineFlagCollection : GTLObject
+@property (retain) NSArray *deletedIds;  // of NSNumber (longLongValue)
 @property (retain) NSArray *flags;  // of GTLFlagengineFlag
 @end

@@ -9,14 +9,17 @@
 #import "JoinViewController.h"
 #import "FlagViewController.h"
 #import "SWRevealViewController.h"
+#import "PhoneCertificationViewController.h"
 
 #import "User.h"
 
 #import "Util.h"
 #import "ViewUtil.h"
+#import "DataUtil.h"
 
 #import "GTLFlagengine.h"
 #import "FlagClient.h"
+#import "GoogleAnalytics.h"
 
 @interface JoinViewController ()
 
@@ -42,11 +45,33 @@
     [Util setPlaceholderAttributeWithTextField:self.passwordTextField placeholderContent:@"password"];
     [Util setPlaceholderAttributeWithTextField:self.confirmPasswordTextField placeholderContent:@"confirm password"];
     
+    
+    // button
+    self.cancelButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.cancelButton.layer.borderWidth = 0.8f;
+    self.cancelButton.layer.cornerRadius = 5;
+    
+    self.joinButton.layer.borderColor = [UIColor whiteColor].CGColor;
+    self.joinButton.layer.borderWidth = 0.8f;
+    self.joinButton.layer.cornerRadius = 5;
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+    
+    // GA
+    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REGISTER_VIEW];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+
 }
 
 - (void)didReceiveMemoryWarning
@@ -56,6 +81,10 @@
 
 - (IBAction)joinButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"register_button_tapped" label:@"escape_view" value:nil];
+
+    
     if ([self userFormCheck]) {
         NSLog(@"registering");
         [self registerUser];
@@ -64,6 +93,8 @@
 
 - (void)registerUser
 {
+    NSDate *startDate = [NSDate date];
+    
     GTLServiceFlagengine *service = [FlagClient flagengineService];
     
     GTLFlagengineUserForm *userForm =  [GTLFlagengineUserForm alloc];
@@ -76,8 +107,9 @@
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUserForm *user, NSError *error){
         
         if (error == nil) {
+            [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"register_user" label:nil];
             [self changeUserForm];
-            [self restartView];
+            [self presentPhoneCertView];
         }else{
             [Util showAlertView:nil message:@"회원가입 중에 에러가 발생했습니다" title:@"회원가입"];
         }
@@ -91,38 +123,24 @@
     self.user.email = self.emailTextField.text;
 }
 
-- (void)restartView
+- (void)presentPhoneCertView
 {
     UIStoryboard *storyboard = [ViewUtil getStoryboard];
-    SWRevealViewController *restartViewController = (SWRevealViewController *)[storyboard instantiateViewControllerWithIdentifier:@"RevealView"];
-    restartViewController.user = self.user;
+    PhoneCertificationViewController *childViewController = (PhoneCertificationViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PhoneCertificationView"];
     
-    [self saveUserFormInCoreData];
+    childViewController.user = self.user;
     
-    [self presentViewController:restartViewController animated:YES completion:nil];
-}
-
-- (void)saveUserFormInCoreData
-{
-    NSManagedObjectContext *context = [self managedObjectContext];
+    [DataUtil saveUserFormForRegisterWithEmail:self.emailTextField.text];
     
-    NSFetchRequest *fetchRequest = [[NSFetchRequest alloc] initWithEntityName:@"UserInfo"];
-    NSMutableArray *userInfos = [[context executeFetchRequest:fetchRequest error:nil] mutableCopy];
-    NSManagedObject *userInfo = [userInfos objectAtIndex:0];
-    
-    if (userInfo) {
-        [userInfo setValue:self.emailTextField.text forKey:@"email"];
-        [userInfo setValue:[NSNumber numberWithBool:YES] forKey:@"registered"];
-    }
-    
-    NSError *error = nil;
-    if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error localizedDescription]);
-    }
+    [self presentViewController:childViewController animated:YES completion:nil];
 }
 
 - (IBAction)backgroundTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"background_tapped" label:@"inside_view" value:nil];
+
+    
     [self.emailTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
     [self.confirmPasswordTextField resignFirstResponder];
@@ -130,6 +148,10 @@
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+
+    
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
 
         [self dismissViewControllerAnimated:YES completion:nil];
@@ -142,6 +164,24 @@
         
         [self dismissViewControllerAnimated:YES completion:nil];
     }
+}
+
+- (IBAction)showUserAgreementButtonTapped:(id)sender
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_to_user_agreement" label:@"escape_view" value:nil];
+
+    
+    [ViewUtil presentUserPolicyInView:self policyType:POLICY_FOR_USER_AGREEMENT];
+}
+
+- (IBAction)showUserInfoPolicyButtonTapped:(id)sender
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_to_user_info_policy" label:@"escape_view" value:nil];
+
+    
+    [ViewUtil presentUserPolicyInView:self policyType:POLICY_FOR_USER_INFO];
 }
 
 #pragma mark -
@@ -194,18 +234,6 @@
     if ([email rangeOfString:@"@"].location == NSNotFound) {
         return NO;
     }else return YES;
-}
-
-#pragma mark -
-#pragma mark core data
-- (NSManagedObjectContext *)managedObjectContext
-{
-    NSManagedObjectContext *context = nil;
-    id delegate = [[UIApplication sharedApplication] delegate];
-    if ([delegate performSelector:@selector(managedObjectContext)]) {
-        context = [delegate managedObjectContext];
-    }
-    return context;
 }
 
 @end

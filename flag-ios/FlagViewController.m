@@ -15,6 +15,8 @@
 #import "ShopListViewController.h"
 #import "SWRevealViewController.h"
 #import "JoinViewController.h"
+#import "TransitionDelegate.h"
+#import "CollectRewardViewController.h"
 
 #import "Flag.h"
 #import "FlagDataController.h"
@@ -23,6 +25,7 @@
 
 #import "Util.h"
 #import "ViewUtil.h"
+#import "DataUtil.h"
 
 #import "FlagClient.h"
 #import "GoogleAnalytics.h"
@@ -30,6 +33,7 @@
 @interface FlagViewController ()
 
 @property (nonatomic, weak) AppDelegate *delegate;
+@property (nonatomic, strong) TransitionDelegate *transitionDelegate;
 
 @end
 
@@ -38,14 +42,13 @@
     Shop *selectedShop;
     UIImage *shopImage;
     BOOL isSlide;
-    
-    BOOL flagListFirstTapped;
-    BOOL myPageFirstTapped;
-}
 
-CGFloat navigationBarHeight = 64.0f;
-CGFloat tabBarHeight = 0.0f;
-CGFloat mapPadding = 5.0f;
+    CGFloat navigationBarHeight;
+    CGFloat tabBarHeight;
+    CGFloat mapPadding;
+    
+    NSDate *createdViewAt;
+}
 
 - (void)awakeFromNib
 {
@@ -68,8 +71,11 @@ CGFloat mapPadding = 5.0f;
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    self.delegate.timeCriteria = [NSDate date];
+
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+
+    createdViewAt = [NSDate date];
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_FLAG_VIEW];
     [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
@@ -78,14 +84,38 @@ CGFloat mapPadding = 5.0f;
 {
     [super viewDidLoad];
     
-    self.menuButton.target = self.revealViewController;
-    self.menuButton.action = @selector(revealToggle:);
-//    [self.view addGestureRecognizer:self.revealViewController.panGestureRecognizer];
-    
-    flagListFirstTapped = NO;
-    myPageFirstTapped = NO;
+    [self configureNavigationBar];
     
     isSlide = [self didSlideOutMapView];
+}
+
+- (void)configureNavigationBar
+{
+    navigationBarHeight = self.navigationController.navigationBar.frame.origin.y + self.navigationController.navigationBar.frame.size.height;
+    tabBarHeight = 0.0f;
+    mapPadding = 5.0f;
+    
+    if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+     
+        UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(revealToggle:)];
+        self.navigationItem.leftBarButtonItem = menuButton;
+        
+//        self.transitionDelegate = [[TransitionDelegate alloc] init];
+//        UIBarButtonItem *collectRewardButton = [[UIBarButtonItem alloc] initWithTitle:@"달따기" style:UIBarButtonItemStyleBordered target:self action:@selector(presentCollectRewardView:)];
+//        self.navigationItem.rightBarButtonItem = collectRewardButton;
+        UIBarButtonItem *rewardMenuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(rightRevealToggle:)];
+        [rewardMenuButton setTintColor:UIColorFromRGB(0xeb6468)];
+        self.navigationItem.rightBarButtonItem = rewardMenuButton;
+        
+    }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
+        
+        self.title = @"체크인 상점";
+        self.navigationController.navigationBar.tintColor = UIColorFromRGB(BASE_COLOR);
+        
+        
+        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
+        self.navigationItem.leftBarButtonItem = cancelButton;
+    }
 }
 
 - (void)didReceiveMemoryWarning
@@ -97,8 +127,6 @@ CGFloat mapPadding = 5.0f;
 #pragma mark - server connection
 - (void)getShopInfoWithFlag:(Flag *)flag
 {
-    NSDate *loadBeforeTime = [NSDate date];
-    
     shopImage = nil;
     
     URLParameters *urlParam = [[URLParameters alloc] init];
@@ -106,18 +134,14 @@ CGFloat mapPadding = 5.0f;
     [urlParam addParameterWithKey:@"id" withParameter:flag.shopId];
     [urlParam addParameterWithUserId:self.user.userId];
     NSURL *url = [urlParam getURLForRequest];
+    NSString *methodName = [urlParam getMethodName];
     
-    [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
-        
-        NSDictionary *results = [FlagClient getURLResultWithURL:url];
-        
-        [[NSOperationQueue mainQueue] addOperationWithBlock:^{
-            
+    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *results){
+       
+        if (results) {
             [self setShopWithJsonData:results];
-            
-            // GAI User Timing
-            [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"data_load" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:loadBeforeTime]] name:@"get_shop" label:nil] build]];
-        }];
+        }
+        
     }];
 }
 
@@ -125,10 +149,55 @@ CGFloat mapPadding = 5.0f;
 {
     selectedShop = [[Shop alloc] initWithData:results];
     
+    [self.shopInfoViewController setShop:selectedShop];
+    [self.shopInfoViewController configureShopScanRewardInfo];
+    [self.shopInfoViewController configureShopSaleInfo];
+    
     if (selectedShop.logoUrl) {
-        shopImage = [FlagClient getImageWithImagePath:selectedShop.logoUrl];
-        self.shopInfoViewController.shopImageView.image = shopImage;
+        
+        if ([DataUtil isImageCachedWithObjectId:selectedShop.shopId imageUrl:selectedShop.logoUrl inListType:IMAGE_SHOP_LOGO]) {
+
+            shopImage = [DataUtil getImageWithObjectId:selectedShop.shopId inListType:IMAGE_SHOP_LOGO];
+            [self.shopInfoViewController.shopImageView setImage:shopImage];
+
+        }else{
+            
+            [FlagClient getImageWithImageURL:selectedShop.logoUrl imageDataController:nil objectId:selectedShop.shopId objectType:IMAGE_SHOP_LOGO view:self.view completion:^(UIImage *image){
+            
+                shopImage = image;
+                [DataUtil insertImageWithImage:image imageUrl:selectedShop.logoUrl objectId:selectedShop.shopId inListType:IMAGE_SHOP_LOGO];
+                [self.shopInfoViewController.shopImageView setImage:shopImage];
+            }];
+        }
     }
+}
+
+#pragma mark - 
+#pragma mark IBAction
+//- (IBAction)presentCollectRewardView:(id)sender
+//{
+//    // GA
+//    [GAUtil sendGADataWithUIAction:@"go_to_reward_collection" label:@"escape_view" value:nil];
+//    
+//    
+//    UIStoryboard *storyboard = [ViewUtil getStoryboard];
+//    CollectRewardViewController *childViewController = (CollectRewardViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CollectRewardView"];
+//    childViewController.user = self.user;
+//    
+//    childViewController.view.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
+//    [childViewController setTransitioningDelegate:self.transitionDelegate];
+//    childViewController.modalPresentationStyle = UIModalPresentationCustom;
+//    
+//    [self presentViewController:childViewController animated:YES completion:nil];
+//}
+
+- (IBAction)cancelButtonTapped:(id)sender
+{
+    // GA
+    [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    
+    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark - Implementaion
@@ -146,8 +215,9 @@ CGFloat mapPadding = 5.0f;
     }
     
     if ([[segue identifier] isEqualToString:@"ShowShopInfo"]) {
-//        ShopInfoViewController *containerViewController = (ShopInfoViewController *)[segue destinationViewController];
+        
         self.shopInfoViewController = (ShopInfoViewController *)[segue destinationViewController];
+        
     }
 }
 
@@ -156,6 +226,8 @@ CGFloat mapPadding = 5.0f;
     self.mapViewController = segue.destinationViewController;
     self.mapViewController.delegate = self;
     self.mapViewController.user = self.user;
+    self.mapViewController.objectIdForFlag = self.objectIdForFlag;
+    self.mapViewController.parentPage = self.parentPage;
 }
 
 - (BOOL)didSlideMapView
@@ -194,12 +266,10 @@ CGFloat mapPadding = 5.0f;
     
     [self getShopInfoWithFlag:selectedFlag];
     
-    self.shopInfoViewController.user = self.user;
-    self.shopInfoViewController.shopId = [selectedFlag.shopId copy];
-    self.shopInfoViewController.shopName = [selectedFlag.shopName copy];
+    [self.shopInfoViewController setUser:self.user];
+    [self.shopInfoViewController setShop:selectedShop];
     [self.shopInfoViewController.shopNameLabel setText:[Util changeStringFirstSpaceToLineBreak:selectedFlag.shopName]];
     [self.shopInfoViewController.shopRewardLabel setText:[NSString stringWithFormat:@"%ld달", (long)selectedShop.reward]];
-//    [self.shopInfoViewController.shopSalePercentageLabel setText:[NSString stringWithFormat:@"%d%%SALE", selectedShop.sale]];
     self.shopInfoViewController.shopImageView.image = shopImage;
     
     isSlide = [self didSlideMapView];
@@ -218,51 +288,35 @@ CGFloat mapPadding = 5.0f;
     flagData.masterData = [flagDataController.masterData mutableCopy];
 }
 
-//- (void)setCurrentLocation:(CLLocation *)currentLocation
-//{
-////    self.currentLocation = currentLocation;
-//}
 
 #pragma mark - IBAction
 
-- (void)showMyPage
-{
-    UIStoryboard *storyboard = [ViewUtil getStoryboard];
-    MyPageViewController *childViewController = (MyPageViewController *)[storyboard instantiateViewControllerWithIdentifier:@"MyPageView"];
-    
-//    navController.navigationBar.tintColor = UIColorFromRGB(BASE_COLOR);
-    childViewController.user = self.user;
-    
-//    [self presentViewController:navController animated:YES completion:nil];
-    [self.navigationController pushViewController:childViewController animated:YES];
-}
-
-- (void)showJoinPage
-{
-    UIStoryboard *storyboard = [ViewUtil getStoryboard];
-//    UINavigationController *navController = [[UINavigationController alloc] init];
-//    JoinViewController *childViewController = (JoinViewController *)[navController topViewController];
-    
-    JoinViewController *childViewController = (JoinViewController *)[storyboard instantiateViewControllerWithIdentifier:@"JoinView"];
-    
-    childViewController.user = self.user;
-    childViewController.parentPage = TAB_BAR_VIEW_PAGE;
-    
-    [self presentViewController:childViewController animated:YES completion:nil];
-//    [self.navigationController pushViewController:childViewController animated:YES];
-}
-
-//- (IBAction)showShopListButtonTapped:(id)sender
+//- (void)showMyPage
 //{
-//    // GAI event
-//    if (!flagListFirstTapped) {
-//        [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createTimingWithCategory:@"ui_delay" interval:[NSNumber numberWithDouble:[[NSDate date] timeIntervalSinceDate:self.delegate.timeCriteria]] name:@"go_to_flag_list" label:nil] build]];
-//        flagListFirstTapped = YES;
-//    }
-//    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createEventWithCategory:@"ui_action" action:@"go_to_flag_list" label:@"escape_view" value:nil] build]];
+//    UIStoryboard *storyboard = [ViewUtil getStoryboard];
+//    MyPageViewController *childViewController = (MyPageViewController *)[storyboard instantiateViewControllerWithIdentifier:@"MyPageView"];
 //    
-//    [self showShopList];
+//    childViewController.user = self.user;
+//    
+//    [self.navigationController pushViewController:childViewController animated:YES];
 //}
+//
+//- (void)showJoinPage
+//{
+//    UIStoryboard *storyboard = [ViewUtil getStoryboard];
+//    
+//    JoinViewController *childViewController = (JoinViewController *)[storyboard instantiateViewControllerWithIdentifier:@"JoinView"];
+//    
+//    childViewController.user = self.user;
+//    childViewController.parentPage = TAB_BAR_VIEW_PAGE;
+//    
+//    [self presentViewController:childViewController animated:YES completion:nil];
+//}
+
+- (IBAction)showShopListButtonTapped:(id)sender
+{
+    [self showShopList];
+}
 
 - (void)showShopList
 {
@@ -282,20 +336,7 @@ CGFloat mapPadding = 5.0f;
     [self.mapViewController showCurrentLocation];
 }
 
-- (IBAction)showMyPageTapped:(id)sender {
-    [self showMyPage];
-}
-
-#pragma mark - 
-#pragma mark alert delegate
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
-{
-    if (alertView.tag == ASK_JOIN_ALERT) {
-        if (buttonIndex == 0) {
-            
-        }else if(buttonIndex == 1){
-            [self showJoinPage];
-        }
-    }
-}
+//- (IBAction)showMyPageTapped:(id)sender {
+//    [self showMyPage];
+//}
 @end

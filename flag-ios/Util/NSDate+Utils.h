@@ -11,6 +11,8 @@
 @interface NSDate(Utils)
 
 + (NSString *)dateAtTime:(NSTimeInterval)timeInterval withFormat:(NSInteger)format;
++ (NSTimeInterval)generateTimeIntervalFromYear:(NSInteger)year;
++ (NSInteger)breakDownTimeInterval:(NSTimeInterval)time toCalendarComponent:(NSCalendarUnit)calendarUnit;
 
 @end
 

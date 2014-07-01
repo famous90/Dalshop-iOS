@@ -10,6 +10,7 @@
 #import <QuartzCore/QuartzCore.h>
 
 @class User;
+@class Shop;
 
 @interface ShopInfoViewController : UIViewController
 
@@ -17,10 +18,17 @@
 @property (weak, nonatomic) IBOutlet UILabel *shopRewardLabel;
 @property (weak, nonatomic) IBOutlet UILabel *shopSalePercentageLabel;
 @property (weak, nonatomic) IBOutlet UIImageView *shopImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *scanRewardImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *shopSaleImageView;
 
 @property (nonatomic, strong) User *user;
-@property (nonatomic, strong) NSNumber *shopId;
-@property (nonatomic, strong) NSString *shopName;
+@property (nonatomic, strong) Shop *shop;
+//@property (nonatomic, strong) NSNumber *shopId;
+//@property (nonatomic, strong) NSString *shopName;
 
+
+- (void)configureShopScanRewardInfo;
+- (void)configureShopSaleInfo;
 - (IBAction)shopInfoViewTapped:(id)sender;
+
 @end

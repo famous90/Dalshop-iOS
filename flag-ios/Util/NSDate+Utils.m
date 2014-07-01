@@ -33,6 +33,60 @@
     return dateString;
 }
 
++ (NSTimeInterval)generateTimeIntervalFromYear:(NSInteger)year
+{
+    NSDate *now = [NSDate date];
+    NSCalendar *calendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDateComponents *componets = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit fromDate:now];
+    [componets setYear:year];
+    
+    NSDate *date = [calendar dateFromComponents:componets];
+    NSTimeInterval yearTimeInterval = [date timeIntervalSince1970];
+    
+    return yearTimeInterval;
+}
+
++ (NSInteger)breakDownTimeInterval:(NSTimeInterval)time toCalendarComponent:(NSCalendarUnit)calendarUnit
+{
+    NSCalendar *calendar = [NSCalendar currentCalendar];
+    NSDate *date = [[NSDate alloc] initWithTimeIntervalSince1970:time];
+    NSDateComponents *component = [calendar components:calendarUnit fromDate:date];
+    NSInteger value = 0;
+    
+    switch (calendarUnit) {
+        case NSMinuteCalendarUnit:{
+            value = [component minute];
+            break;
+        }
+        case NSHourCalendarUnit:{
+            value = [component hour];
+            break;
+        }
+        case NSDayCalendarUnit:{
+            value = [component day];
+            break;
+        }
+        case NSWeekCalendarUnit:{
+            value = [component weekday];
+            break;
+        }
+        case NSMonthCalendarUnit:{
+            value = [component month];
+            break;
+        }
+        case NSYearCalendarUnit:{
+            value = [component year];
+            break;
+        }
+            
+        default:{
+            break;
+        }
+    }
+    
+    return value;
+}
+
 @end
 
 @implementation NSDate_Utils

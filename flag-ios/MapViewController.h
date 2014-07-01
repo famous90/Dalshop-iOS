@@ -15,7 +15,6 @@
 
 @class GMSMarker;
 @class MapViewController;
-@class Flag;
 @class FlagDataController;
 
 @protocol MapViewControllerDelegate <NSObject>
@@ -32,6 +31,8 @@
 @property (nonatomic, weak) id<MapViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) User *user;
+@property (nonatomic, strong) NSNumber *objectIdForFlag;
+@property (nonatomic, assign) NSInteger parentPage;
 
 - (void)showCurrentLocation;
 //- (GTLServiceFlagengine *)flagengineService;
