@@ -12,7 +12,7 @@
 
 @class User;
 
-@interface FlagViewController : UIViewController <MapViewControllerDelegate, UIAlertViewDelegate>
+@interface FlagViewController : GAITrackedViewController <MapViewControllerDelegate, UIAlertViewDelegate>
 
 @property (nonatomic, strong) MapViewController *mapViewController;
 @property (nonatomic, strong) ShopInfoViewController *shopInfoViewController;
@@ -22,7 +22,7 @@
 @property (nonatomic, strong) User *user;
 @property (nonatomic, strong) NSNumber *objectIdForFlag;
 @property (nonatomic, assign) NSInteger parentPage;
-//@property (nonatomic, weak) CLLocation *currentLocation;
+@property (nonatomic, assign) NSInteger type;
 
 - (IBAction)findCurrentPositionButtonTapped:(id)sender;
 @end

@@ -10,6 +10,8 @@
 
 @class User;
 @class Shop;
+@class Item;
+@class ItemListViewController;
 
 @interface ItemListViewController : UICollectionViewController
 
@@ -17,10 +19,11 @@
 @property (nonatomic, strong) Shop *shop;
 @property (nonatomic, assign) NSInteger parentPage;
 @property (nonatomic, assign) BOOL afterItemScan;
+@property (nonatomic, strong) UIImage *shopEventImage;
+
+@property (nonatomic, strong) Item *item;
+@property (nonatomic, strong) UIImage *itemImage;
 
 - (IBAction)cancel:(UIStoryboardSegue *)segue;
-//- (void)changeItemRewardToRewardedWithItemId:(NSNumber *)itemId;
-- (void)addItemLikesWithIndexpathRow:(NSInteger)row;
-- (void)minusItemLikesWithIndexpathRow:(NSInteger)row;
 
 @end

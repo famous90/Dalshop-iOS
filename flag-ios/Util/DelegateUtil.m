@@ -11,6 +11,7 @@
 #import "AppDelegate.h"
 
 #import "User.h"
+#import "AppBaseDataController.h"
 
 @implementation DelegateUtil
 
@@ -47,6 +48,17 @@
 {
     AppDelegate *delegate = [self getAppDelegate];
     [delegate setUser:user];
+}
+
+
+// App Base Data
++ (NSString *)getNewestVersion
+{
+    AppDelegate *delegate = [self getAppDelegate];
+    AppBaseDataController *appBaseData = delegate.appBaseData;
+    NSString *version = [appBaseData getNewestAppVersion];
+    
+    return version;
 }
 
 

@@ -181,16 +181,16 @@
     NSError *error;
     
     // send request
-    NSLog(@"request url %@", url);
+    DLog(@"request url %@", url);
     NSData *jsonDataString = [[NSString stringWithContentsOfURL:url encoding:NSUTF8StringEncoding error:nil] dataUsingEncoding:NSUTF8StringEncoding];
     
     if (!jsonDataString) {
-        NSLog(@"Download failed : %@", error.localizedDescription);
+        DLog(@"Download failed : %@", error.localizedDescription);
         return nil;
     }
     
     NSDictionary *results = [NSJSONSerialization JSONObjectWithData:jsonDataString options:NSJSONReadingMutableContainers error:&error];
-    NSLog(@"data response results : %@", results);
+    DLog(@"data response results : %@\nerror : %@\nurl : %@", results, error, url);
     
     return results;
 }

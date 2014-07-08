@@ -20,6 +20,7 @@
 #import "BeaconDataController.h"
 #import "Beacon.h"
 #import "URLParameters.h"
+#import "AppBaseDataController.h"
 
 #import "Util.h"
 #import "ViewUtil.h"
@@ -30,18 +31,20 @@
 
 #import "FlagClient.h"
 #import "GTLFlagengine.h"
+#import "GoogleAnalytics.h"
 
 /******* Set your tracking ID here *******/
 static NSString *const kGaTrackingId = @"UA-45882688-3";
+static BOOL const kGaTrackingOptOut = YES;
 static NSString *const kTrackingPreferenceKey = @"allowTracking";
 
-#ifdef DEBUG
-static BOOL const kGaDryRun = YES;
-#else
-static BOOL const kGaDryRun = NO;
-#endif
+//#ifdef DEBUG
+//static BOOL const kGaDryRun = YES;
+//#else
+//static BOOL const kGaDryRun = NO;
+//#endif
 
-static int const kGaDispatchPeriod = 30;
+static int const kGaDispatchPeriod = 20;
 
 @interface AppDelegate ()<CLLocationManagerDelegate>
 
@@ -70,6 +73,18 @@ static int const kGaDispatchPeriod = 30;
     }
     
     
+    // app base data
+    [self initializeAppBaseDataCompletion:^(){}];
+    
+    
+    // device token
+    [self initializeRemoteNotification];
+    
+    
+    // Google Analytics
+    [self initializeGoogleAnalytics];
+    
+    
     self.transitionDelegate = [[TransitionDelegate alloc] init];
     // update flag list
     [self updateFlagTimeStamp];
@@ -90,10 +105,6 @@ static int const kGaDispatchPeriod = 30;
     
     // Google Map
     [GMSServices provideAPIKey:GOOGLE_MAP_API_KEY];
-    
-    
-    // Google Analytics
-    [self initializeGoogleAnalytics];
     
     
     // is launched by Notification
@@ -132,8 +143,6 @@ static int const kGaDispatchPeriod = 30;
 - (void)applicationDidBecomeActive:(UIApplication *)application
 {
     NSLog(@"become active");
-    
-    [GAI sharedInstance].optOut = ![[NSUserDefaults standardUserDefaults] boolForKey:kTrackingPreferenceKey];
 }
 
 - (void)applicationWillTerminate:(UIApplication *)application
@@ -232,7 +241,50 @@ static int const kGaDispatchPeriod = 30;
 }
 
 
-#pragma mark - 
+#pragma mark -
+#pragma mark App Base Data Delegate
+- (BOOL)initializeAppBaseDataCompletion:(void (^)())completion
+{
+    self.appBaseData = [[AppBaseDataController alloc] init];
+    
+    URLParameters *urlParam = [self getURLForAppBaseData];
+    
+    [FlagClient getDataResultWithURL:[urlParam getURLForRequest] methodName:[urlParam getMethodName] completion:^(NSDictionary *result){
+        
+        [self.appBaseData addObjectsWithData:result];
+        
+        if ([self.appBaseData getLaunchAlertShow]) {
+            
+            [self showAppLaunchUnexpectedAlert];
+            
+        }else{
+            // pass
+        }
+        
+    }];
+    
+    return [self.appBaseData getLaunchAlertShow];
+}
+
+- (URLParameters *)getURLForAppBaseData
+{
+    URLParameters *urlParam = [[URLParameters alloc] init];
+    [urlParam setMethodName:@"idstring"];
+    
+    return urlParam;
+}
+
+- (void)showAppLaunchUnexpectedAlert
+{
+    NSString *alertTitle = [self.appBaseData getLaunchAlertTitle];
+    NSString *alertMessage = [self.appBaseData getLaunchAlertMessage];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:nil otherButtonTitles:@"좋아. 이해해주지", nil];
+    [alert setTag:ALERT_UNEXPECTED_MESSAGE];
+    [alert show];
+}
+
+
+#pragma mark -
 #pragma mark Reachability
 - (BOOL)checkDeviceNetworkState
 {
@@ -339,11 +391,18 @@ static int const kGaDispatchPeriod = 30;
 
 - (void)initializeGoogleAnalytics
 {
-    [[GAI sharedInstance] setDispatchInterval:kGaDispatchPeriod];
-    [[GAI sharedInstance] setDryRun:kGaDryRun];
+//    [[GAI sharedInstance] setDryRun:kGaDryRun];
+    [[[GAI sharedInstance] logger] setLogLevel:kGAILogLevelVerbose];
     [[GAI sharedInstance] setTrackUncaughtExceptions:YES];
     
-    [self setTracker:[[GAI sharedInstance] trackerWithTrackingId:kGaTrackingId]];
+    [[GAI sharedInstance] setDispatchInterval:kGaDispatchPeriod];
+    
+    id<GAITracker> tracker = [[GAI sharedInstance] trackerWithTrackingId:kGaTrackingId];
+    
+    NSString *version = [[NSBundle mainBundle] objectForInfoDictionaryKey:(NSString *)kCFBundleVersionKey];
+    [tracker set:kGAIAppVersion value:version];
+    
+    [[GAI sharedInstance] setOptOut:kGaTrackingOptOut];
 }
 
 
@@ -573,6 +632,8 @@ static int const kGaDispatchPeriod = 30;
 {
     if (alertView.tag == ALERT_NETWORK_CHECK) {
         exit(0);
+    }else if (alertView.tag == ALERT_UNEXPECTED_MESSAGE){
+        
     }
 }
 
@@ -736,6 +797,67 @@ static int const kGaDispatchPeriod = 30;
         
         return YES;
     }return NO;
+}
+
+
+#pragma mark -
+#pragma mark remote notification
+- (void)initializeRemoteNotification
+{
+    UIRemoteNotificationType types = (UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeSound);
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:types];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
+{
+    NSString *token = [self hexStringFromData:deviceToken];
+    NSLog(@"content---%@", token);
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"deviceTokenNotification" object:self];
+}
+
+// Returns an NSString object that contains a hexadecimal representation of the
+// receiver’s contents.
+- (NSString *)hexStringFromData:(NSData *)data {
+    NSUInteger dataLength = [data length];
+    NSMutableString *stringBuffer =
+    [NSMutableString stringWithCapacity:dataLength * 2];
+    const unsigned char *dataBuffer = [data bytes];
+    for (int i=0; i<dataLength; i++) {
+        [stringBuffer appendFormat:@"%02lx", (unsigned long)dataBuffer[i]];
+    }
+    
+    return stringBuffer;
+}
+
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
+{
+    NSLog(@"error %@", error);
+}
+
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
+{
+    NSLog(@"alert %@", userInfo);
+    
+    NSString *message = userInfo[@"hiddenMessage"];
+    
+    // message is in the format of "<regId>:query:<clientSubId>" based on the backend
+    NSArray *tokens = [message componentsSeparatedByString:@":"];
+    
+    // Tokens are not expected, do nothing
+    if ([tokens count] != 3) {
+        NSLog(@"Message doesn't conform to the subId format at the backend %@", message);
+        return;
+    }
+    
+    // Token type isn't "query", do nothing
+    if (![[tokens objectAtIndex:1] isEqual:@"query"]) {
+        NSLog(@"Message id not in type QUERY %@", message);
+        return;
+    }
+    
+    // Handle this push notification based on this topicID
+//    NSString *topicID = [tokens objectAtIndex:2];
 }
 
 

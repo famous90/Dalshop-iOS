@@ -44,18 +44,6 @@
 
 @implementation QRCodeReaderViewController
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self setUser:[DelegateUtil getUser]];
-    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_QRCODE_READER_VIEW];
-    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -68,7 +56,22 @@
         [_statusLabel setText:@"코드를 스캔해주세요"];
     }
     _isReading = YES;
+    
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_QRCODE_READER_VIEW];
+    //    [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_QRCODE_READER_VIEW];
+    //    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
+}
+
 
 #pragma mark -
 #pragma mark - IBAction

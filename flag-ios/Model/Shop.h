@@ -25,5 +25,9 @@
 @property (nonatomic, assign) BOOL onSale;
 
 - (id)initWithData:(id)data;
+- (BOOL)isShopLiked;
+- (void)likeShop;
+- (void)canceLikeShop;
+- (NSInteger)getCheckInStateType;
 
 @end

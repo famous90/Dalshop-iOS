@@ -47,4 +47,37 @@
     _rewarded = YES;
 }
 
+- (BOOL)isItemLiked
+{
+    return _liked;
+}
+
+- (void)likeItem
+{
+    _liked = YES;
+    _likes++;
+}
+
+- (void)cancelLikeItem
+{
+    _liked = NO;
+    _likes--;
+}
+
+- (BOOL)hasOldPrice
+{
+    if (_oldPrice) {
+        return YES;
+    }else return NO;
+}
+
+- (NSInteger)getRewardState
+{
+    if (_rewardable) {
+        if (_rewarded) {
+            return REWARD_STATE_DONE;
+        }else return REWARD_STATE_BEFORE;
+    }else return REWARD_STATE_DISABLED;
+}
+
 @end

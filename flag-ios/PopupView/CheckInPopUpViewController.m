@@ -54,6 +54,12 @@
     [super viewDidLoad];
     
     [self setContent];
+    
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_CHECKIN_POPUP_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_CHECKIN_POPUP_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)setContent
@@ -64,10 +70,6 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_CHECKIN_POPUP_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)didReceiveMemoryWarning

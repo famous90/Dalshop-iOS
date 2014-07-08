@@ -10,7 +10,7 @@
 
 @class User;
 
-@interface HelpViewController : UIViewController<UIAlertViewDelegate>
+@interface HelpViewController : GAITrackedViewController <UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *viewDescription;
 @property (weak, nonatomic) IBOutlet UITextField *emailAddressTextField;

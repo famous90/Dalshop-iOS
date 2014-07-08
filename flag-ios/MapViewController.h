@@ -33,6 +33,7 @@
 @property (nonatomic, strong) User *user;
 @property (nonatomic, strong) NSNumber *objectIdForFlag;
 @property (nonatomic, assign) NSInteger parentPage;
+@property (nonatomic, assign) NSInteger type;
 
 - (void)showCurrentLocation;
 //- (GTLServiceFlagengine *)flagengineService;

@@ -24,5 +24,6 @@
 - (NSDate *)getCreatedAtByNSDate;
 - (void)setCreatedAtWithDate:(NSDate *)date;
 - (BOOL)canFlagBeCheckedIn;
+- (NSInteger)getFlagCheckInStatus;
 
 @end

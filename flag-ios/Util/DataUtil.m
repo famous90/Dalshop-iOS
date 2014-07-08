@@ -105,6 +105,40 @@
     }
 }
 
++ (void)updateUserIdWithUserId:(NSNumber *)userId
+{
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UserInfo"];
+    NSMutableArray *managedObjects = [[context executeFetchRequest:request error:nil] mutableCopy];
+    NSManagedObject *object = [managedObjects lastObject];
+    
+    if (object) {
+        [object setValue:userId forKey:@"userId"];
+    }
+    
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Can't save! %@ %@", error, [error description]);
+    }
+}
+
++ (void)updateRegisteredWithUserRegistered:(BOOL)registered
+{
+    NSManagedObjectContext *context = [self managedObjectContext];
+    NSFetchRequest *request = [[NSFetchRequest alloc] initWithEntityName:@"UserInfo"];
+    NSMutableArray *managedObjects = [[context executeFetchRequest:request error:nil] mutableCopy];
+    NSManagedObject *object = [managedObjects lastObject];
+    
+    if (object) {
+        [object setValue:[NSNumber numberWithBool:registered] forKey:@"registered"];
+    }
+    
+    NSError *error = nil;
+    if (![context save:&error]) {
+        NSLog(@"Can't save! %@ %@", error, [error description]);
+    }
+}
+
 + (void)savePhoneCertificationSeccess
 {
     NSManagedObjectContext *context = [self managedObjectContext];

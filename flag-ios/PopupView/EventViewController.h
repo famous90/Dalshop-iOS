@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface EventViewController : UIViewController
+@interface EventViewController : GAITrackedViewController
 
 @property (weak, nonatomic) IBOutlet UIImageView *backgroundImageView;
 @property (weak, nonatomic) IBOutlet UILabel *titleLabel;

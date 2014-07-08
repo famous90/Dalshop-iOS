@@ -57,4 +57,17 @@
 + (BOOL)isCorrectPhoneNumberForm:(NSString *)number;
 + (NSString *)addNationalCodeToNumber:(NSString *)number;
 
+
+// NAME
++ (NSString *)getRewardButtonTitleWithType:(NSInteger)type reward:(NSInteger)reward;
+
+
+// COLOR CODE
++ (UIColor *)getRewardButtonColorWithType:(NSInteger)type;
++ (UIColor *)getRewardButtonBackgroundColorWithType:(NSInteger)type page:(NSInteger)page;
+
+
+// CGPOINT
++ (CGPoint)getPointForTappedObjectWithSender:(id)sender toView:(UIView *)view;
+
 @end

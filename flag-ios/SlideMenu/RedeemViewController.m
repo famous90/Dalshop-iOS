@@ -59,6 +59,12 @@
     
     URLParameters *urlParams = [self urlToGetRedeemList];
     [self performSelectorInBackground:@selector(getRedeemListWithURLParams:) withObject:urlParams];
+    
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_REDEEM_LIST_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REDEEM_LIST_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)initializeContent
@@ -108,11 +114,6 @@
     
     [self setUser:[DelegateUtil getUser]];
     [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REDEEM_LIST_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
-
 }
 
 - (void)didReceiveMemoryWarning

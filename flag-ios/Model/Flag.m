@@ -72,4 +72,13 @@
     }
 }
 
+- (NSInteger)getFlagCheckInStatus
+{
+    if ([self canFlagBeCheckedIn]) {
+        return BASE;
+    }else{
+        return REWARDED;
+    }
+}
+
 @end

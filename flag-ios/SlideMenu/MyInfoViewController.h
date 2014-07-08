@@ -14,7 +14,7 @@
 @class User;
 @class AbstractActionSheetPicker;
 
-@interface MyInfoViewController : UIViewController<UIActionSheetDelegate>
+@interface MyInfoViewController : GAITrackedViewController <UIActionSheetDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *lineImageView1;
 @property (weak, nonatomic) IBOutlet UIImageView *lineImageView2;

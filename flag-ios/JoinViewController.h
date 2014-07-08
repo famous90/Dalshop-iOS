@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "GTMHTTPFetcherLogging.h"
 
-@interface JoinViewController : UIViewController
+@interface JoinViewController : GAITrackedViewController
 
 @property (weak, nonatomic) IBOutlet UITextField *emailTextField;
 @property (weak, nonatomic) IBOutlet UITextField *passwordTextField;

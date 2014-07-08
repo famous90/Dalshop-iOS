@@ -41,6 +41,12 @@
     [super viewDidLoad];
     
     self.policyTextView.text = [Util getFileContentWithFileName:self.textFileName];
+    
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_USER_POLIVY_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_USER_POLIVY_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -48,10 +54,6 @@
     [super viewWillAppear:animated];
     
     [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_USER_POLIVY_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)didReceiveMemoryWarning

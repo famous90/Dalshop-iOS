@@ -302,4 +302,33 @@
     return height;
 }
 
++ (UIImage *)getLikeIconImageWithLiked:(BOOL)liked colorType:(NSString *)color
+{
+    NSString *iconImageName = @"icon_likeIt";
+    if (liked) {
+        iconImageName = [iconImageName stringByAppendingString:@"_done"];
+    }
+    iconImageName = [iconImageName stringByAppendingString:[NSString stringWithFormat:@"_%@", color]];
+    
+    UIImage *likeIconImage = [UIImage imageNamed:iconImageName];
+    
+    return likeIconImage;
+}
+
++ (UIImage *)getRewardIconImageWithImagePath:(NSString *)path type:(NSInteger)type
+{
+    NSString *imagePath = path;
+    if (type == REWARD_STATE_BEFORE) {
+        imagePath = [imagePath stringByAppendingString:@"_before"];
+    }else if (type == REWARD_STATE_DONE){
+        imagePath = [imagePath stringByAppendingString:@"_done"];
+    }else if (type == REWARD_STATE_DISABLED){
+        imagePath = [imagePath stringByAppendingString:@"_disabled"];
+    }
+    
+    UIImage *image = [UIImage imageNamed:imagePath];
+    
+    return image;
+}
+
 @end

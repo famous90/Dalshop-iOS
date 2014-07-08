@@ -480,9 +480,7 @@
         if (error == nil) {
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"like_item" label:nil];
             [DataUtil saveLikeObjectWithObjectId:self.item.itemId type:LIKE_ITEM];
-            self.item.likes++;
-            self.item.liked = YES;
-            [self.itemListViewController addItemLikesWithIndexpathRow:self.selectedItemIndexpathRow];
+            [self.item likeItem];
             [self.tableView reloadData];
         }
         
@@ -497,9 +495,7 @@
 
         if (!results) {
             [DataUtil deleteLikeObjectWithObjectId:self.item.itemId type:LIKE_ITEM];
-            self.item.likes--;
-            self.item.liked = NO;
-            [self.itemListViewController minusItemLikesWithIndexpathRow:self.selectedItemIndexpathRow];
+            [self.item cancelLikeItem];
             [self.tableView reloadData];
 
         }

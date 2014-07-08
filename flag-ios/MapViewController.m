@@ -44,7 +44,11 @@
     flagData = [[FlagDataController alloc] init];
     
     [self initializeLocation];
-    
+    [self initalizeContent];
+}
+
+- (void)initalizeContent
+{
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
         [self initializeLocation];
@@ -72,7 +76,27 @@
         // load check in reward flag list
         URLParameters *urlParams = [self urlParamsToGetFlagListByRewardAroundLocation:location];
         [self performSelectorInBackground:@selector(getFlagListByURLParams:) withObject:urlParams];
-
+        
+    }else if (self.parentPage == SHOP_LIST_VIEW_PAGE){
+        
+        if (self.type == MAP_TYPE_FLAG_LIST_FOR_SHOP) {
+            
+            NSLog(@"flag list by shop");
+            [self initializeMapViewWithCurrentLocation:location];
+            
+            URLParameters *urlParam = [self urlParamsToGetFlagListByShop:self.objectIdForFlag];
+            
+            [self getFlagListByURLParams:urlParam];
+            
+        }else if (self.type == MAP_TYPE_CHECKIN_REWARD_FLAG_LIST){
+            
+            [self initializeMapViewWithCurrentLocation:[MapUtil getProximateCheckInSpotFromLocation:location]];
+            
+            URLParameters *urlParams = [self urlParamsToGetFlagListByRewardAroundLocation:location];
+            
+            [self performSelectorInBackground:@selector(getFlagListByURLParams:) withObject:urlParams];
+            
+        }
     }
 }
 
@@ -224,7 +248,7 @@
 {
     GMSMarker *marker = [[GMSMarker alloc] init];
     marker.position = CLLocationCoordinate2DMake([theFlag.lat floatValue], [theFlag.lon floatValue]);
-    marker.icon = [UIImage imageNamed:[MapUtil getMapMarkerImageFileNameWithCategory:theFlag.shopType status:BASE]];
+    marker.icon = [UIImage imageNamed:[MapUtil getMapMarkerImageFileNameWithCategory:theFlag.shopType status:[theFlag getFlagCheckInStatus]]];
     marker.userData = theFlag;
     marker.map = mapView_;
 }
@@ -281,4 +305,5 @@
     
     return urlParam;
 }
+
 @end

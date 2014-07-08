@@ -34,4 +34,32 @@
     return self;
 }
 
+- (BOOL)isShopLiked
+{
+    return _liked;
+}
+
+- (void)likeShop
+{
+    _liked = YES;
+    _likes++;
+}
+
+- (void)canceLikeShop
+{
+    _liked = NO;
+    _likes--;
+}
+
+- (NSInteger)getCheckInStateType
+{
+    if (_reward == 0) {
+        return REWARD_STATE_DISABLED;
+    }else{
+        if (_rewarded) {
+            return REWARD_STATE_DONE;
+        }else return REWARD_STATE_BEFORE;
+    }
+}
+
 @end

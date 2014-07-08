@@ -241,4 +241,77 @@
     return numberWithNationalCode;
 }
 
+
+// NAME
++ (NSString *)getRewardButtonTitleWithType:(NSInteger)type reward:(NSInteger)reward
+{
+    NSString *title;
+    
+    if (type == REWARD_STATE_BEFORE) {
+        title = [NSString stringWithFormat:@"%ld달", (long)reward];
+    }else if (type == REWARD_STATE_DISABLED){
+        title = @"적립불가";
+    }else if (type == REWARD_STATE_DONE){
+        title = @"적립완료";
+    }
+    
+    return title;
+}
+
+
+
+// COLOR
++ (UIColor *)getRewardButtonColorWithType:(NSInteger)type
+{
+    UIColor *color;
+    
+    if (type == REWARD_STATE_BEFORE) {
+        color = [UIColor whiteColor];
+    }else if (type == REWARD_STATE_DISABLED){
+        color = [UIColor colorWithWhite:0.4 alpha:1];
+    }else if (type == REWARD_STATE_DONE){
+        color = [UIColor whiteColor];
+    }
+    
+    return color;
+}
+
++ (UIColor *)getRewardButtonBackgroundColorWithType:(NSInteger)type page:(NSInteger)page
+{
+    UIColor *color;
+    
+    if (page == SHOP_LIST_VIEW_PAGE) {
+        
+        if (type == REWARD_STATE_BEFORE) {
+            color = UIColorFromRGBWithAlpha(0xf2b518, 0.7);
+        }else if (type == REWARD_STATE_DISABLED){
+            color = [UIColor whiteColor];
+        }else if (type == REWARD_STATE_DONE){
+            color = UIColorFromRGB(0xf2b518);
+        }
+        
+    }else if (page == ITEM_LIST_VIEW_PAGE){
+        
+        if (type == REWARD_STATE_BEFORE) {
+            color = UIColorFromRGBWithAlpha(0xf2b518, 0.7);
+        }else if (type == REWARD_STATE_DISABLED){
+            color = [UIColor colorWithWhite:0.8 alpha:0.4];
+        }else if (type == REWARD_STATE_DONE){
+            color = UIColorFromRGBWithAlpha(0xf2b518, 0.7);
+        }
+        
+    }
+    
+    return color;
+}
+
+
+// INDEXPATH
++ (CGPoint)getPointForTappedObjectWithSender:(id)sender toView:(UIView *)view
+{
+    CGPoint senderOriginInView = [sender convertPoint:CGPointZero toView:view];
+    
+    return senderOriginInView;
+}
+
 @end

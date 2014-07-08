@@ -70,6 +70,11 @@
     
     [self setNavigationBar];
     [self setMenuCell];
+    
+    
+    // GA
+    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_SETTING_VIEW];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)setNavigationBar
@@ -85,8 +90,7 @@
 - (void)setMenuCell
 {
     self.currentVersionLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-    self.newestVersionLabel.text = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-//    [self getNewestVersion];
+    self.newestVersionLabel.text =  [self getNewestVersion];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -95,27 +99,14 @@
     
     [self setUser:[DelegateUtil getUser]];
     [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_SETTING_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
-- (void)getNewestVersion
+- (NSString *)getNewestVersion
 {
-    URLParameters *urlParam = [[URLParameters alloc] init];
-    [urlParam setMethodName:@"version"];
-    NSURL *url = [urlParam getURLForRequest];
-    NSString *methodName = [urlParam getMethodName];
-    
-    [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *result){
-        
-        NSString *newestVersion = [result valueForKey:@"version"];
-        if (newestVersion) {
-            self.newestVersionLabel.text = newestVersion;
-        }else self.newestVersionLabel.text = @"1.0.0";
-        
-    }];
+    NSString *version = [DelegateUtil getNewestVersion];
+    if (version) {
+        return version;
+    }else return @"1.0.0";
 }
 
 #pragma mark -

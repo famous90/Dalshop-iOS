@@ -60,4 +60,9 @@
     [self.masterData addObjectsFromArray:dataArray];
 }
 
+- (NSMutableArray *)getMasterData
+{
+    return self.masterData;
+}
+
 @end

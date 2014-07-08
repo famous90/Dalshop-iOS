@@ -178,7 +178,7 @@
             CGFloat pointButtonWidth = [ViewUtil getMagnifiedImageWidthWithImage:pointButtonBackgroundImage height:buttonHeight];
             UIButton *pointButton = [[UIButton alloc] initWithFrame:CGRectMake(menuSlideVisibleWidth - buttonPadding - pointButtonWidth, 0, pointButtonWidth, buttonHeight)];
             [pointButton setBackgroundImage:pointButtonBackgroundImage forState:UIControlStateNormal];
-            [pointButton setTitle:[NSString stringWithFormat:@"%d달", self.user.reward]    forState:UIControlStateNormal];
+            [pointButton setTitle:[NSString stringWithFormat:@"%ld달", (long)self.user.reward]    forState:UIControlStateNormal];
             [pointButton.titleLabel setFont:buttonFont];
             [pointButton.titleLabel setTextAlignment:NSTextAlignmentRight];
             [pointButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -187,6 +187,7 @@
             
             NSLog(@"registered %d", self.user.registered);
             
+            [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
             return cell;
             
@@ -235,9 +236,9 @@
         
         
         // selection view
-//        UIView *bgColorView = [[UIView alloc] init];
-//        bgColorView.backgroundColor = UIColorFromRGB(BASE_COLOR);
-//        [cell setSelectedBackgroundView:bgColorView];
+        UIView *bgColorView = [[UIView alloc] init];
+        bgColorView.backgroundColor = UIColorFromRGBWithAlpha(BASE_COLOR, 0.6);
+        [cell setSelectedBackgroundView:bgColorView];
 
         return cell;
         

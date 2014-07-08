@@ -9,6 +9,7 @@
 #import "AppDelegate.h"
 #import "ShopInfoViewController.h"
 #import "SaleInfoViewController.h"
+#import "ItemListViewController.h"
 
 #import "User.h"
 #import "Shop.h"
@@ -18,8 +19,6 @@
 #import "GoogleAnalytics.h"
 
 @interface ShopInfoViewController ()
-
-@property (nonatomic, weak) AppDelegate *appDelegate;
 
 @end
 
@@ -72,18 +71,19 @@
 - (IBAction)shopInfoViewTapped:(id)sender
 {
     // GA
-    [GAUtil sendGADataWithUIAction:@"go_to_shop" label:@"escape_view" value:nil];
+    [GAUtil sendGADataWithUIAction:@"go_to_item_list" label:@"escape_view" value:nil];
     
     
     // change view
     UIStoryboard *storyborad = [ViewUtil getStoryboard];
     
-    SaleInfoViewController *childViewController = (SaleInfoViewController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoView"];
+//    SaleInfoViewController *childViewController = (SaleInfoViewController *)[storyborad instantiateViewControllerWithIdentifier:@"SaleInfoView"];
+    ItemListViewController *childViewController = (ItemListViewController *)[storyborad instantiateViewControllerWithIdentifier:@"ItemListView"];
     
-    childViewController.user = self.user;
-    childViewController.shopId = self.shop.shopId;
-    childViewController.parentPage = SHOP_INFO_VIEW_PAGE;
-    childViewController.title = self.shop.name;
+    [childViewController setUser:self.user];
+    [childViewController setShop:self.shop];
+    [childViewController setParentPage:SALE_INFO_VIEW_PAGE];
+    [childViewController setShopEventImage:self.shopImageView.image];
  
     [self.navigationController pushViewController:childViewController animated:YES];
 }

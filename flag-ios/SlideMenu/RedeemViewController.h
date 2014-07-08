@@ -10,7 +10,7 @@
 
 @class User;
 
-@interface RedeemViewController : UIViewController <UICollectionViewDataSource, UICollectionViewDelegate>
+@interface RedeemViewController : GAITrackedViewController <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UICollectionView *redeemCollectionView;
 @property (weak, nonatomic) IBOutlet UILabel *myRewardTitleLabel;

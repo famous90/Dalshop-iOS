@@ -21,5 +21,9 @@
 // USER
 + (User *)getUser;
 + (void)updateUserWithUser:(User *)user;
+
+
+// App Base Data
++ (NSString *)getNewestVersion;
    
 @end

@@ -46,8 +46,6 @@
     CGFloat navigationBarHeight;
     CGFloat tabBarHeight;
     CGFloat mapPadding;
-    
-    NSDate *createdViewAt;
 }
 
 - (void)awakeFromNib
@@ -57,7 +55,6 @@
     
     // make user mock up
     self.user = [[User alloc] init];
-    self.user.userId = [NSNumber numberWithInteger:0];
 }
 
 - (void)viewDidLayoutSubviews
@@ -68,18 +65,6 @@
     [self setMapView];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-
-    [self setUser:[DelegateUtil getUser]];
-    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-
-    createdViewAt = [NSDate date];
-    [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_FLAG_VIEW];
-    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -87,6 +72,12 @@
     [self configureNavigationBar];
     
     isSlide = [self didSlideOutMapView];
+    
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_FLAG_VIEW];
+    //    [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_FLAG_VIEW];
+    //    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)configureNavigationBar
@@ -104,18 +95,21 @@
 //        UIBarButtonItem *collectRewardButton = [[UIBarButtonItem alloc] initWithTitle:@"달따기" style:UIBarButtonItemStyleBordered target:self action:@selector(presentCollectRewardView:)];
 //        self.navigationItem.rightBarButtonItem = collectRewardButton;
         UIBarButtonItem *rewardMenuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"icon_slide_menu"] style:UIBarButtonItemStyleBordered target:self.revealViewController action:@selector(rightRevealToggle:)];
-        [rewardMenuButton setTintColor:UIColorFromRGB(0xeb6468)];
+        [rewardMenuButton setTintColor:UIColorFromRGB(0xf2b518)];
         self.navigationItem.rightBarButtonItem = rewardMenuButton;
         
-    }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
+        [self.view addGestureRecognizer:self.revealViewController.tapGestureRecognizer];
         
-        self.title = @"체크인 상점";
-        self.navigationController.navigationBar.tintColor = UIColorFromRGB(BASE_COLOR);
-        
-        
-        UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
-        self.navigationItem.leftBarButtonItem = cancelButton;
+    }else if (self.parentPage == SHOP_LIST_VIEW_PAGE){
     }
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
 }
 
 - (void)didReceiveMemoryWarning
@@ -174,23 +168,6 @@
 
 #pragma mark - 
 #pragma mark IBAction
-//- (IBAction)presentCollectRewardView:(id)sender
-//{
-//    // GA
-//    [GAUtil sendGADataWithUIAction:@"go_to_reward_collection" label:@"escape_view" value:nil];
-//    
-//    
-//    UIStoryboard *storyboard = [ViewUtil getStoryboard];
-//    CollectRewardViewController *childViewController = (CollectRewardViewController *)[storyboard instantiateViewControllerWithIdentifier:@"CollectRewardView"];
-//    childViewController.user = self.user;
-//    
-//    childViewController.view.backgroundColor = [UIColor colorWithWhite:0 alpha:0.7];
-//    [childViewController setTransitioningDelegate:self.transitionDelegate];
-//    childViewController.modalPresentationStyle = UIModalPresentationCustom;
-//    
-//    [self presentViewController:childViewController animated:YES completion:nil];
-//}
-
 - (IBAction)cancelButtonTapped:(id)sender
 {
     // GA
@@ -224,10 +201,11 @@
 - (void)prepareForMapEmbeddingSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     self.mapViewController = segue.destinationViewController;
-    self.mapViewController.delegate = self;
-    self.mapViewController.user = self.user;
-    self.mapViewController.objectIdForFlag = self.objectIdForFlag;
-    self.mapViewController.parentPage = self.parentPage;
+    [self.mapViewController setDelegate:self];
+    [self.mapViewController setUser:self.user];
+    [self.mapViewController setObjectIdForFlag:self.objectIdForFlag];
+    [self.mapViewController setParentPage:self.parentPage];
+    [self.mapViewController setType:self.type];
 }
 
 - (BOOL)didSlideMapView

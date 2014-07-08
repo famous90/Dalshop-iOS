@@ -18,8 +18,21 @@
     #import "FlagClient.h"
 #endif
 
+//#ifdef __OPTIMIZE__
+//#define NSLog(...) NSLog(__VA_ARGS__)
+//#else
+//#define NSLog(...) {}
+//#endif
+
+#ifdef DEBUG
+#define DLog( s, ... ) NSLog( @"<%p %@:(%d)> %@", self, [[NSString stringWithUTF8String:__FILE__] lastPathComponent], __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__] )
+#else
+#define DLog( s, ... )
+#endif
+
 #import "GAUtil.h"
 #import "DelegateUtil.h"
+#import "DalogField.h"
 
 // DEVICE INFO 
 
@@ -224,3 +237,22 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 // ALERT TAG
 #define ALERT_NETWORK_CHECK         10
 #define ALERT_RECOMMAND_SHOP_NEARBY 11
+#define ALERT_UNEXPECTED_MESSAGE    12
+
+
+// MAP LOAD TYPE
+#define MAP_TYPE_CHECKIN_REWARD_FLAG_LIST   1
+#define MAP_TYPE_FLAG_LIST_FOR_SHOP         2
+
+
+// REWARD STATE TYPE
+#define REWARD_STATE_BEFORE     0
+#define REWARD_STATE_DONE       1
+#define REWARD_STATE_DISABLED   2
+
+
+// IOS_KEY_INDEX
+#define IOS_KEY_LAUNCH_ALERT_SHOW       1
+#define IOS_KEY_LAUNCH_ALERT_TITLE      2
+#define IOS_KEY_LAUNCH_ALERT_MESSAGE    3
+#define IOS_KEY_NEWEST_VERSION          4

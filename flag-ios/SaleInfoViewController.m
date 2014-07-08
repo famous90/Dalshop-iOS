@@ -397,8 +397,7 @@
         if (error == nil) {
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"like_shop" label:nil];
             [DataUtil saveLikeObjectWithObjectId:self.shop.shopId type:LIKE_SHOP];
-            self.shop.likes++;
-            self.shop.liked = YES;
+            [self.shop likeShop];
             [self.tableView reloadData];
         }
         
@@ -413,8 +412,7 @@
         
         if (!results) {
             [DataUtil deleteLikeObjectWithObjectId:self.shop.shopId type:LIKE_SHOP];
-            self.shop.likes--;
-            self.shop.liked = NO;
+            [self.shop canceLikeShop];
             [self.tableView reloadData];
         }
     }];
@@ -469,6 +467,7 @@
     controller.shop = self.shop;
     controller.title = self.title;
     controller.parentPage = SALE_INFO_VIEW_PAGE;
+    [controller setShopEventImage:saleImage];
 }
 
 - (void)pushItemListView

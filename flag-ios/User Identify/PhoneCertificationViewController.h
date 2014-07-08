@@ -10,7 +10,7 @@
 
 @class User;
 
-@interface PhoneCertificationViewController : UIViewController
+@interface PhoneCertificationViewController : GAITrackedViewController
 
 @property (weak, nonatomic) IBOutlet UITextField *phoneNumberTextField;
 @property (weak, nonatomic) IBOutlet UITextField *certificationNumberTextField;

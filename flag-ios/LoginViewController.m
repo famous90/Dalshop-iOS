@@ -14,6 +14,7 @@
 
 #import "Util.h"
 #import "ViewUtil.h"
+#import "DataUtil.h"
 
 #import "FlagClient.h"
 #import "GTLFlagengine.h"
@@ -44,6 +45,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_LOGIN_VIEW];
+//    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_LOGIN_VIEW];
+//    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -52,10 +58,6 @@
     
     [self setUser:[DelegateUtil getUser]];
     [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_LOGIN_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 #pragma mark -
@@ -86,15 +88,15 @@
     
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGetWithObject:userForm];
     
-    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *user, NSError *error){
+    [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error){
         
         if (error == nil) {
-            if (user) {
-                [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_user_info" label:nil];
-                NSLog(@"result user info %@", user);
-                [self changeUserFormWithUser:user];
-                [self restartView];                
-            }
+                
+            [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_user_info" label:nil];
+            
+            [self changeUserFormWithUserForm:userForm];
+            [self restartView];
+            
         }else{
             [Util showAlertView:nil message:@"로그인에 실패하였습니다\n다시 시도해주세요" title:@"로그인"];
         }
@@ -102,10 +104,19 @@
     }];
 }
 
-- (void)changeUserFormWithUser:(GTLFlagengineUser *)user
+- (void)changeUserFormWithUserForm:(GTLFlagengineUserForm *)userForm
 {
-    User *theUser = [[User alloc] initWithLoginData:user];
-    self.user = theUser;
+    [self.user setEmail:userForm.email];
+    [self.user setRegistered:YES];
+    
+    [DelegateUtil updateUserWithUser:self.user];
+    [self updateUserInfoInCoreDataWithUser:self.user];
+}
+
+- (void)updateUserInfoInCoreDataWithUser:(User *)theUser
+{
+    [DataUtil saveUserFormForRegisterWithEmail:theUser.email];
+    [DataUtil updateRegisteredWithUserRegistered:theUser.registered];
 }
 
 - (void)restartView

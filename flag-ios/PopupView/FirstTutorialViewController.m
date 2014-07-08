@@ -117,6 +117,12 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_TUTORIAL_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_TUTORIAL_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -124,10 +130,6 @@
     [super viewWillAppear:animated];
     
     [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_TUTORIAL_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)didReceiveMemoryWarning

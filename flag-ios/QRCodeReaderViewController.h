@@ -13,7 +13,7 @@
 @class User;
 @class ItemListViewController;
 
-@interface QRCodeReaderViewController : UIViewController<AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
+@interface QRCodeReaderViewController : GAITrackedViewController <AVCaptureMetadataOutputObjectsDelegate, UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIView *previewView;
 @property (weak, nonatomic) IBOutlet UILabel *statusLabel;

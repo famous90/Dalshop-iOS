@@ -40,6 +40,7 @@
 + (void)presentTutorialInView:(UIViewController *)viewController type:(NSInteger)type;
 + (void)presentItemListViewNavInView:(UIViewController *)viewController withUser:(User *)user shopId:(NSNumber *)shopId shopName:(NSString *)shopName withParentPageNumber:(NSInteger)parentPage;
 
+
 // DRAW LINE
 + (UIImage *)drawDiagonalCrossLineOnFrame:(CGRect)frame;
 + (UIImage *)drawBorderLineOnFrame:(CGRect)frame byCellRow:(NSInteger)row;
@@ -48,5 +49,7 @@
 // IMAGE
 + (CGFloat)getMagnifiedImageWidthWithImage:(UIImage *)image height:(CGFloat)height;
 + (CGFloat)getMagnifiedImageHeightWithImage:(UIImage *)image width:(CGFloat)width;
++ (UIImage *)getLikeIconImageWithLiked:(BOOL)liked colorType:(NSString *)color;
++ (UIImage *)getRewardIconImageWithImagePath:(NSString *)imagePath type:(NSInteger)type;
 
 @end

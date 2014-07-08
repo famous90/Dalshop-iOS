@@ -20,5 +20,6 @@
 - (void)addObjectWithObject:(id)object;
 - (void)removeAllData;
 - (void)addMasterDataWithArray:(NSArray *)dataArray;
+- (NSMutableArray *)getMasterData;
 
 @end

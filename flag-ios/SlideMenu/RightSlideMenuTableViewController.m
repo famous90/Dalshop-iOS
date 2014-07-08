@@ -20,6 +20,7 @@
 #import "FlagViewController.h"
 #import "RedeemViewController.h"
 #import "RewardHistoryViewController.h"
+#import "ShopListViewController.h"
 
 #import "ViewUtil.h"
 #import "DelegateUtil.h"
@@ -145,6 +146,8 @@
             [cell setBackgroundColor:[UIColor colorWithWhite:0.2 alpha:1]];
         }
         
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        
     }else if (indexPath.section == MY_INFO_SECTION){
         
         if (indexPath.row == MY_INFO_ROW) {
@@ -171,7 +174,7 @@
             CGFloat pointButtonWidth = [ViewUtil getMagnifiedImageWidthWithImage:pointButtonBackgroundImage height:titleLabelHeight];
             UIButton *pointButton = [[UIButton alloc] initWithFrame:CGRectMake(cell.frame.size.width - buttonPadding - pointButtonWidth, (cell.frame.size.height - titleLabelHeight)/2, pointButtonWidth, titleLabelHeight)];
             [pointButton setBackgroundImage:pointButtonBackgroundImage forState:UIControlStateNormal];
-            [pointButton setTitle:[NSString stringWithFormat:@"%d달", self.user.reward]    forState:UIControlStateNormal];
+            [pointButton setTitle:[NSString stringWithFormat:@"%ld달", (long)self.user.reward]    forState:UIControlStateNormal];
             [pointButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
             [pointButton.titleLabel setTextAlignment:NSTextAlignmentRight];
             [pointButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
@@ -181,6 +184,8 @@
             // Cell background
             [cell setBackgroundColor:UIColorFromRGB(0xf2b518)];
         }
+        
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
         
     }else if (indexPath.section == MENU_SECTION) {
         
@@ -201,6 +206,12 @@
         UIView *seperatorLine = [[UIView alloc] initWithFrame:CGRectMake(0, cell.frame.size.height - 0.5f, cell.frame.size.width, 0.5f)];
         [seperatorLine setBackgroundColor:UIColorFromRGB(BASE_COLOR)];
         [cell addSubview:seperatorLine];
+        
+
+        // selection view
+        UIView *bgColorView = [[UIView alloc] init];
+        bgColorView.backgroundColor = UIColorFromRGBWithAlpha(BASE_COLOR, 0.6);
+        [cell setSelectedBackgroundView:bgColorView];
     }
     
     return cell;
@@ -300,10 +311,11 @@
 - (void)presentCheckInShopsInMap
 {
     UIStoryboard *storyboard = [ViewUtil getStoryboard];
-    UINavigationController *navController = (UINavigationController *)[storyboard instantiateViewControllerWithIdentifier:@"FlagViewNav"];
-    FlagViewController *childViewController = (FlagViewController *)[navController topViewController];
-    childViewController.user = self.user;
-    childViewController.parentPage = COLLECT_REWARD_SELECT_VIEW_PAGE;
+    UINavigationController *navController = (UINavigationController *)[storyboard instantiateViewControllerWithIdentifier:@"ShopListViewNav"];
+    ShopListViewController *childViewController = (ShopListViewController *)[navController topViewController];
+    
+    [childViewController setUser:[DelegateUtil getUser]];
+    [childViewController setParentPage:SLIDE_MENU_PAGE];
     
     [self presentViewController:navController animated:YES completion:nil];
 }

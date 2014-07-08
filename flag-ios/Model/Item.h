@@ -30,5 +30,10 @@
 - (id)initWithData:(id)data;
 - (BOOL)isEqualToCodeString:(NSString *)codeString;
 - (void)didRewardItem;
+- (BOOL)isItemLiked;
+- (void)likeItem;
+- (void)cancelLikeItem;
+- (BOOL)hasOldPrice;
+- (NSInteger)getRewardState;
 
 @end

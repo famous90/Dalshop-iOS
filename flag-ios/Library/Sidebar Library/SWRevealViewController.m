@@ -24,6 +24,9 @@
  
 */
 
+#define TAB_INDEX_SHOP  0
+#define TAB_INDEX_ITEM  1
+
 #import <QuartzCore/QuartzCore.h>
 #import <UIKit/UIGestureRecognizerSubclass.h>
 
@@ -664,26 +667,26 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
     [self setChildViewControllerWithTabbarController:tabbarController];
     [self setTabBarWithTabbarController:tabbarController];
     
-    [tabbarController setSelectedIndex:2];
+    [tabbarController setSelectedIndex:TAB_INDEX_ITEM];
 }
 
 - (void)setChildViewControllerWithTabbarController:(UITabBarController *)tabbarController
 {
-    UINavigationController *firstChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:0];
-    FlagViewController *firstChildViewController = (FlagViewController *)[firstChildNavController topViewController];
-    firstChildViewController.user = self.user;
-    firstChildViewController.parentPage = TAB_BAR_VIEW_PAGE;
-    firstChildViewController.title = @"MAP";
-    [firstChildNavController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
+//    UINavigationController *firstChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:0];
+//    FlagViewController *firstChildViewController = (FlagViewController *)[firstChildNavController topViewController];
+//    firstChildViewController.user = self.user;
+//    firstChildViewController.parentPage = TAB_BAR_VIEW_PAGE;
+//    firstChildViewController.title = @"MAP";
+//    [firstChildNavController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
     
-    UINavigationController *secondChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:1];
+    UINavigationController *secondChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:TAB_INDEX_SHOP];
     ShopListViewController *secondChildViewController = (ShopListViewController *)[secondChildNavController topViewController];
     secondChildViewController.user = self.user;
     secondChildViewController.parentPage = TAB_BAR_VIEW_PAGE;
-    secondChildViewController.title = @"SHOP";
+    secondChildViewController.title = @"BRAND";
     [secondChildNavController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
     
-    UINavigationController *thirdChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:2];
+    UINavigationController *thirdChildNavController = (UINavigationController *)[[tabbarController customizableViewControllers] objectAtIndex:TAB_INDEX_ITEM];
     ItemListViewController *thirdChildViewController = (ItemListViewController *)[thirdChildNavController topViewController];
     thirdChildViewController.user = self.user;
     thirdChildViewController.shop.shopId = [NSNumber numberWithInt:1];
@@ -695,15 +698,15 @@ static NSString * const SWSegueRightIdentifier = @"sw_right";
 - (void)setTabBarWithTabbarController:(UITabBarController *)tabbarController
 {
     UITabBar *tabBar = tabbarController.tabBar;
-    UITabBarItem *tabBarItem1 = [tabBar.items objectAtIndex:0];
-    UITabBarItem *tabBarItem2 = [tabBar.items objectAtIndex:1];
-    UITabBarItem *tabBarItem3 = [tabBar.items objectAtIndex:2];
+//    UITabBarItem *tabBarItem1 = [tabBar.items objectAtIndex:0];
+    UITabBarItem *tabBarItem2 = [tabBar.items objectAtIndex:TAB_INDEX_SHOP];
+    UITabBarItem *tabBarItem3 = [tabBar.items objectAtIndex:TAB_INDEX_ITEM];
     
-    [tabBarItem1 setTitle:@"MAP"];
-    [tabBarItem2 setTitle:@"SHOP"];
+//    [tabBarItem1 setTitle:@"MAP"];
+    [tabBarItem2 setTitle:@"BRAND"];
     [tabBarItem3 setTitle:@"ITEM"];
     
-    [tabBarItem1 setImage:[UIImage imageNamed:@"tabbar_icon_map"]];
+//    [tabBarItem1 setImage:[UIImage imageNamed:@"tabbar_icon_map"]];
     [tabBarItem2 setImage:[UIImage imageNamed:@"tabbar_icon_shops"]];
     [tabBarItem3 setImage:[UIImage imageNamed:@"tabbar_icon_item"]];
     

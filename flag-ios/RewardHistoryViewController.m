@@ -34,8 +34,14 @@
 {
     [super viewDidLoad];
 
-    [self configureViewContent];
     [self getRewardHistory];
+}
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self configureViewContent];
 }
 
 - (void)configureViewContent

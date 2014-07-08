@@ -27,6 +27,8 @@
 + (User *)getUserInfo;
 + (void)saveGuestSessionWithUser:(User *)user;
 + (void)saveUserFormForRegisterWithEmail:(NSString *)email;
++ (void)updateUserIdWithUserId:(NSNumber *)userId;
++ (void)updateRegisteredWithUserRegistered:(BOOL)registered;
 + (void)savePhoneCertificationSeccess;
 + (void)saveUserAdditionalInfoEntered;
 + (void)getUserInfoFromServerWithCompletionHandler:(void (^)(User *user))completion;

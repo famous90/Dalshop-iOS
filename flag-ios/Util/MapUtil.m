@@ -85,15 +85,15 @@
     
     switch (status) {
         case BASE:
-            imageFileNameAffix = @"";
+            imageFileNameAffix = @"_red";
             break;
             
         case REWARDED:
-            imageFileNameAffix = @"_scanned";
+            imageFileNameAffix = @"_gray";
             break;
             
         case SELECTED:
-            imageFileNameAffix = @"_selected";
+            imageFileNameAffix = @"_yellow";
             break;
             
         default:

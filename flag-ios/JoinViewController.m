@@ -59,6 +59,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_REGISTER_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REGISTER_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -67,11 +72,6 @@
     
     [self setUser:[DelegateUtil getUser]];
     [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REGISTER_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
-
 }
 
 - (void)didReceiveMemoryWarning

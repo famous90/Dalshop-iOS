@@ -46,18 +46,6 @@
     self.user = [[User alloc] init];
 }
 
-- (void)viewWillAppear:(BOOL)animated
-{
-    [super viewWillAppear:animated];
-    
-    [self setUser:[DelegateUtil getUser]];
-    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
-    
-    // GA
-    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_ADDITIONAL_INFO_VIEW];
-    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
-}
-
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -69,6 +57,12 @@
     }else if (self.parentPage == PHONE_CERTIFICATION_VIEW_PAGE){
         [self setUserInfoByDefault];
     }
+    
+    
+    // GA
+    [self setScreenName:GAI_SCREEN_NAME_ADDITIONAL_INFO_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_ADDITIONAL_INFO_VIEW];
+    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)setContenView
@@ -111,6 +105,15 @@
     for (int i=MINIMUM_BIRTH_YEAR; i<=year; i++) {
         [birthYearData addObject:[[NSNumber numberWithInt:i] stringValue]];
     }
+}
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [self setUser:[DelegateUtil getUser]];
+    [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
 }
 
 - (void)getUserInfo

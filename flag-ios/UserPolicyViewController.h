@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface UserPolicyViewController : UIViewController
+@interface UserPolicyViewController : GAITrackedViewController
 
 @property (weak, nonatomic) IBOutlet UITextView *policyTextView;
 @property (nonatomic, strong) NSString *textFileName;
