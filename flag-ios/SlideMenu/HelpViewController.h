@@ -13,6 +13,7 @@
 @interface HelpViewController : GAITrackedViewController <UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UILabel *viewDescription;
+@property (weak, nonatomic) IBOutlet UILabel *emailLabel;
 @property (weak, nonatomic) IBOutlet UITextField *emailAddressTextField;
 @property (weak, nonatomic) IBOutlet UILabel *messageTitle;
 @property (weak, nonatomic) IBOutlet UITextView *messageTextView;

@@ -52,4 +52,9 @@
 + (UIImage *)getLikeIconImageWithLiked:(BOOL)liked colorType:(NSString *)color;
 + (UIImage *)getRewardIconImageWithImagePath:(NSString *)imagePath type:(NSInteger)type;
 
+
+// FRAME
++ (CGFloat)getOriginXNextToFrame:(CGRect)frame;
++ (CGFloat)getOriginYBottomToFrame:(CGRect)frame;
+
 @end

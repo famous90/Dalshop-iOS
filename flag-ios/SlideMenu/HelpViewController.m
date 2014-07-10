@@ -38,31 +38,60 @@
 
 - (void)configureViewContent
 {
-    NSString *title;
     NSString *description;
+    NSString *emailLabelName;
+    NSString *title;
     NSString *messageTitle;
+    
+    UIFont *descriptionFont = [UIFont systemFontOfSize:12];
+    UIFont *LabelNameFont = [UIFont systemFontOfSize:14];
+    
+    CGFloat lineSpace = 10.0f;
+    CGFloat viewPadding = 20.0f;
     
     if (self.parentPage == SLIDE_MENU_PAGE) {
         
+        emailLabelName = @"이메일:";
         title = @"달샵에게 물어보기";
         description = @"달샵에게 궁금하거나 필요한 것이 있으면\n어떤 것이든 말씀해주세요^^(쫑끗)";
         messageTitle = @"문의 내용:";
         
     }else if (self.parentPage == REDEEM_VIEW_PAGE){
         
+        emailLabelName = @"이메일:";
         title = @"달샵에게 요청합니다!";
         description = @"달로 사고 싶은 물품을 말씀해주세요~\n어떤 수단과 방법을 동원해서라도 넣어드릴게요!";
         messageTitle = @"물품 내용:";
         
     }
     
-    self.title = title;
+    [self setTitle:title];
     
+    CGRect descriptionFrame = [description boundingRectWithSize:CGSizeMake(self.viewDescription.frame.size.width, self.view.frame.size.height) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:descriptionFont, NSFontAttributeName, nil] context:nil];
+    CGRect descriptionLabelFrame = CGRectMake(self.viewDescription.frame.origin.x, self.viewDescription.frame.origin.y, self.viewDescription.frame.size.width, descriptionFrame.size.height);
+    [self.viewDescription setFrame:descriptionLabelFrame];
     [self.viewDescription setText:description];
-    [self.viewDescription setTextAlignment:NSTextAlignmentCenter];
+    [self.viewDescription setFont:descriptionFont];
+    [self.viewDescription setTextAlignment:NSTextAlignmentLeft];
     [self.viewDescription setTextColor:UIColorFromRGB(BASE_COLOR)];
     
+    CGRect emailNameFrame = [emailLabelName boundingRectWithSize:CGSizeMake(200, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{LabelNameFont: NSFontAttributeName} context:nil];
+    CGRect emailLabelNameFrame = CGRectMake(self.emailLabel.frame.origin.x, [ViewUtil getOriginYBottomToFrame:self.emailLabel.frame] + lineSpace, emailNameFrame.size.width, emailNameFrame.size.height);
+    [self.emailLabel setFrame:emailLabelNameFrame];
+    [self.emailLabel setText:emailLabelName];
+    
+    CGRect emailFieldFrame = CGRectMake([ViewUtil getOriginXNextToFrame:self.emailLabel.frame] + lineSpace, [ViewUtil getOriginYBottomToFrame:self.viewDescription.frame] + lineSpace, self.view.frame.size.width - viewPadding - [ViewUtil getOriginXNextToFrame:self.emailLabel.frame] - lineSpace, self.emailAddressTextField.frame.size.height);
+    [self.emailAddressTextField setFrame:emailFieldFrame];
+    
+    CGRect messageNameFrame = [messageTitle boundingRectWithSize:CGSizeMake(300, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{LabelNameFont: NSFontAttributeName} context:nil];
+    CGRect messageTitleFrame = CGRectMake(self.messageTitle.frame.origin.x, [ViewUtil getOriginYBottomToFrame:self.emailAddressTextField.frame] + lineSpace, messageNameFrame.size.width, messageNameFrame.size.height);
+    [self.messageTitle setFrame:messageTitleFrame];
     [self.messageTitle setText:messageTitle];
+    [self.messageTitle setFont:LabelNameFont];
+    
+    CGFloat messageFrameOriginY = [ViewUtil getOriginYBottomToFrame:self.messageTitle.frame] + lineSpace;
+    CGRect messageFrame = CGRectMake(self.messageTextView.frame.origin.x, messageFrameOriginY, self.messageTextView.frame.size.width, self.view.frame.size.height - messageFrameOriginY);
+    [self.messageTextView setFrame:messageFrame];
     
     self.emailAddressTextField.layer.borderColor = UIColorFromRGB(BASE_COLOR).CGColor;
     self.emailAddressTextField.layer.borderWidth = 1.0f;

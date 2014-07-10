@@ -198,8 +198,8 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 
 // REWARD TYPE
 
-#define REWARD_CHECKIN  10
-#define REWARD_SCAN     11
+#define REWARD_CHECKIN  1
+#define REWARD_SCAN     2
 
 
 // DISTANCE TAG

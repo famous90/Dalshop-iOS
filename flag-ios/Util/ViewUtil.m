@@ -331,4 +331,18 @@
     return image;
 }
 
+
+// FRAME
++ (CGFloat)getOriginXNextToFrame:(CGRect)frame
+{
+    CGFloat originX = frame.origin.x + frame.size.width;
+    return originX;
+}
+
++ (CGFloat)getOriginYBottomToFrame:(CGRect)frame
+{
+    CGFloat originY = frame.origin.y + frame.size.height;
+    return originY;
+}
+
 @end

@@ -220,7 +220,7 @@
                                             </state>
                                         </button>
                                         <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="212" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="285" translatesAutoresizingMaskIntoConstraints="NO" id="NgP-p5-Vem">
-                                            <rect key="frame" x="12.5" y="0.0" width="285" height="20"/>
+                                            <rect key="frame" x="13" y="0.0" width="285" height="20"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                             <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                             <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -968,6 +968,7 @@ Label</string>
                     </navigationItem>
                     <connections>
                         <outlet property="emailAddressTextField" destination="IIw-C1-rL9" id="gZB-mC-0vH"/>
+                        <outlet property="emailLabel" destination="o2X-vp-TeK" id="gdK-a3-2HP"/>
                         <outlet property="messageTextView" destination="y4G-pd-mf5" id="hLl-Mg-1Dy"/>
                         <outlet property="messageTitle" destination="J8M-t7-lAz" id="4oU-a8-DWm"/>
                         <outlet property="viewDescription" destination="ZcT-Zv-huI" id="xgT-5Y-jdm"/>
