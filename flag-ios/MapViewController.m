@@ -49,13 +49,19 @@
 
 - (void)initalizeContent
 {
+    NSInteger view_type = 0;
+    
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+        
+        view_type = VIEW_FLAG_LIST;
         
         [self initializeLocation];
         [self initializeMapViewWithCurrentLocation:location];
         [self findFlagNearbyWithCurrentLocatoin:location];
         
     }else if (self.parentPage == SALE_INFO_VIEW_PAGE){
+        
+        view_type = VIEW_MAP_SHOP;
         
         [self initializeMapViewWithCurrentLocation:location];
         
@@ -64,12 +70,16 @@
         
     }else if (self.parentPage == ITEM_DETAIL_VIEW_PAGE){
         
+        view_type = VIEW_MAP_ITEM;
+        
         [self initializeMapViewWithCurrentLocation:location];
         
         URLParameters *urlParams = [self urlParamsToGetFlagListByItem:self.objectIdForFlag];
         [self getFlagListByURLParams:urlParams];
         
     }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
+        
+        view_type = VIEW_MAP_REWARD;
         
         [self initializeMapViewWithCurrentLocation:[MapUtil getProximateCheckInSpotFromLocation:location]];
         
@@ -79,9 +89,11 @@
         
     }else if (self.parentPage == SHOP_LIST_VIEW_PAGE){
         
+        view_type = VIEW_MAP_REWARD;
+        
         if (self.type == MAP_TYPE_FLAG_LIST_FOR_SHOP) {
             
-            NSLog(@"flag list by shop");
+            DLog(@"flag list by shop");
             [self initializeMapViewWithCurrentLocation:location];
             
             URLParameters *urlParam = [self urlParamsToGetFlagListByShop:self.objectIdForFlag];
@@ -98,6 +110,9 @@
             
         }
     }
+    
+    // Analytics
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:view_type value:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -187,7 +202,7 @@
     [GAUtil sendGADataWithUIAction:@"tap_map" label:@"inside_view" value:nil];
 
     
-    NSLog(@"tapped : %f, %f", coordinate.latitude, coordinate.longitude);
+    DLog(@"tapped : %f, %f", coordinate.latitude, coordinate.longitude);
     
     if (mapView.selectedMarker != nil) {
         Flag *theFlag = (Flag *)mapView.selectedMarker.userData;

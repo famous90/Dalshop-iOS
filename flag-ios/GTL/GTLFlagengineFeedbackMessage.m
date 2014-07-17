@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineFeedbackMessage (0 custom class methods, 6 custom properties)
+//   GTLFlagengineFeedbackMessage (0 custom class methods, 7 custom properties)
 
 #import "GTLFlagengineFeedbackMessage.h"
 
@@ -25,7 +25,8 @@
 //
 
 @implementation GTLFlagengineFeedbackMessage
-@dynamic createdAt, createdAtString, email, identifier, message, userId;
+@dynamic createdAt, createdAtString, email, identifier, message, statusCode,
+         userId;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

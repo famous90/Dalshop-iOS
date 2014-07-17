@@ -59,15 +59,14 @@
     }
     
     
-    // GA
+    // Analytics
     [self setScreenName:GAI_SCREEN_NAME_ADDITIONAL_INFO_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_ADDITIONAL_INFO_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_EDIT_PROFILE value:0];
 }
 
 - (void)setContenView
 {
-    self.title = @"나의 정보";
+    self.title = NSLocalizedString(@"My Info", @"My Info");
     
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = backButton;
@@ -155,7 +154,7 @@
 - (void)setContentConfigureWithUserInfo
 {
     [self setManAndWomanButton];
-    [self.birthYearButton setTitle:[NSString stringWithFormat:@"%ld년생", (long)(birthYearIndex+MINIMUM_BIRTH_YEAR)] forState:UIControlStateNormal];
+    [self.birthYearButton setTitle:[NSString stringWithFormat:@"%ld%@", (long)(birthYearIndex+MINIMUM_BIRTH_YEAR), NSLocalizedString(@"birth year", @"birth year")] forState:UIControlStateNormal];
     [self.occupationButton setTitle:[occupationData objectAtIndex:occupationIndex] forState:UIControlStateNormal];
 }
 
@@ -228,7 +227,7 @@
     [GAUtil sendGADataWithUIAction:@"birth_year_click" label:@"inside_view" value:nil];
 
     
-    [ActionSheetStringPicker showPickerWithTitle:@"출생년도선택" rows:birthYearData initialSelection:birthYearIndex target:self successAction:@selector(birthYearWasSelected:element:) cancelAction:@selector(actionPickerCancelled:) origin:sender];
+    [ActionSheetStringPicker showPickerWithTitle:NSLocalizedString(@"Select birth year", @"Select birth year") rows:birthYearData initialSelection:birthYearIndex target:self successAction:@selector(birthYearWasSelected:element:) cancelAction:@selector(actionPickerCancelled:) origin:sender];
 }
 
 - (IBAction)birthYearPickerButtonTapped:(UIBarButtonItem *)sender
@@ -240,7 +239,7 @@
 - (void)birthYearWasSelected:(NSNumber *)selectedIndex element:(id)element
 {
     birthYearIndex = [selectedIndex integerValue];
-    [self.birthYearButton setTitle:[NSString stringWithFormat:@"%ld년생", (long)(birthYearIndex + MINIMUM_BIRTH_YEAR)] forState:UIControlStateNormal];
+    [self.birthYearButton setTitle:[NSString stringWithFormat:@"%ld%@", (long)(birthYearIndex + MINIMUM_BIRTH_YEAR), NSLocalizedString(@"birth year", @"birth year")] forState:UIControlStateNormal];
 }
 
 - (IBAction)occupationButtonTapped:(id)sender
@@ -249,7 +248,7 @@
     [GAUtil sendGADataWithUIAction:@"occupation_click" label:@"inside_view" value:nil];
 
     
-    [ActionSheetStringPicker showPickerWithTitle:@"직업선택" rows:occupationData initialSelection:occupationIndex target:self successAction:@selector(occupationWasSelected:element:) cancelAction:@selector(actionPickerCancelled:) origin:sender];
+    [ActionSheetStringPicker showPickerWithTitle:NSLocalizedString(@"Select occupation", @"Select occupation") rows:occupationData initialSelection:occupationIndex target:self successAction:@selector(occupationWasSelected:element:) cancelAction:@selector(actionPickerCancelled:) origin:sender];
 }
 
 - (IBAction)occupationPickerButtonTapped:(UIBarButtonItem *)sender
@@ -266,8 +265,9 @@
 
 - (IBAction)saveButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"update_user_info" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_EDIT_PROFILE value:0];
 
     
     [self sendUserInfo];
@@ -292,19 +292,17 @@
         
         if (error == nil) {
         
+            // Analytics
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"send_user_info" label:nil];
-            [DataUtil saveUserAdditionalInfoEntered];
-            [Util showAlertView:nil message:@"정보 업데이트를 완료하였습니다" title:@"나의 정보"];
-            if (self.parentPage == SLIDE_MENU_PAGE) {
-                [self dismissViewControllerAnimated:YES completion:nil];
-            }else if (self.parentPage == PHONE_CERTIFICATION_VIEW_PAGE){
-                [ViewUtil presentTabbarViewControllerInView:self withUser:self.user];
-            }
+            [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_EDIT_PROFILE value:0];
+            
+            
+            [self didUpdateAdditionalUserInfo];
         
         }else{
         
             NSLog(@"user info update error %@ %@", error, [error localizedDescription]);
-            [Util showAlertView:nil message:@"업데이트에 실패하였습니다" title:@"나의 정보"];
+            [Util showAlertView:nil message:NSLocalizedString(@"Failed to update", @"Failed to update") title:NSLocalizedString(@"My Info", @"My Info")];
         
         }
         
@@ -314,9 +312,10 @@
 
 - (IBAction)cancel:(id)sender
 {
-    // GA
+    // Anaytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
-
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_EDIT_PROFILE value:0];
+    
     
     if (self.parentPage == SLIDE_MENU_PAGE) {
         [self dismissViewControllerAnimated:YES completion:nil];
@@ -332,12 +331,18 @@
 - (void)didUpdateAdditionalUserInfo
 {
     [DataUtil saveUserAdditionalInfoEntered];
-    [Util showAlertView:nil message:@"추가정보를 업데이트하였습니다" title:@"나의정보"];
     
     if (self.parentPage == SLIDE_MENU_PAGE) {
+        
+        [Util showAlertView:nil message:NSLocalizedString(@"Success updating", @"Success updating") title:NSLocalizedString(@"My Info", @"My Info")];
         [self dismissViewControllerAnimated:YES completion:nil];
+        
     }else if (self.parentPage == PHONE_CERTIFICATION_VIEW_PAGE){
+        
+        [Util showAlertView:nil message:NSLocalizedString(@"Updated additional info", @"Updated additional info") title:NSLocalizedString(@"My Info", @"My Info")];
         [ViewUtil presentTabbarViewControllerInView:self withUser:self.user];
+        
     }
 }
+
 @end

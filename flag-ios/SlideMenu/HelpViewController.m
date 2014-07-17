@@ -21,19 +21,24 @@
 
 @end
 
-@implementation HelpViewController
+@implementation HelpViewController{
+    CGFloat viewPadding;
+}
+
+- (void)viewDidLayoutSubviews
+{
+    [super viewDidLayoutSubviews];
+    
+    [self configureViewContent];
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    [self configureViewContent];
-    
     
     // GA
     [self setScreenName:GAI_SCREEN_NAME_HELP_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_HELP_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)configureViewContent
@@ -43,54 +48,59 @@
     NSString *title;
     NSString *messageTitle;
     
-    UIFont *descriptionFont = [UIFont systemFontOfSize:12];
-    UIFont *LabelNameFont = [UIFont systemFontOfSize:14];
+    UIFont *descriptionFont = [UIFont systemFontOfSize:11];
+    UIFont *LabelNameFont = [UIFont systemFontOfSize:15];
     
     CGFloat lineSpace = 10.0f;
-    CGFloat viewPadding = 20.0f;
+    viewPadding = 20.0f;
     
     if (self.parentPage == SLIDE_MENU_PAGE) {
         
-        emailLabelName = @"이메일:";
-        title = @"달샵에게 물어보기";
-        description = @"달샵에게 궁금하거나 필요한 것이 있으면\n어떤 것이든 말씀해주세요^^(쫑끗)";
-        messageTitle = @"문의 내용:";
+        emailLabelName = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"Email", @"Email")];
+        title = NSLocalizedString(@"Ask DALSHOP", @"Ask DALSHOP");
+        description = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"Ask Us Anything you want", @"Ask Us Anything you want"), NSLocalizedString(@"With a corrent Email, We can help ASAP", @"With a corrent Email, We can help ASAP")];
+        messageTitle = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"Ask Message", @"Ask Message")];
         
     }else if (self.parentPage == REDEEM_VIEW_PAGE){
         
-        emailLabelName = @"이메일:";
-        title = @"달샵에게 요청합니다!";
-        description = @"달로 사고 싶은 물품을 말씀해주세요~\n어떤 수단과 방법을 동원해서라도 넣어드릴게요!";
-        messageTitle = @"물품 내용:";
+        emailLabelName = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"Email", @"Email")];
+        title = NSLocalizedString(@"Ask DALSHOP", @"Ask DALSHOP");
+        description = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"Tell us you want to buy with DAL", @"Tell us you want to buy with DAL"), NSLocalizedString(@"We will try every possible means and include it", @"We will try every possible means and include it")];
+        messageTitle = [NSString stringWithFormat:@"%@:", NSLocalizedString(@"Want to get", @"Want to get")];
         
     }
     
     [self setTitle:title];
     
-    CGRect descriptionFrame = [description boundingRectWithSize:CGSizeMake(self.viewDescription.frame.size.width, self.view.frame.size.height) options:NSStringDrawingUsesLineFragmentOrigin attributes:[NSDictionary dictionaryWithObjectsAndKeys:descriptionFont, NSFontAttributeName, nil] context:nil];
-    CGRect descriptionLabelFrame = CGRectMake(self.viewDescription.frame.origin.x, self.viewDescription.frame.origin.y, self.viewDescription.frame.size.width, descriptionFrame.size.height);
+    [self.navigationItem.rightBarButtonItem setTitle:NSLocalizedString(@"Send", @"Send")];
+    
+    CGRect descriptionFrame = [description boundingRectWithSize:CGSizeMake(self.view.frame.size.width, self.view.frame.size.height) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: descriptionFont} context:nil];
+    CGRect descriptionLabelFrame = CGRectMake((self.view.frame.size.width - descriptionFrame.size.width)/2, self.viewDescription.frame.origin.y, descriptionFrame.size.width, descriptionFrame.size.height);
     [self.viewDescription setFrame:descriptionLabelFrame];
     [self.viewDescription setText:description];
     [self.viewDescription setFont:descriptionFont];
     [self.viewDescription setTextAlignment:NSTextAlignmentLeft];
     [self.viewDescription setTextColor:UIColorFromRGB(BASE_COLOR)];
+    [self.viewDescription setNumberOfLines:0];
     
-    CGRect emailNameFrame = [emailLabelName boundingRectWithSize:CGSizeMake(200, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{LabelNameFont: NSFontAttributeName} context:nil];
-    CGRect emailLabelNameFrame = CGRectMake(self.emailLabel.frame.origin.x, [ViewUtil getOriginYBottomToFrame:self.emailLabel.frame] + lineSpace, emailNameFrame.size.width, emailNameFrame.size.height);
+    CGRect emailNameFrame = [emailLabelName boundingRectWithSize:CGSizeMake(200, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: LabelNameFont} context:nil];
+    CGRect emailLabelNameFrame = CGRectMake(self.emailLabel.frame.origin.x, [ViewUtil getOriginYBottomToFrame:self.viewDescription.frame] + lineSpace, emailNameFrame.size.width, emailNameFrame.size.height);
     [self.emailLabel setFrame:emailLabelNameFrame];
     [self.emailLabel setText:emailLabelName];
+    [self.emailLabel setFont:LabelNameFont];
     
     CGRect emailFieldFrame = CGRectMake([ViewUtil getOriginXNextToFrame:self.emailLabel.frame] + lineSpace, [ViewUtil getOriginYBottomToFrame:self.viewDescription.frame] + lineSpace, self.view.frame.size.width - viewPadding - [ViewUtil getOriginXNextToFrame:self.emailLabel.frame] - lineSpace, self.emailAddressTextField.frame.size.height);
     [self.emailAddressTextField setFrame:emailFieldFrame];
+    [self.emailAddressTextField setPlaceholder:NSLocalizedString(@"Email to answer", @"Email to answer")];
     
-    CGRect messageNameFrame = [messageTitle boundingRectWithSize:CGSizeMake(300, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{LabelNameFont: NSFontAttributeName} context:nil];
+    CGRect messageNameFrame = [messageTitle boundingRectWithSize:CGSizeMake(300, 100) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: LabelNameFont} context:nil];
     CGRect messageTitleFrame = CGRectMake(self.messageTitle.frame.origin.x, [ViewUtil getOriginYBottomToFrame:self.emailAddressTextField.frame] + lineSpace, messageNameFrame.size.width, messageNameFrame.size.height);
     [self.messageTitle setFrame:messageTitleFrame];
     [self.messageTitle setText:messageTitle];
     [self.messageTitle setFont:LabelNameFont];
     
     CGFloat messageFrameOriginY = [ViewUtil getOriginYBottomToFrame:self.messageTitle.frame] + lineSpace;
-    CGRect messageFrame = CGRectMake(self.messageTextView.frame.origin.x, messageFrameOriginY, self.messageTextView.frame.size.width, self.view.frame.size.height - messageFrameOriginY);
+    CGRect messageFrame = CGRectMake(self.messageTextView.frame.origin.x, messageFrameOriginY, self.messageTextView.frame.size.width, self.view.frame.size.height - messageFrameOriginY - viewPadding);
     [self.messageTextView setFrame:messageFrame];
     
     self.emailAddressTextField.layer.borderColor = UIColorFromRGB(BASE_COLOR).CGColor;
@@ -166,17 +176,24 @@
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForAppsFeedbacksInsertWithObject:feedback];
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineFeedbackMessage *feedback, NSError *error){
-        NSLog(@"result object %@", feedback);
+        DLog(@"result object %@", feedback);
         
         [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"send_feedback" label:nil];
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"To 달샵" message:@"좋은 의견 감사합니다.잠시만 기다려주시면 바로 답변해드리도록 하겠습니다." delegate:self cancelButtonTitle:@"확인" otherButtonTitles:nil, nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:[NSString stringWithFormat:@"To %@", NSLocalizedString(@"DALSHOP", @"DALSHOP")] message:NSLocalizedString(@"Thank you for telling us", @"Thank you for telling us") delegate:self cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay") otherButtonTitles:nil, nil];
         [alert show];
     }];
 }
 
 - (NSString *)appendReferenceToMessageText:(NSString *)text
 {
-    text = [text stringByAppendingString:@"\n\n 아이폰에서 보낸 메세지"];
+    NSString *appVersion = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+    NSString *systemVersion  = [[UIDevice currentDevice] systemVersion];
+    NSString *systemName = [[UIDevice currentDevice] systemName];
+    NSString *model = [[UIDevice currentDevice] model];
+    NSString *name = [[UIDevice currentDevice] name];
+
+    text = [text stringByAppendingString:@"\n\n아이폰에서 보낸 메세지"];
+    text = [text stringByAppendingFormat:@"\n model : %@ \n name : %@ \n systemName : %@ \n systemVersion : %@ \n appVersion : %@", model, name, systemName, systemVersion, appVersion];
     
     return text;
 }
@@ -232,7 +249,7 @@
     } else {
         // Keyboard is going away (down) - restore original frame
         CGRect frame = self.messageTextView.frame;
-        frame.size.height = self.view.frame.size.height - self.messageTextView.frame.origin.y - 100;
+        frame.size.height = self.view.frame.size.height - self.messageTextView.frame.origin.y - viewPadding;
         self.messageTextView.frame = frame;
 
     }

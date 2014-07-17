@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineTOU (0 custom class methods, 2 custom properties)
+//   GTLFlagengineTOU (0 custom class methods, 3 custom properties)
 
 #import "GTLFlagengineTOU.h"
 
@@ -25,7 +25,7 @@
 //
 
 @implementation GTLFlagengineTOU
-@dynamic identifier, tou;
+@dynamic identifier, statusCode, tou;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

@@ -24,28 +24,35 @@ long const VIEW_TABBAR_SHOP_LIST =   302;
 long const VIEW_TABBAR_LEFT_SLIDE =  303;
 long const VIEW_TABBAR_RIGHT_SLIDE = 304;
 
+long const VIEW_SHOP    =           310;
+
 long const VIEW_ITEM_LIST    =       320;
 long const VIEW_ITEM_LIST_MY_LIKES = 321;
 long const VIEW_ITEM_LIST_REWARD =   322;
 long const VIEW_ITEM_LIST_DETAIL =   330;
 
-long const VIEW_MAP  =       340;
-long const VIEW_MAP_SHOP =   341;
-long const VIEW_MAP_ITEM =   342;
-long const VIEW_MAP_REWARD = 343;
-long const VIEW_FLAG_LIST =  350;
+long const VIEW_MAP =           340;
+long const VIEW_MAP_SHOP =      341;
+long const VIEW_MAP_ITEM =      342;
+long const VIEW_MAP_REWARD =    343;
+long const VIEW_FLAG_LIST =     350;
 
-long const VIEW_MY_PAGE  =       400;
-long const VIEW_REWARD_HISTORY = 420;
-long const VIEW_SETTINGS =       430;
-long const VIEW_NOTICE   =       440;
+long const VIEW_MY_PAGE =           400;
+long const VIEW_REDEEM  =           410;
+long const VIEW_REWARD_HISTORY =    420;
+long const VIEW_SETTING =           430;
+long const VIEW_NOTICE  =           440;
+
+long const VIEW_IMAGE   =       500;
+long const VIEW_POPUP   =       501;
+long const VIEW_SIMPLE_TEXT =   502;
 
 
-// CATEGORY
-long const CATEGORY_FIRST_USER = 100;
+// GATEGORY
+long const CATEGORY_FIRST_USER =    100;
 
-long const CATEGORY_VIEW_APPEAR  =   200;
-long const CATEGORY_VIEW_DISAPPEAR = 201;
+long const CATEGORY_VIEW_APPEAR  =      200;
+long const CATEGORY_VIEW_DISAPPEAR  =   201;
 
 long const CATEGORY_SHOP_VIEW =  300;
 long const CATEGORY_SHOP_SHARE = 301;

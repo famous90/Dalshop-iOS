@@ -15,8 +15,9 @@
 #import "UserPolicyViewController.h"
 #import "LoginViewController.h"
 #import "CheckInPopUpViewController.h"
-#import "FirstTutorialViewController.h"
+#import "TutorialViewController.h"
 #import "ItemListViewController.h"
+#import "PageTutorialViewController.h"
 
 #import "TransitionDelegate.h"
 #import "AppDelegate.h"
@@ -129,13 +130,13 @@
     switch (policyType) {
         case POLICY_FOR_USER_AGREEMENT:{
             
-            policyName = @"서비스 이용약관";
+            policyName = NSLocalizedString(@"User Agreement", @"User Agreement");
             policyFileName = @"user_agreement";
             break;
         }
         case POLICY_FOR_USER_INFO:{
             
-            policyName = @"개인정보취급방침";
+            policyName = NSLocalizedString(@"User Infomation Policy", @"User Infomation Policy");
             policyFileName = @"user_info_policy";
             break;
         }
@@ -191,7 +192,7 @@
 {
     if (type == TUTORIAL_REWARD_DESCRIPTION) {
         UIStoryboard *storyboard = [ViewUtil getStoryboard];
-        FirstTutorialViewController *tutorialViewController = (FirstTutorialViewController *)[storyboard instantiateViewControllerWithIdentifier:@"FirstTutorialView"];
+        TutorialViewController *tutorialViewController = (TutorialViewController *)[storyboard instantiateViewControllerWithIdentifier:@"TutorialView"];
         
         AppDelegate *delegate = (AppDelegate *)[[UIApplication sharedApplication] delegate];
         TransitionDelegate *transitionDelegate = delegate.transitionDelegate;
@@ -202,6 +203,21 @@
         
         [viewController presentViewController:tutorialViewController animated:YES completion:nil];
     }
+}
+
++ (void)presentBluetoothTutorialInView:(UIViewController *)viewController
+{
+    UIStoryboard *storyboard = [ViewUtil getStoryboard];
+    PageTutorialViewController *tutorialViewController = (PageTutorialViewController *)[storyboard instantiateViewControllerWithIdentifier:@"PageTutorialView"];
+    
+    TransitionDelegate *transitionDelegate = [[TransitionDelegate alloc] init];
+    
+    [tutorialViewController.view setBackgroundColor:[UIColor colorWithWhite:0 alpha:0.8]];
+    [tutorialViewController setTransitioningDelegate:transitionDelegate];
+    [tutorialViewController setModalPresentationStyle:UIModalPresentationCustom];
+    
+    [viewController presentViewController:tutorialViewController animated:YES completion:nil];
+
 }
 
 + (void)presentItemListViewNavInView:(UIViewController *)viewController withUser:(User *)user shopId:(NSNumber *)shopId shopName:(NSString *)shopName withParentPageNumber:(NSInteger)parentPage
@@ -216,6 +232,36 @@
     [childViewController setParentPage:parentPage];
     
     [viewController presentViewController:navController animated:YES completion:nil];
+}
+
++ (UIView *)getCellResultMessageInView:(UIView *)view messageType:(NSInteger)type
+{
+    UIView *messageView = [[UIView alloc] initWithFrame:view.frame];
+    [messageView setBackgroundColor:[UIColor clearColor]];
+
+    NSString *message;
+    
+    if (type == CELL_RESULT_NO_RESULT) {
+        message = NSLocalizedString(@"No Content. We will be ready soon", @"No Content. We will be ready soon");
+    }else if (type == CELL_RESULT_DATA_LOADING){
+        message = NSLocalizedString(@"Loading Data. Please wait a second", @"Loading Data. Please wait a second");
+    }
+    
+    UILabel *resultLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, messageView.frame.size.width, messageView.frame.size.height)];
+    [resultLabel setFont:[UIFont systemFontOfSize:15]];
+    [resultLabel setNumberOfLines:0];
+    [resultLabel setTextColor:[UIColor whiteColor]];
+//    [resultLabel setShadowColor:[UIColor lightTextColor]];
+//    [resultLabel setShadowOffset:CGSizeMake(0, 1)];
+    [resultLabel setBackgroundColor:[UIColor clearColor]];
+    [resultLabel setTextAlignment:NSTextAlignmentCenter];
+    [resultLabel setText:message];
+    
+    [messageView setHidden:YES];
+    [messageView addSubview:resultLabel];
+    [view insertSubview:messageView belowSubview:view];
+    
+    return messageView;
 }
 
 

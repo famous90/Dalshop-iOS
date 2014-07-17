@@ -14,6 +14,7 @@
 #import "URLParameters.h"
 
 #import "FlagClient.h"
+#import "GoogleAnalytics.h"
 
 @interface RewardHistoryViewController ()
 
@@ -35,6 +36,11 @@
     [super viewDidLoad];
 
     [self getRewardHistory];
+    
+    // Analytics
+    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REWARD_HISTORY];
+    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_REWARD_HISTORY value:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -46,7 +52,7 @@
 
 - (void)configureViewContent
 {
-    [self setTitle:@"적립 내역"];
+    [self setTitle:NSLocalizedString(@"Reward History", @"Reward History")];
     
     if (self.parentPage == SLIDE_MENU_PAGE) {
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
@@ -123,11 +129,11 @@
         
         shopNameLabel.text = theReward.targetName;
         if (theReward.type == 1) {
-            rewardTypeLabel.text = @"체크인";
+            rewardTypeLabel.text = NSLocalizedString(@"Check In", @"Check In");
         }else if (theReward.type == 2){
-            rewardTypeLabel.text = @"아이템스캔";
+            rewardTypeLabel.text = NSLocalizedString(@"Item Scan", @"Item Scan");
         }
-        rewardLabel.text = [NSString stringWithFormat:@"%ld원", (long)theReward.reward];
+        rewardLabel.text = [NSString stringWithFormat:@"%ld%@", (long)theReward.reward, NSLocalizedString(@"Dal", @"Dal")];
     }
 
     return cell;
@@ -151,8 +157,10 @@
 #pragma mark - IBAction
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_REWARD_HISTORY value:0];
+    
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }

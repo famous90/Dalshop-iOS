@@ -39,11 +39,11 @@
     // text field
     [Util setHorizontalPaddingWithTextField:self.phoneNumberTextField];
     self.phoneNumberTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
-    [Util setPlaceholderAttributeWithTextField:self.phoneNumberTextField placeholderContent:@"휴대폰 번호"];
+    [Util setPlaceholderAttributeWithTextField:self.phoneNumberTextField placeholderContent:NSLocalizedString(@"Phone Number", @"Phone Number")];
     
     [Util setHorizontalPaddingWithTextField:self.certificationNumberTextField];
     self.certificationNumberTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
-    [Util setPlaceholderAttributeWithTextField:self.certificationNumberTextField placeholderContent:@"인증번호"];
+    [Util setPlaceholderAttributeWithTextField:self.certificationNumberTextField placeholderContent:NSLocalizedString(@"Verification Code", @"Verificatino Code")];
     
     
     // button
@@ -71,11 +71,9 @@
     [self initializeContent];
     
     
-    // GA
+    // Analtics
     [self setScreenName:GAI_SCREEN_NAME_PHONE_CERTIFICATION_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_PHONE_CERTIFICATION_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
-
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_PHONE_INPUT value:0];
 }
 
 - (void)initializeContent
@@ -101,8 +99,9 @@
 #pragma mark IBAction
 - (IBAction)passButtonTapped:(id)sender
 {
-    // GA
+    // Analtics
     [GAUtil sendGADataWithUIAction:@"pass_phone_certificate" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_PHONE_INPUT value:0];
 
     
     [self presentAdditionalUserInfoView];
@@ -112,14 +111,14 @@
 {
     // GA
     [GAUtil sendGADataWithUIAction:@"request_button_tapped" label:@"inside_view" value:nil];
-
+    
     
     phoneNumber = self.phoneNumberTextField.text;
     
     if ([Util isCorrectPhoneNumberForm:phoneNumber]) {
         [self requestPhoneCertificationNumber];
     }else{
-        [Util showAlertView:nil message:@"휴대폰 번호가 올바르지 않습니다" title:@"휴대폰 인증"];
+        [Util showAlertView:nil message:NSLocalizedString(@"Phone number is not valid", @"Phone number is not valid") title:NSLocalizedString(@"Phone Number", @"Phone Number")];
     }
 }
 
@@ -132,7 +131,7 @@
     if ([Util isCorrectPhoneNumberForm:phoneNumber]) {
         [self requestPhoneCertificationNumber];
     }else{
-        [Util showAlertView:nil message:@"휴대폰 번호가 올바르지 않습니다" title:@"휴대폰 인증"];
+        [Util showAlertView:nil message:NSLocalizedString(@"Phone number is not valid", @"Phone number is not valid") title:NSLocalizedString(@"Phone Number", @"Phone Number")];
     }
 }
 
@@ -145,7 +144,7 @@
     if (![self.certificationNumberTextField.text isEqual:(id)[NSNull null]]) {
         [self sendCertificationNumber];
     }else{
-        [Util showAlertView:nil message:@"인증코드를 입력해주세요" title:@"휴대폰 인증"];
+        [Util showAlertView:nil message:NSLocalizedString(@"Enter the verification code", @"Enter the verification code") title:NSLocalizedString(@"Verification Code", @"Verification Code")];
     }
 }
 
@@ -177,11 +176,18 @@
         
         NSLog(@"result %@", userInfo);
         if (error == nil) {
+            
+            // Analytics
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"request_phone_verification" label:nil];
+            [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_PHONE_INPUT value:0];
+            [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_CERTIFICATION_INPUT value:0];
+            
+            
             [self didReceiveCertificationNumber];
+            
         }else{
-            NSLog(@"request certification number error %@ %@", error, [error localizedDescription]);
-            [Util showAlertView:nil message:@"인증번호를 받는데 문제가 발생했습니다\n다시 시도해주세요" title:@"휴대폰 인증"];
+            DLog(@"request certification number error %@ %@", error, [error localizedDescription]);
+            [Util showAlertView:nil message:NSLocalizedString(@"Receiving verification code Error", @"There are some problem to receive the certification code\nPlease try again") title:NSLocalizedString(@"Verification Code", @"Verification Code")];
         }
         
     }];
@@ -202,12 +208,17 @@
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUserInfo *userInfo, NSError *error){
         
         if (error == nil) {
+            
+            // Analytics
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"send_phone_verification" label:nil];
+            [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_CERTIFICATION_INPUT value:0];
+
+            
             [self successPhoneCertification];
             [self presentAdditionalUserInfoView];
         }else{
             NSLog(@"phone certification error %@ %@", error, [error localizedDescription]);
-            [Util showAlertView:nil message:@"인증번호를 다시 입력해주세요" title:@"인증번호"];
+            [Util showAlertView:nil message:NSLocalizedString(@"Please check the certification code and try again", @"Please check the certification code and try again") title:NSLocalizedString(@"Verification Code", @"Verification Code")];
         }
         
     }];

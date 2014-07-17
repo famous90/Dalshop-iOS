@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineRedeem (0 custom class methods, 5 custom properties)
+//   GTLFlagengineRedeem (0 custom class methods, 6 custom properties)
 
 #import "GTLFlagengineRedeem.h"
 
@@ -23,7 +23,7 @@
 //
 
 @implementation GTLFlagengineRedeem
-@dynamic identifier, imageUrl, name, price, vendor;
+@dynamic identifier, imageUrl, name, price, statusCode, vendor;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

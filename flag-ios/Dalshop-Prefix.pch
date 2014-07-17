@@ -33,6 +33,7 @@
 #import "GAUtil.h"
 #import "DelegateUtil.h"
 #import "DalogField.h"
+#import "DaLogClient.h"
 
 // DEVICE INFO 
 
@@ -54,7 +55,7 @@
 #define LOCATION_UPDATE_RADIUS_DISTANCE 100
 
 #ifdef DEBUG
-#define BEACON_COOL_TIME                30.0
+#define BEACON_COOL_TIME                30000.0
 #else
 #define BEACON_COOL_TIME                259200.0
 #endif
@@ -94,9 +95,12 @@
 #define GAI_SCREEN_NAME_SETTING_VIEW            @"Setting Screen"
 #define GAI_SCREEN_NAME_REDEEM_LIST_VIEW        @"Redeem List Screen"
 
+#define GAI_SCREEN_NAME_REWARD_HISTORY          @"Reward History Screen"
+
 #define GAI_SCREEN_NAME_CHECKIN_POPUP_VIEW      @"CheckIn Popup Screen"
 #define GAI_SCREEN_NAME_EVENT_POPUP_VIEW        @"Event Popup Screen"
 #define GAI_SCREEN_NAME_TUTORIAL_VIEW           @"Tutorial Screen"
+#define GAI_SCREEN_NAME_PAGE_TUTORIAL_VIEW      @"Page Tutorial Screen"
 
 
 
@@ -198,8 +202,13 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 
 // REWARD TYPE
 
-#define REWARD_CHECKIN  1
-#define REWARD_SCAN     2
+#define REWARD_CHECKIN  10
+#define REWARD_SCAN     11
+
+
+// REWARD REQUEST
+#define REWARD_REQUEST_CHECKIN  1
+#define REWARD_REQUEST_SCAN     2
 
 
 // DISTANCE TAG
@@ -256,3 +265,14 @@ blue:((float)(rgbValue & 0xFF))/255.0 alpha:a];
 #define IOS_KEY_LAUNCH_ALERT_TITLE      2
 #define IOS_KEY_LAUNCH_ALERT_MESSAGE    3
 #define IOS_KEY_NEWEST_VERSION          4
+
+
+// HTTP STATUS CODE
+#define HTTP_STATUS_OK          200
+#define HTTP_STATUS_NO_CONTENT  204
+#define HTTP_STATUS_ERROR       503
+
+
+// CELL RESULT TYPE
+#define CELL_RESULT_NO_RESULT       1
+#define CELL_RESULT_DATA_LOADING    2

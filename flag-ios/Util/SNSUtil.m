@@ -35,7 +35,7 @@
 + (void)sendKakaoTalkLinkByKakaoTalkLinkObjects:(NSMutableDictionary *)kakaoTalkLinkObjects
 {
     if ([kakaoTalkLinkObjects count] < 1) {
-        [Util showAlertView:nil message:@"카카오톡을 확인해주세요" title:@"카카오톡 링크 에러"];
+        [Util showAlertView:nil message:NSLocalizedString(@"Check KakaoTalk", @"Check KakaoTalk") title:NSLocalizedString(@"KakaoTalk Link Error", @"KakaoTalk Link Error")];
         return;
     }
     

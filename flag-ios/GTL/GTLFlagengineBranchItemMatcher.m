@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineBranchItemMatcher (0 custom class methods, 4 custom properties)
+//   GTLFlagengineBranchItemMatcher (0 custom class methods, 5 custom properties)
 
 #import "GTLFlagengineBranchItemMatcher.h"
 
@@ -23,7 +23,7 @@
 //
 
 @implementation GTLFlagengineBranchItemMatcher
-@dynamic branchShopId, identifier, itemId, rewardable;
+@dynamic branchShopId, identifier, itemId, rewardable, statusCode;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

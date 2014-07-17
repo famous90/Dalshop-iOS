@@ -198,9 +198,6 @@
 + (void)getDataResultWithURL:(NSURL *)url methodName:(NSString *)methodName completion:(void (^)(NSDictionary *))completion
 {
     NSDate *startTime = [NSDate date];
-//    NSString *actionName = @"get_";
-//    actionName = [actionName stringByAppendingString:methodName];
-//    NSLog(@"ui_action_name %@", actionName);
     
     [[[NSOperationQueue alloc] init] addOperationWithBlock:^{
     
@@ -208,8 +205,11 @@
         
         [[NSOperationQueue mainQueue] addOperationWithBlock:^{
            
+            // GA
             NSDate *now = [NSDate date];
             [GAUtil sendGADataLoadTimeWithInterval:[now timeIntervalSinceDate:startTime] actionName:methodName label:nil];
+            
+            DLog(@"results %@", results);
             completion(results);
             
         }];

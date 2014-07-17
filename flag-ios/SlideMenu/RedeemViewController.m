@@ -61,10 +61,9 @@
     [self performSelectorInBackground:@selector(getRedeemListWithURLParams:) withObject:urlParams];
     
     
-    // GA
+    // Analytics
     [self setScreenName:GAI_SCREEN_NAME_REDEEM_LIST_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REDEEM_LIST_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_REDEEM value:0];
 }
 
 - (void)initializeContent
@@ -78,7 +77,7 @@
 - (void)configureViewContent
 {
     // navigation bar
-    self.title = @"달사용하기";
+    [self setTitle:NSLocalizedString(@"Use DAL", @"Use DAL")];
     
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
     self.navigationItem.leftBarButtonItem = cancelButton;
@@ -132,7 +131,7 @@
 
 - (void)setMyReward
 {
-    self.myRewardLabel.text = [NSString stringWithFormat:@"%ld달", (long)self.user.reward];
+    self.myRewardLabel.text = [NSString stringWithFormat:@"%ld%@", (long)self.user.reward, NSLocalizedString(@"Dal", @"Dal")];
 }
 
 - (URLParameters *)urlToGetRedeemList
@@ -243,8 +242,8 @@
         if (indexPath.row == [redeemData countOfList]) {
             
             cellIcon = [UIImage imageNamed:@"appIcon"];
-            title = @"신청하기";
-            subTitle = @"달로 사고 싶은 것을\n말해주세요";
+            title = NSLocalizedString(@"Request Redeem", @"Request Redeem");
+            subTitle = NSLocalizedString(@"Tell us what you want to buy with reward", @"Tell us what you want to buy with reward");
             
         }else{
             
@@ -252,7 +251,7 @@
             cellIconImageView.layer.borderWidth = 1.0f;
             
             cellIcon = [ViewUtil drawDiagonalCrossLineOnFrame:cellIconImageView.frame];
-            title = @"준비 중입니다";
+            title = NSLocalizedString(@"Ready", @"Ready");
         }
         
         cellIconImageView.image = cellIcon;
@@ -287,7 +286,7 @@
         UILabel *headerTitleLabel = (UILabel *)[headerView viewWithTag:1012];
         
         headerImageView.backgroundColor = [UIColor whiteColor];
-        headerTitleLabel.text = @"달 store - 기프티샵";
+        headerTitleLabel.text = [NSString stringWithFormat:@"%@ %@ - %@", NSLocalizedString(@"Dal", @"Dal"), @"store", NSLocalizedString(@"Giftishop", @"Giftishop")];
         headerTitleLabel.textColor = UIColorFromRGB(BASE_COLOR);
         
         reusableView = headerView;
@@ -301,14 +300,16 @@
 {
     if (indexPath.row < [redeemData countOfList]) {
         
-        // GA
+        // Analytics
         [GAUtil sendGADataWithUIAction:@"redeem_cell_click" label:@"escape_view" value:nil];
+        [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_REDEEM value:0];
 
         
     }else if (indexPath.row == [redeemData countOfList]) {
         
-        // GA
+        // Analytics
         [GAUtil sendGADataWithUIAction:@"redeem_help_click" label:@"escape_view" value:nil];
+        [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_REDEEM value:0];
 
         
         UIStoryboard *storyboard = [ViewUtil getStoryboard];
@@ -321,7 +322,7 @@
         
     }else if (indexPath.row > [redeemData countOfList]){
         
-        // GA
+        // Analytics
         [GAUtil sendGADataWithUIAction:@"redeem_blank_click" label:@"inside_view" value:nil];
 
     }
@@ -331,9 +332,10 @@
 #pragma mark IBAction
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
-
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_REDEEM value:0];
+    
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
@@ -345,10 +347,11 @@
 
     
     [DataUtil getUserFormServerAtCompletionHandler:^(User *user){
-        NSLog(@"refresh reward");
-        self.myRewardLabel.text = [NSString stringWithFormat:@"%ld달", (long)user.reward];
+        
+        self.myRewardLabel.text = [NSString stringWithFormat:@"%ld%@", (long)user.reward, NSLocalizedString(@"Dal", @"Dal")];
         [self.user setUserId:user.userId];
         [self.user setReward:user.reward];
+        
     }];
 }
 

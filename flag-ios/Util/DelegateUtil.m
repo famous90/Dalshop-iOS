@@ -62,4 +62,14 @@
 }
 
 
+// TRANSITION DELEGATE
++ (TransitionDelegate *)getTransitionDelegate
+{
+    AppDelegate *delegate = [self getAppDelegate];
+    TransitionDelegate *transitionDelegate = delegate.transitionDelegate;
+    
+    return transitionDelegate;
+}
+
+
 @end

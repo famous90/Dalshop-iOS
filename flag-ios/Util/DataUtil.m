@@ -42,7 +42,7 @@
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUserForm *theUserForm, NSError *error){
         
-        NSLog(@"did load user form");
+        DLog(@"did load user form");
         if (error == nil) {
             
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_user_form" label:nil];
@@ -83,7 +83,7 @@
     
     NSError *error;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save! %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -101,7 +101,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error description]);
+        DLog(@"Can't save! %@ %@", error, [error description]);
     }
 }
 
@@ -118,7 +118,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error description]);
+        DLog(@"Can't save! %@ %@", error, [error description]);
     }
 }
 
@@ -135,7 +135,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error description]);
+        DLog(@"Can't save! %@ %@", error, [error description]);
     }
 }
 
@@ -152,7 +152,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error description]);
+        DLog(@"Can't save! %@ %@", error, [error description]);
     }
 }
 
@@ -169,7 +169,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error description]);
+        DLog(@"Can't save! %@ %@", error, [error description]);
     }
 }
 
@@ -250,7 +250,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error description]);
+        DLog(@"Can't save! %@ %@", error, [error description]);
     }
 }
 
@@ -265,7 +265,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error description]);
+        DLog(@"Can't save! %@ %@", error, [error description]);
     }
 }
 
@@ -279,7 +279,7 @@
     if ([managedObjects count]) {
         NSManagedObject *object = [managedObjects lastObject];
         NSDate *lastUpdateTime = [object valueForKey:@"lastUpdateTime"];
-        NSLog(@"last update time %@", lastUpdateTime);
+        DLog(@"last update time %@", lastUpdateTime);
         
         return lastUpdateTime;
     }else return nil;
@@ -295,7 +295,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save! %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -304,7 +304,7 @@
 + (void)updateFlagListWithData:(NSDictionary *)results afterLastUpdateTime:(NSTimeInterval)lastUpdateTime
 {
     NSArray *flags = [results objectForKey:@"flags"];
-    NSLog(@"updated new flag list %ld", (long)[flags count]);
+    DLog(@"updated new flag list %ld", (long)[flags count]);
     
     if ([flags count]) {
         
@@ -352,7 +352,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -397,8 +397,6 @@
 
 + (void)didCheckInFlagWithFlagId:(NSNumber *)flagId
 {
-    NSLog(@"did check in shop");
-    
     NSManagedObjectContext *context = [self managedObjectContext];
     NSEntityDescription *entityDesc = [NSEntityDescription entityForName:@"FlagList" inManagedObjectContext:context];
     NSFetchRequest *request = [[NSFetchRequest alloc] init];
@@ -416,7 +414,7 @@
     }
     
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save! %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -552,7 +550,7 @@
 
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -570,7 +568,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -599,7 +597,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -629,7 +627,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -667,7 +665,7 @@
         
         NSError *error = nil;
         if (![context save:&error]) {
-            NSLog(@"Can't save %@ %@", error, [error localizedDescription]);
+            DLog(@"Can't save %@ %@", error, [error localizedDescription]);
         }
     }
 }
@@ -689,7 +687,7 @@
     
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -770,7 +768,7 @@
 
     NSError *error = nil;
     if (![context save:&error]) {
-        NSLog(@"Can't save! %@ %@", error, [error localizedDescription]);
+        DLog(@"Can't save! %@ %@", error, [error localizedDescription]);
     }
 }
 
@@ -782,7 +780,7 @@
     
     NSDate *now = [NSDate date];
     NSDate *timeBaseLine = [now dateByAddingTimeInterval:-(BEACON_COOL_TIME)];
-    NSLog(@"now %@ %@", now, timeBaseLine);
+    
     NSPredicate *predicateWithLastScanTime = [NSPredicate predicateWithFormat:@"lastScanTime <= %@", timeBaseLine];
     
     NSPredicate *compoundPredicate = [NSCompoundPredicate andPredicateWithSubpredicates:@[predicateWithLocation, predicateWithLastScanTime]];
@@ -822,6 +820,10 @@
     
     NSError *error = nil;
     NSMutableArray *managedObjects = [[context executeFetchRequest:request error:&error] mutableCopy];
+    
+    if (error) {
+        return nil;
+    }
     return managedObjects;
 }
 

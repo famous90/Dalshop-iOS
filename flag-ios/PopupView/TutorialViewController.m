@@ -1,22 +1,22 @@
 //
-//  FirstTutorialViewController.m
+//  TutorialViewController.m
 //  Dalshop
 //
-//  Created by Hwang Gyuyoung on 2014. 6. 18..
+//  Created by Hwang Gyuyoung on 2014. 7. 12..
 //
 //
 
-#import "FirstTutorialViewController.h"
+#import "TutorialViewController.h"
 
 #import "ViewUtil.h"
 
 #import "GoogleAnalytics.h"
 
-@interface FirstTutorialViewController ()
+@interface TutorialViewController ()
 
 @end
 
-@implementation FirstTutorialViewController
+@implementation TutorialViewController
 
 - (void)viewDidLayoutSubviews
 {
@@ -40,7 +40,7 @@
     
     UIImage *moneyImage = [UIImage imageNamed:@"tutorial1_money"];
     CGSize moneyImageSize = CGSizeMake(35, 35 * moneyImage.size.height / moneyImage.size.width);
-
+    
     NSString *mainMessageStr = @"달 따서 커피먹자!";
     UIFont *mainMessageFont = [UIFont fontWithName:@"Helvetica-Bold" size:22];
     NSDictionary *mainMessageAttribute = [NSDictionary dictionaryWithObjectsAndKeys:mainMessageFont, NSFontAttributeName, nil];
@@ -117,12 +117,11 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
     
-    // GA
+    
+    // Anaytics
     [self setScreenName:GAI_SCREEN_NAME_TUTORIAL_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_TUTORIAL_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_FIRST_TUTORIAL value:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -140,11 +139,12 @@
 
 - (IBAction)backgroundTapped:(id)sender
 {
-    // GA
+    // Anaytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
-
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_FIRST_TUTORIAL value:0];
     
-    [self dismissViewControllerAnimated:YES completion:nil];
+    
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
-
+    
 @end

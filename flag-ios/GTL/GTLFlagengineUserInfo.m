@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineUserInfo (0 custom class methods, 7 custom properties)
+//   GTLFlagengineUserInfo (0 custom class methods, 8 custom properties)
 
 #import "GTLFlagengineUserInfo.h"
 
@@ -23,5 +23,5 @@
 //
 
 @implementation GTLFlagengineUserInfo
-@dynamic birth, empty, job, phone, sex, userId, verificationCode;
+@dynamic birth, empty, job, phone, sex, statusCode, userId, verificationCode;
 @end

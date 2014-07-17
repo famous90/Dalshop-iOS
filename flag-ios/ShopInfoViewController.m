@@ -70,8 +70,9 @@
 #pragma mark - IBAction
 - (IBAction)shopInfoViewTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"go_to_item_list" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_SHOP_VIEW target:VIEW_SHOP value:0];
     
     
     // change view

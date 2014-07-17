@@ -74,10 +74,8 @@
     isSlide = [self didSlideOutMapView];
     
     
-    // GA
+    // Analytics
     [self setScreenName:GAI_SCREEN_NAME_FLAG_VIEW];
-    //    [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_FLAG_VIEW];
-    //    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)configureNavigationBar
@@ -170,8 +168,9 @@
 #pragma mark IBAction
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_FLAG_LIST value:0];
     
     
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -247,7 +246,7 @@
     [self.shopInfoViewController setUser:self.user];
     [self.shopInfoViewController setShop:selectedShop];
     [self.shopInfoViewController.shopNameLabel setText:[Util changeStringFirstSpaceToLineBreak:selectedFlag.shopName]];
-    [self.shopInfoViewController.shopRewardLabel setText:[NSString stringWithFormat:@"%ld달", (long)selectedShop.reward]];
+    [self.shopInfoViewController.shopRewardLabel setText:[NSString stringWithFormat:@"%ld%@", (long)selectedShop.reward, NSLocalizedString(@"Dal", @"Dal")]];
     self.shopInfoViewController.shopImageView.image = shopImage;
     
     isSlide = [self didSlideMapView];
@@ -304,7 +303,7 @@
     
     navController.navigationBar.tintColor = UIColorFromRGB(BASE_COLOR);
     [childViewController setUser:self.user];
-    [childViewController setTitle:@"상점리스트"];
+    [childViewController setTitle:NSLocalizedString(@"Store List", @"Store List")];
     
     [self presentViewController:navController animated:YES completion:nil];
 }

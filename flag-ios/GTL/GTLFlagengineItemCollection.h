@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineItemCollection (0 custom class methods, 2 custom properties)
+//   GTLFlagengineItemCollection (0 custom class methods, 3 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -34,4 +34,5 @@
 @interface GTLFlagengineItemCollection : GTLCollectionObject
 @property (retain) NSArray *hiddenItems;  // of GTLFlagengineItem
 @property (retain) NSArray *items;  // of GTLFlagengineItem
+@property (retain) NSNumber *statusCode;  // intValue
 @end

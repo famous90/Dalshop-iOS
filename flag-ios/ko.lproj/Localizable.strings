@@ -6,4 +6,125 @@
 
 */
 
+"Email" = "이메일";
+"Password" = "비밀번호";
+"Confirm Passwrod" = "비밀번호 확인";
+"Join" = "회원가입";
+"Phone Number" = "휴대폰 번호";
+"Verification Code" = "인증번호";
+"My Info" = "나의 정보";
+"My Likes" = "나의 좋아요";
+"Message" = "메세지";
+"Invite Friend" = "친구초대";
+"Setting" = "설정";
+"Ask DALSHOP" = "달샵에게 물어보기";
+"Ask Message" = "문의 내용";
+"Scan Item" = "스캔 아이템";
+"Item Detail" = "아이템 상세보기";
+
+"Dal" = "달";
+"DALSHOP" = "달샵";
+"DAL" = "달";
+"Want to get" = "물품 요청";
+"Okay" = "확인";
+"birth year" = "년생";
+
+
+"Back" = "돌아가기";
+"Login" = "로그인";
+"Logout" = "로그아웃";
+"Quit" = "탈퇴";
+"Join" = "회원가입";
+"Cancel" = "취소";
+"User Agreement" = "이용약관";
+"User Infomation Policy" = "개인정보 취급방침";
+"Open Source License" = "오픈소스 라이센스";
+"Notice" = "공지사항";
+"Use DAL" = "달사용하기";
+"Request Redeem" = "신청하기";
+"Giftishop" = "기프티샵";
+"Reward History" = "적립내역";
+"Shop with DAL" = "달이 뜨는 가게";
+"CHECK-IN" = "CHECK_IN";
+"Check In" = "체크인";
+"Item Scan" = "아이템스캔";
+"Try again" = "재시도";
+"End App" = "종료";
+"Send" = "보내기";
+
+
+"Email to answer" = "답변받을 이메일 주소";
+
+
+"Store List" = "상점리스트";
+
+
+"Detail Event" = "이벤트 자세히 보기";
+"Unfold Detail Event" = "이벤트창 접기";
+"Like" = "좋아요";
+"Recommend" = "추천아이템";
+"No Reward" = "적립불가";
+"Reward Complete" = "적립완료";
+
+
+"Check-In Shop" = "체크인 상점";
+"Shop" = "상점";
+
+
+"Select birth year" = "출생년도 선택";
+"Select occupation" = "직업 선택";
+
+"KakaoTalk Link Error" = "카카오톡 링크 에러";
+"Check KakaoTalk" = "카카오톡을 확인해주세요";
+
+
+"I got it" = "좋아. 이해해주지";
+"Network error" = "네크워크 에러";
+"app is impossible to network" = "네트워크 상태가 좋지 않습니다\n네트워크를 확인해주세요";
+"is near here" = "이/가 근처에 있습니다\n달샵과 함께 쇼핑을 즐겨보세요";
+"You are in check-in shop. Have a shopping and get DAL" = "체크인 가능한 상점에 들어왔습니다. 쇼핑도 하고 달도 받아가세요!";
+"Sorry" = "죄송합니다";
+"Failed to update" = "업데이트에 실패하였습니다";
+"Success updating" = "성공적으로 업데이트했습니다";
+"Updated additional info" = "추가정보 입력이 완료되었습니다";
+"Thank you for telling us" = "좋은 의견 감사합니다.잠시만 기다려주시면 바로 답변해드리도록 하겠습니다.";
+"Ready to update" = "서비스 준비 중입니다\n폭풍 야근으로 개발하고 있사오니\n업데이트를 기다려주세요:)";
+"Ready" = "준비 중입니다";
+"Login Error" = "로그인에 실패하였습니다\n다시 시도해주세요";
+"Email field is empty" = "이메일을 입력해주세요";
+"Email form is invalid" = "이메일 형식이 올바르지 않습니다";
+"Password field is empty" = "비밀번호를 입력해주세요";
+"Password Error" = "비밀번호를 확인해서 다시 입력해주세요";
+"Join Error" = "회원가입 중 에러가 발생했습니다\n다시 시도해주세요";
+"Phone number is not valid" = "휴대폰 번호가 올바르지 않습니다";
+"Enter the verification code" = "인증코드를 입력해주세요";
+"Receiving verification code Error" = "인증번호를 받는데 문제가 발생했습니다\n다시 시도해주세요";
+"Please check the certification code and try again" = "인증번호를 다시 입력해주세요";
+"Please use after Login" = "로그인 후 이용 가능합니다";
+"With DALSHOP, Shopping With More Fun" = "달샵을 이용해 쇼핑에 즐거움을 더하세요";
+"Really want to logout?" = "로그아웃을 하면 서비스 이용에 제한이 있을 수 있습니다\n정말 로그아웃하시겠습니까?";
+"Really want to quit?" = "탈퇴하시면 저희와의 인연이 모두 끝납니다\n정말...정말 탈퇴하시겠어요?ㅠ";
+"Cancel to quit" = "마음돌림";
+"Keep in mind to quit" = "확고한탈퇴";
+"We are making this function" = "죄송합니다\n아직 탈퇴 기능이 완성되지 않았습니다\n얼른 만들어서 탈퇴할 수 있도록... 해드리겠습니다\n그전에는 메뉴의 달샵에게 문의하기로 말씀해주세요\n다시 한 번 죄송합니다(--)(__)";
+"Tell us what you want to buy with reward" = "달로 사고 싶은 것을\n말해주세요";
+"will cooperate with us. Please wait" = "는 입점 준비 중입니다\n하지만 이런 사소하지만 소중한 터치가\n브랜드와 제휴를 가능케합니다!";
+"is already rewarded" = "는 이미 적립하였습니다\n쿨타임이 끝난 뒤에 다시 적립하세요:)";
+"DALSHOP found SALE For you" = "달샵에서 기가 막힌 세일정보를 발견했어요!";
+"DALSHOP found Hot Item For you" = "달샵에서 설레는 아이템을 발견했어요!";
+"Please scan the code" = "코드를 스캔해주세요";
+"No Match" = "일치하는 상품이 아닙니다";
+"Reward error and try again" = "리워드 적립 중 에러가 발생했습니다\n죄송하지만 다시 스캔해주세요";
+"Not match item" = "스캔 상품이 올바르지 않네요\n다시 확인 후 스캔해주세요~";
+"Success scanning item" = "s(~o~)/\n성공적으로 스캔했습니다\n다른 아이템도 스캔해보세요";
+"No Content. We will be ready soon" = "컨텐츠 준비 중입니다";
+"Loading Data. Please wait a second" = "데이터를 불러오고 있습니다\n잠시만 기다려 주십시오";
+
+
+"Ask Us Anything you want" = "달샵에게 궁금하거나 필요한 것이 있으면 무엇이든 말씀해주세요^^";
+"With a corrent Email, We can help ASAP" = "이메일을 정확하게 입력해주시면 빠른 답변을 받으실 수 있습니다";
+"Tell us you want to buy with DAL" = "달로 사고 싶은 물품을 말씀해주세요~";
+"We will try every possible means and include it" = "어떤 수단과 방법을 동원해서라도 넣어드릴게요!";
+
+
 "BUTTON_TITLE_FIND_SHOP_FOR_REWARD" = "달따기";

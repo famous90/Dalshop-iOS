@@ -10,6 +10,7 @@
 #import <CoreLocation/CoreLocation.h>
 
 @class User;
+@class TransitionDelegate;
 
 @interface DelegateUtil : NSObject
 
@@ -25,5 +26,9 @@
 
 // App Base Data
 + (NSString *)getNewestVersion;
+
+
+// TRANSITION DELEGATE
++ (TransitionDelegate *)getTransitionDelegate;
    
 @end

@@ -45,8 +45,7 @@
     
     // GA
     [self setScreenName:GAI_SCREEN_NAME_USER_POLIVY_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_USER_POLIVY_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_SIMPLE_TEXT value:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -63,9 +62,10 @@
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // Anaytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
-
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_SIMPLE_TEXT value:0];
+    
     
     if (self.parentPage == JOIN_VIEW_PAGE) {
         [self dismissViewControllerAnimated:YES completion:nil];

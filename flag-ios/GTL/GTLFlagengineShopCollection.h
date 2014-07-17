@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineShopCollection (0 custom class methods, 2 custom properties)
+//   GTLFlagengineShopCollection (0 custom class methods, 4 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -22,6 +22,7 @@
 #endif
 
 @class GTLFlagengineFlag;
+@class GTLFlagengineJsonMap;
 @class GTLFlagengineShop;
 
 // ----------------------------------------------------------------------------
@@ -31,5 +32,7 @@
 
 @interface GTLFlagengineShopCollection : GTLObject
 @property (retain) NSArray *flags;  // of GTLFlagengineFlag
+@property (retain) GTLFlagengineJsonMap *pointMap;
 @property (retain) NSArray *shops;  // of GTLFlagengineShop
+@property (retain) NSNumber *statusCode;  // intValue
 @end

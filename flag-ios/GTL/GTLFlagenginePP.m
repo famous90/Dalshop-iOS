@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagenginePP (0 custom class methods, 2 custom properties)
+//   GTLFlagenginePP (0 custom class methods, 3 custom properties)
 
 #import "GTLFlagenginePP.h"
 
@@ -25,7 +25,7 @@
 //
 
 @implementation GTLFlagenginePP
-@dynamic identifier, pp;
+@dynamic identifier, pp, statusCode;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

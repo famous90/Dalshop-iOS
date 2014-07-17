@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineRedeemCollection (0 custom class methods, 1 custom properties)
+//   GTLFlagengineRedeemCollection (0 custom class methods, 2 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -30,4 +30,5 @@
 
 @interface GTLFlagengineRedeemCollection : GTLObject
 @property (retain) NSArray *redeems;  // of GTLFlagengineRedeem
+@property (retain) NSNumber *statusCode;  // intValue
 @end

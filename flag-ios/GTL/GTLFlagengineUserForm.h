@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineUserForm (0 custom class methods, 3 custom properties)
+//   GTLFlagengineUserForm (0 custom class methods, 4 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -33,4 +33,5 @@
 @property (retain) NSNumber *identifier;  // longLongValue
 
 @property (copy) NSString *password;
+@property (retain) NSNumber *statusCode;  // intValue
 @end

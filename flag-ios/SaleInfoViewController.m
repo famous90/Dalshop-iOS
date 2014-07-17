@@ -11,7 +11,7 @@
 
 #import "AppDelegate.h"
 #import "TransitionDelegate.h"
-#import "FirstTutorialViewController.h"
+#import "TutorialViewController.h"
 
 #import "SaleInfoViewController.h"
 #import "ItemListViewController.h"

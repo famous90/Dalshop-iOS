@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineFlag (0 custom class methods, 9 custom properties)
+//   GTLFlagengineFlag (0 custom class methods, 10 custom properties)
 
 #import "GTLFlagengineFlag.h"
 
@@ -24,7 +24,7 @@
 
 @implementation GTLFlagengineFlag
 @dynamic createdAt, distance, identifier, lat, lon, reward, shopId, shopName,
-         shopType;
+         shopType, statusCode;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

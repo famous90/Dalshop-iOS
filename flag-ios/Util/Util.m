@@ -78,13 +78,13 @@
     if ([textField respondsToSelector:@selector(setAttributedPlaceholder:)]) {
         
         UIColor *color = [UIColor colorWithRed:34.0f/255.0f green:173.0f/255.0f blue:167.0f/255.0f alpha:0.3];
-        UIFont *font = [UIFont fontWithName:@"helvetica" size:12];
+        UIFont *font = [UIFont systemFontOfSize:12];
         NSDictionary *placeholderAttribute = [NSDictionary dictionaryWithObjectsAndKeys:color, NSForegroundColorAttributeName, font, NSFontAttributeName,nil];
         
         textField.attributedPlaceholder = [[NSAttributedString alloc] initWithString:string attributes:placeholderAttribute];
         
     } else {
-        NSLog(@"Cannot set placeholder text's color, because deployment target is earlier than iOS 6.0");
+        DLog(@"Cannot set placeholder text's color, because deployment target is earlier than iOS 6.0");
     }
 }
 
@@ -121,7 +121,7 @@
     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:title
 													message:message
 												   delegate:delegate
-										  cancelButtonTitle:@"확인"
+										  cancelButtonTitle:NSLocalizedString(@"Okay", @"Okay")
 										  otherButtonTitles:nil];
     
 	[alert show];
@@ -213,19 +213,19 @@
 + (BOOL)isCorrectPhoneNumberForm:(NSString *)number
 {
     if ([number isEqual:(id)[NSNull null]]) {
-        NSLog(@"phone number null");
+        DLog(@"phone number null");
         return NO;
     }else if ([number length] == 0){
-        NSLog(@"phone number no length");
+        DLog(@"phone number no length");
         return NO;
     }else if ([number length] < 9){
-        NSLog(@"phone number too short");
+        DLog(@"phone number too short");
         return NO;
     }else if ([number rangeOfString:@"-"].location != NSNotFound){
-        NSLog(@"phone number dash contained");
+        DLog(@"phone number dash contained");
         return NO;
     }else if ([number characterAtIndex:0] != '0'){
-        NSLog(@"phone number not start with 0");
+        DLog(@"phone number not start with 0");
         return NO;
     }
     
@@ -236,7 +236,7 @@
 {
     NSRange range = NSMakeRange(0, 1);
     NSString *numberWithNationalCode = [number stringByReplacingCharactersInRange:range withString:@"+82"];
-    NSLog(@"number with national code %@", numberWithNationalCode);
+    DLog(@"number with national code %@", numberWithNationalCode);
     
     return numberWithNationalCode;
 }
@@ -248,11 +248,11 @@
     NSString *title;
     
     if (type == REWARD_STATE_BEFORE) {
-        title = [NSString stringWithFormat:@"%ld달", (long)reward];
+        title = [NSString stringWithFormat:@"%ld%@", (long)reward, NSLocalizedString(@"Dal", @"Dal")];
     }else if (type == REWARD_STATE_DISABLED){
-        title = @"적립불가";
+        title = NSLocalizedString(@"No Reward", @"No Reward");
     }else if (type == REWARD_STATE_DONE){
-        title = @"적립완료";
+        title = NSLocalizedString(@"Reward Complete", @"Reward Complete");
     }
     
     return title;

@@ -72,14 +72,15 @@
     [self setMenuCell];
     
     
-    // GA
+    // Anaytics
     [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_SETTING_VIEW];
     [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_SETTING value:0];
 }
 
 - (void)setNavigationBar
 {
-    self.title = @"설정";
+    self.title = NSLocalizedString(@"Setting", @"Setting");
     
     UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancel:)];
     self.navigationItem.leftBarButtonItem = backButton;
@@ -113,8 +114,9 @@
 #pragma mark IBAction
 - (IBAction)cancel:(id)sender
 {
-    // GA
+    // Anaytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_SETTING value:0];
 
     
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -142,19 +144,22 @@
         
         if (indexPath.row == LOGOUT_ROW) {
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"로그아웃" message:@"로그아웃을 하면 서비스 이용에 제한이 있을 수 있습니다\n정말 로그아웃하시겠습니까?" delegate:self cancelButtonTitle:@"취소" otherButtonTitles:@"로그아웃", nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Logout", @"Logout") message:NSLocalizedString(@"Really want to logout", @"Really want to logout") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel", @"Cancel") otherButtonTitles:NSLocalizedString(@"Logout", @"Logout"), nil];
             [alert setTag:LOGOUT_TAG];
             [alert show];
             
         }else if (indexPath.row == LEAVE_OUT_ROW){
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"회원탈퇴" message:@"탈퇴하시면 저희와의 인연이 모두 끝납니다\n정말...정말 탈퇴하시겠어요?ㅠ" delegate:self cancelButtonTitle:@"마음돌림" otherButtonTitles:@"확고한탈퇴", nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Quit", @"Quit") message:NSLocalizedString(@"Really want to quit?", @"Really want to quit?") delegate:self cancelButtonTitle:NSLocalizedString(@"Cancel to quit", @"Cancel to quit") otherButtonTitles:NSLocalizedString(@"Keep in mind to quit", @"Keep in mind to quit"), nil];
             [alert setTag:LEAVE_OUT_TAG];
             [alert show];
 
         }
         
     }else if (indexPath.section == USER_AGREEMENT_SECTION){
+        
+        // Analytics
+        [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_SETTING value:0];
         
         UIViewController *childViewController = [[UIViewController alloc] init];
         UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
@@ -163,17 +168,17 @@
         
         if (indexPath.row == USER_AGREEMENT_ROW) {
         
-            childViewController.title = @"이용약관";
+            childViewController.title = NSLocalizedString(@"User Agreement", @"User Agreement");
             textView.text = [Util getFileContentWithFileName:@"user_agreement"];
             
         }else if (indexPath.row == USER_INFO_POLICY_ROW){
             
-            childViewController.title = @"개인정보 취급방침";
+            childViewController.title = NSLocalizedString(@"User Infomation Policy", @"User Infomation Policy");
             textView.text = [Util getFileContentWithFileName:@"user_info_policy"];
             
         }else if (indexPath.row == OPEN_SOURCE_LICENSE_ROW){
             
-            childViewController.title = @"오픈소스 라이센스";
+            childViewController.title = NSLocalizedString(@"Open Source License", @"Open Source License");
             textView.text = [Util getFileContentWithFileName:@"open_source_license"];
         }
 
@@ -184,11 +189,15 @@
 
 - (void)presentNoticeViewWithNotice:(NSString *)notice
 {
+    // Analytics
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_SETTING value:0];
+    
+    
     UIViewController *childViewController = [[UIViewController alloc] init];
     UITextView *textView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.width)];
     
     [childViewController setView:textView];
-    childViewController.title = @"공지사항";
+    childViewController.title = NSLocalizedString(@"Notice", @"Notice");
     textView.text = notice;
     
     [self.navigationController pushViewController:childViewController animated:YES];
@@ -222,6 +231,11 @@
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *object, NSError *error){
        
         if (object) {
+            
+            // Analytics
+            [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_SETTING value:0];
+            
+            
             User *user = [[User alloc] init];
             user.userId = [object identifier];
             user.reward = [[object reward] integerValue];
@@ -256,7 +270,7 @@
 
             
             NSLog(@"leave out");
-            [Util showAlertView:nil message:@"죄송합니다\n아직 탈퇴 기능이 완성되지 않았습니다\n얼른 만들어서 탈퇴할 수 있도록... 해드리겠습니다\n그전에는 메뉴의 달샵에게 문의하기로 말씀해주세요\n다시 한 번 죄송합니다(--)(__)" title:@"탈퇴"];
+            [Util showAlertView:nil message:NSLocalizedString(@"We are making this function", @"We are making this function") title:NSLocalizedString(@"Quit", @"Quit")];
         }
         
     }

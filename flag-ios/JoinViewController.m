@@ -41,29 +41,32 @@
     self.passwordTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
     self.confirmPasswordTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
     
-    [Util setPlaceholderAttributeWithTextField:self.emailTextField placeholderContent:@"e-mail"];
-    [Util setPlaceholderAttributeWithTextField:self.passwordTextField placeholderContent:@"password"];
-    [Util setPlaceholderAttributeWithTextField:self.confirmPasswordTextField placeholderContent:@"confirm password"];
+    [Util setPlaceholderAttributeWithTextField:self.emailTextField placeholderContent:NSLocalizedString(@"Email", @"Email")];
+    [Util setPlaceholderAttributeWithTextField:self.passwordTextField placeholderContent:NSLocalizedString(@"Password", @"Password")];
+    [Util setPlaceholderAttributeWithTextField:self.confirmPasswordTextField placeholderContent:NSLocalizedString(@"Confirm Password", @"Confirm Password")];
     
     
     // button
+    [self.cancelButton setTitle:NSLocalizedString(@"Cancel", @"Cancel") forState:UIControlStateNormal];
     self.cancelButton.layer.borderColor = [UIColor whiteColor].CGColor;
     self.cancelButton.layer.borderWidth = 0.8f;
     self.cancelButton.layer.cornerRadius = 5;
     
+    [self.joinButton setTitle:NSLocalizedString(@"Join", @"Join") forState:UIControlStateNormal];
     self.joinButton.layer.borderColor = [UIColor whiteColor].CGColor;
     self.joinButton.layer.borderWidth = 0.8f;
     self.joinButton.layer.cornerRadius = 5;
+    
+    [self.dalshopLabel setText:[NSString stringWithFormat:@"%@ shop", NSLocalizedString(@"DAL", @"DAL")]];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    // GA
+    // ANALYTICS
     [self setScreenName:GAI_SCREEN_NAME_REGISTER_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_REGISTER_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_JOIN value:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -86,7 +89,6 @@
 
     
     if ([self userFormCheck]) {
-        NSLog(@"registering");
         [self registerUser];
     }
 }
@@ -111,7 +113,7 @@
             [self changeUserForm];
             [self presentPhoneCertView];
         }else{
-            [Util showAlertView:nil message:@"회원가입 중에 에러가 발생했습니다" title:@"회원가입"];
+            [Util showAlertView:nil message:NSLocalizedString(@"Join Error", @"Join Error") title:NSLocalizedString(@"Join", @"Join")];
         }
 
     }];
@@ -148,8 +150,10 @@
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // Analtics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_JOIN value:0];
+
 
     
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
@@ -203,12 +207,12 @@
 {
     if ([self.emailTextField.text length] == 0) {
         
-        [Util textFieldHasProblemWithTextField:self.emailTextField message:@"이메일을 입력해주세요" alertTitle:@"회원가입"];
+        [Util textFieldHasProblemWithTextField:self.emailTextField message:NSLocalizedString(@"Email field is empty", @"Email field is empty") alertTitle:NSLocalizedString(@"Join", @"Join")];
         return NO;
         
     }else if (![self emailFieldCheckWithEmail:self.emailTextField.text]){
         
-        [Util textFieldHasProblemWithTextField:self.emailTextField message:@"이메일 형식이 올바르지 않습니다" alertTitle:@"회원가입"];
+        [Util textFieldHasProblemWithTextField:self.emailTextField message:NSLocalizedString(@"Email form is invaild", @"Email form is invalid") alertTitle:NSLocalizedString(@"Join", @"Join")];
         return NO;
         
     }else return YES;
@@ -218,12 +222,12 @@
 {
     if ([self.passwordTextField.text length] == 0) {
         
-        [Util textFieldHasProblemWithTextField:self.passwordTextField message:@"비밀번호를 입력해주세요" alertTitle:@"회원가입"];
+        [Util textFieldHasProblemWithTextField:self.passwordTextField message:NSLocalizedString(@"Password field is empty", @"Password field is empty") alertTitle:NSLocalizedString(@"Join", @"Join")];
         return NO;
         
     }else if (![self.passwordTextField.text isEqualToString:self.confirmPasswordTextField.text]){
         
-        [Util textFieldHasProblemWithTextField:self.confirmPasswordTextField message:@"비밀번호를 확인해서 다시 입력해주세요" alertTitle:@"회원가입"];
+        [Util textFieldHasProblemWithTextField:self.confirmPasswordTextField message:NSLocalizedString(@"Password Error", @"Password Error") alertTitle:NSLocalizedString(@"Join", @"Join")];
         return NO;
         
     }else return YES;

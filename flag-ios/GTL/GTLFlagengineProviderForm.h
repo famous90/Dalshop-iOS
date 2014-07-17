@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineProviderForm (0 custom class methods, 2 custom properties)
+//   GTLFlagengineProviderForm (0 custom class methods, 3 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -29,4 +29,5 @@
 @interface GTLFlagengineProviderForm : GTLObject
 @property (copy) NSString *email;
 @property (copy) NSString *password;
+@property (retain) NSNumber *statusCode;  // intValue
 @end

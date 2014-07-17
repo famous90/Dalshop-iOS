@@ -13,11 +13,12 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineShopCollection (0 custom class methods, 2 custom properties)
+//   GTLFlagengineShopCollection (0 custom class methods, 4 custom properties)
 
 #import "GTLFlagengineShopCollection.h"
 
 #import "GTLFlagengineFlag.h"
+#import "GTLFlagengineJsonMap.h"
 #import "GTLFlagengineShop.h"
 
 // ----------------------------------------------------------------------------
@@ -26,7 +27,7 @@
 //
 
 @implementation GTLFlagengineShopCollection
-@dynamic flags, shops;
+@dynamic flags, pointMap, shops, statusCode;
 
 + (NSDictionary *)arrayPropertyToClassMap {
   NSDictionary *map =

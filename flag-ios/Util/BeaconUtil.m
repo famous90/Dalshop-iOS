@@ -16,7 +16,7 @@
 + (void)handleBeaconListWithData:(NSDictionary *)results withLastUpdateTime:(NSTimeInterval)lastUpdateTime
 {
     NSArray *beacons = [results objectForKey:@"items"];
-    NSLog(@"beacon list count %ld", (unsigned long)[beacons count]);
+    DLog(@"beacon list count %ld", (unsigned long)[beacons count]);
     
     if ([beacons count]) {
         

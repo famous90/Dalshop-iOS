@@ -56,10 +56,9 @@
     [self setContent];
     
     
-    // GA
+    // Analytics
     [self setScreenName:GAI_SCREEN_NAME_CHECKIN_POPUP_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_CHECKIN_POPUP_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_POPUP value:0];
 }
 
 - (void)setContent
@@ -79,8 +78,9 @@
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_POPUP value:0];
 
     
     [self dismissViewControllerAnimated:YES completion:nil];
@@ -90,6 +90,7 @@
 {
     // GA
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_POPUP value:0];
 
     
     [self dismissViewControllerAnimated:YES completion:nil];

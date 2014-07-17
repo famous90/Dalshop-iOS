@@ -98,13 +98,12 @@
     menuHeaderHeight = 103.0f;
     menuFooterHeight = 150.0f;
 
-    NSDictionary *dic1 = [[NSDictionary alloc] initWithObjectsAndKeys:@"MyInfoCell", @"CellIdentifier", @"나의 정보", @"title", @"icon_myInfo", @"iconImage", nil];
-    NSDictionary *dic2 = [[NSDictionary alloc] initWithObjectsAndKeys:@"MyLikeCell", @"CellIdentifier", @"나의 좋아요", @"title", @"icon_myLike", @"iconImage", nil];
-//    NSDictionary *dic3 = [[NSDictionary alloc] initWithObjectsAndKeys:@"RedeemCell", @"CellIdentifier", @"달 사용하기", @"title", @"icon_redeem", @"iconImage", nil];
-    NSDictionary *dic4 = [[NSDictionary alloc] initWithObjectsAndKeys:@"MessageCell", @"CellIdentifier", @"메세지", @"title", @"icon_message", @"iconImage", nil];
-    NSDictionary *dic5 = [[NSDictionary alloc] initWithObjectsAndKeys:@"InviteCell", @"CellIdentifier", @"친구초대", @"title", @"icon_invite", @"iconImage", nil];
-    NSDictionary *dic6 = [[NSDictionary alloc] initWithObjectsAndKeys:@"SettingCell", @"CellIdentifier", @"설정", @"title", @"icon_setting", @"iconImage", nil];
-    NSDictionary *dic7 = [[NSDictionary alloc] initWithObjectsAndKeys:@"HelpCell", @"CellIdentifier", @"달샵에게 물어보기", @"title", @"icon_help", @"iconImage", nil];
+    NSDictionary *dic1 = [[NSDictionary alloc] initWithObjectsAndKeys:@"MyInfoCell", @"CellIdentifier", NSLocalizedString(@"My Info", @"My Info"), @"title", @"icon_myInfo", @"iconImage", nil];
+    NSDictionary *dic2 = [[NSDictionary alloc] initWithObjectsAndKeys:@"MyLikeCell", @"CellIdentifier", NSLocalizedString(@"My Likes", @"My Likes"), @"title", @"icon_myLike", @"iconImage", nil];
+    NSDictionary *dic4 = [[NSDictionary alloc] initWithObjectsAndKeys:@"MessageCell", @"CellIdentifier", NSLocalizedString(@"Message", @"Message"), @"title", @"icon_message", @"iconImage", nil];
+    NSDictionary *dic5 = [[NSDictionary alloc] initWithObjectsAndKeys:@"InviteCell", @"CellIdentifier", NSLocalizedString(@"Invite Friend", @"Invite Friend"), @"title", @"icon_invite", @"iconImage", nil];
+    NSDictionary *dic6 = [[NSDictionary alloc] initWithObjectsAndKeys:@"SettingCell", @"CellIdentifier", NSLocalizedString(@"Setting", @"Setting"), @"title", @"icon_setting", @"iconImage", nil];
+    NSDictionary *dic7 = [[NSDictionary alloc] initWithObjectsAndKeys:@"HelpCell", @"CellIdentifier", NSLocalizedString(@"Ask DALSHOP", @"Ask DALSHOP"), @"title", @"icon_help", @"iconImage", nil];
     
     menuTableCell = [[NSArray alloc] initWithObjects:dic1, dic2, dic4, dic5, dic6, dic7, nil];
 }
@@ -153,7 +152,7 @@
             // login button
             UIButton *loginButton = [[UIButton alloc] initWithFrame:CGRectMake(buttonPadding, 0, buttonWidth, buttonHeight)];
             [loginButton setBackgroundColor:UIColorFromRGB(0xeb6468)];
-            [loginButton setTitle:@"로그인" forState:UIControlStateNormal];
+            [loginButton setTitle:NSLocalizedString(@"Login", @"Login") forState:UIControlStateNormal];
             [loginButton.titleLabel setFont:buttonFont];
             [loginButton addTarget:self action:@selector(loginButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             [loginButton.layer setCornerRadius:10];
@@ -165,7 +164,7 @@
             UIButton *registerButton = [[UIButton alloc] initWithFrame:CGRectMake(menuSlideVisibleWidth - buttonPadding - buttonWidth, 0, buttonWidth, buttonHeight)];
             [registerButton addTarget:self action:@selector(registerButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             [registerButton setBackgroundColor:UIColorFromRGB(0xb94c52)];
-            [registerButton setTitle:@"회원가입" forState:UIControlStateNormal];
+            [registerButton setTitle:NSLocalizedString(@"Join", @"Join") forState:UIControlStateNormal];
             [registerButton.titleLabel setFont:buttonFont];
             [registerButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [registerButton.layer setCornerRadius:10];
@@ -178,14 +177,14 @@
             CGFloat pointButtonWidth = [ViewUtil getMagnifiedImageWidthWithImage:pointButtonBackgroundImage height:buttonHeight];
             UIButton *pointButton = [[UIButton alloc] initWithFrame:CGRectMake(menuSlideVisibleWidth - buttonPadding - pointButtonWidth, 0, pointButtonWidth, buttonHeight)];
             [pointButton setBackgroundImage:pointButtonBackgroundImage forState:UIControlStateNormal];
-            [pointButton setTitle:[NSString stringWithFormat:@"%ld달", (long)self.user.reward]    forState:UIControlStateNormal];
+            [pointButton setTitle:[NSString stringWithFormat:@"%ld", (long)self.user.reward, NSLocalizedString(@"Dal", @"Dal")]    forState:UIControlStateNormal];
             [pointButton.titleLabel setFont:buttonFont];
             [pointButton.titleLabel setTextAlignment:NSTextAlignmentRight];
             [pointButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
             [cell addSubview:pointButton];
             [pointButton setHidden:!self.user.registered];
             
-            NSLog(@"registered %d", self.user.registered);
+            DLog(@"registered %d", self.user.registered);
             
             [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
             
@@ -321,8 +320,6 @@
     
     if (indexPath.section == LOGIN_STATE_SECTION) {
         
-        NSLog(@"my reward state section");
-        
         return;
     }
     
@@ -345,7 +342,7 @@
                 [self presentViewController:navController animated:YES completion:nil];
                 
             }else{
-                [Util showAlertView:nil message:@"로그인 후 이용 가능합니다" title:@"나의 정보"];
+                [Util showAlertView:nil message:NSLocalizedString(@"Please use after Login", @"Please use after Login") title:NSLocalizedString(@"My Info", @"My Info")];
                 [ViewUtil presentLoginViewInView:self withUser:self.user];
             }
             
@@ -381,7 +378,7 @@
             
         case MESSAGE_ROW:{
             
-            [Util showAlertView:nil message:@"서비스 준비 중입니다\n폭풍 야근으로 개발하고 있사오니\n업데이트를 기다려주세요:)" title:@"죄송합니다"];
+            [Util showAlertView:nil message:NSLocalizedString(@"Ready to update", @"Ready to update") title:NSLocalizedString(@"Sorry", @"Sorry")];
             [tableView deselectRowAtIndexPath:indexPath animated:NO];
             
             break;
@@ -449,7 +446,7 @@
 {
     NSDictionary *kakaoTalkParams = [[NSDictionary alloc] initWithObjectsAndKeys:@"main", @"method", nil];
     
-    [SNSUtil makeKakaoTalkLinkToKakaoTalkLinkObjects:self.kakaoTalkLinkObjects message:@"달샵을 이용해 쇼핑에 즐거움을 더하세요" imageURL:@"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-prn2/t1.0-9/10262117_639256986165999_4859364690509549062_n.png" imageWidth:138 Height:138 execParameter:kakaoTalkParams];
+    [SNSUtil makeKakaoTalkLinkToKakaoTalkLinkObjects:self.kakaoTalkLinkObjects message:NSLocalizedString(@"With DALSHOP, Shopping With More Fun", @"With DALSHOP, Shopping With More Fun") imageURL:@"https://fbcdn-sphotos-f-a.akamaihd.net/hphotos-ak-prn2/t1.0-9/10262117_639256986165999_4859364690509549062_n.png" imageWidth:138 Height:138 execParameter:kakaoTalkParams];
     [SNSUtil sendKakaoTalkLinkByKakaoTalkLinkObjects:self.kakaoTalkLinkObjects];
 }
 

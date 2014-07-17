@@ -37,8 +37,13 @@
 + (void)presentUserPolicyInView:(id)viewController policyType:(NSInteger)policyType;
 + (void)presentLoginViewInView:(UIViewController *)viewController withUser:(User *)user;
 + (void)presentRewardPopUpViewInView:(UIViewController *)viewController shopId:(NSNumber *)shopId shopName:(NSString *)shopName reward:(NSNumber *)reward;
+
 + (void)presentTutorialInView:(UIViewController *)viewController type:(NSInteger)type;
++ (void)presentBluetoothTutorialInView:(UIViewController *)viewController;
+
 + (void)presentItemListViewNavInView:(UIViewController *)viewController withUser:(User *)user shopId:(NSNumber *)shopId shopName:(NSString *)shopName withParentPageNumber:(NSInteger)parentPage;
+
++ (UIView *)getCellResultMessageInView:(UIView *)view messageType:(NSInteger)type;
 
 
 // DRAW LINE

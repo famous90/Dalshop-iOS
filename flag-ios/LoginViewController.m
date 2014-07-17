@@ -33,23 +33,39 @@
     self.view.backgroundColor = UIColorFromRGB(BASE_COLOR);
 
     [Util setHorizontalPaddingWithTextField:self.emailTextField];
-    [Util setHorizontalPaddingWithTextField:self.passwordTextField];
+    [Util setPlaceholderAttributeWithTextField:self.emailTextField placeholderContent:NSLocalizedString(@"Email", "Email")];
     self.emailTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
+    
+    [Util setHorizontalPaddingWithTextField:self.passwordTextField];
+    [Util setPlaceholderAttributeWithTextField:self.passwordTextField placeholderContent:NSLocalizedString(@"Password", @"Password")];
     self.passwordTextField.contentVerticalAlignment = UIControlContentVerticalAlignmentBottom;
     
-    [Util setPlaceholderAttributeWithTextField:self.emailTextField placeholderContent:@"e-mail"];
-    [Util setPlaceholderAttributeWithTextField:self.passwordTextField placeholderContent:@"password"];
+    [self.cancelButton setTitle:NSLocalizedString(@"Back", @"Back") forState:UIControlStateNormal];
+    [self.cancelButton.layer setCornerRadius:5];
+    [self.cancelButton.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [self.cancelButton.layer setBorderWidth:0.8f];
     
+    [self.loginButton setTitle:NSLocalizedString(@"Login", @"Login") forState:UIControlStateNormal];
+    [self.loginButton.layer setCornerRadius:5];
+    [self.loginButton.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [self.loginButton.layer setBorderWidth:0.8f];
+    
+    [self.joinButton setTitle:NSLocalizedString(@"Join", @"Join") forState:UIControlStateNormal];
+    [self.joinButton.layer setCornerRadius:5];
+    [self.joinButton.layer setBorderColor:[UIColor whiteColor].CGColor];
+    [self.joinButton.layer setBorderWidth:0.8f];
+    [self.joinButton setHidden:NO];
+    
+    [self.dalshopLabel setText:[NSString stringWithFormat:@"%@ shop", NSLocalizedString(@"DAL", @"DAL")]];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    // GA
+    // ANALYTICS
     [self setScreenName:GAI_SCREEN_NAME_LOGIN_VIEW];
-//    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_LOGIN_VIEW];
-//    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_LOGIN value:0];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -65,7 +81,7 @@
 
 - (IBAction)loginButtonTapped:(id)sender
 {
-    // GA
+    // ANALYTICS
     [GAUtil sendGADataWithUIAction:@"login_button_tapped" label:@"escape_view" value:nil];
 
     
@@ -84,21 +100,22 @@
     [userForm setEmail:self.emailTextField.text];
     [userForm setPassword:[Util encryptPasswordWithPassword:self.passwordTextField.text]];
     [userForm setIdentifier:self.user.userId];
-    NSLog(@"user info %@", userForm);
     
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGetWithObject:userForm];
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, id object, NSError *error){
         
         if (error == nil) {
-                
+            
+            // GA
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_user_info" label:nil];
+            
             
             [self changeUserFormWithUserForm:userForm];
             [self restartView];
             
         }else{
-            [Util showAlertView:nil message:@"로그인에 실패하였습니다\n다시 시도해주세요" title:@"로그인"];
+            [Util showAlertView:nil message:NSLocalizedString(@"Login Error", @"Login Error") title:NSLocalizedString(@"Login", @"Login")];
         }
         
     }];
@@ -146,7 +163,7 @@
 {
     // GA
     [GAUtil sendGADataWithUIAction:@"background_tapped" label:@"inside_view" value:nil];
-
+    
     
     [self.emailTextField resignFirstResponder];
     [self.passwordTextField resignFirstResponder];
@@ -154,10 +171,10 @@
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // ANALTICS
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_LOGIN value:0];
 
-    
     if (self.parentPage == SLIDE_MENU_PAGE) {
         [self dismissViewControllerAnimated:YES completion:nil];
     }
@@ -180,7 +197,7 @@
 {
     if ([self.emailTextField.text length] == 0) {
         
-        [Util textFieldHasProblemWithTextField:self.emailTextField message:@"이메일을 입력해주세요" alertTitle:@"로그인"];
+        [Util textFieldHasProblemWithTextField:self.emailTextField message:NSLocalizedString(@"Email field is empty", @"Email field is empty") alertTitle:NSLocalizedString(@"Login", @"Login")];
         return NO;
         
     }else return YES;
@@ -190,7 +207,7 @@
 {
     if ([self.passwordTextField.text length] == 0) {
         
-        [Util textFieldHasProblemWithTextField:self.passwordTextField message:@"비밀번호를 입력해주세요" alertTitle:@"로그인"];
+        [Util textFieldHasProblemWithTextField:self.passwordTextField message:NSLocalizedString(@"Password field is empty", @"Password field is empty") alertTitle:NSLocalizedString(@"Login", @"Login")];
         return NO;
         
     }else return YES;

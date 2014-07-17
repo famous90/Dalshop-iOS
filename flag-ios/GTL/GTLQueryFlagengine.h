@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLQueryFlagengine (60 custom class methods, 36 custom properties)
+//   GTLQueryFlagengine (68 custom class methods, 39 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLQuery.h"
@@ -24,8 +24,11 @@
 @class GTLFlagengineBranchItemMatcher;
 @class GTLFlagengineFeedbackMessage;
 @class GTLFlagengineFlag;
+@class GTLFlagengineIdString;
 @class GTLFlagengineItem;
+@class GTLFlagengineItemViewPair;
 @class GTLFlagengineLike;
+@class GTLFlagengineLog;
 @class GTLFlagengineNotice;
 @class GTLFlagenginePP;
 @class GTLFlagengineProviderForm;
@@ -55,9 +58,12 @@
 // Remapped to 'descriptionProperty' to avoid NSObject's 'description'.
 @property (copy) NSString *descriptionProperty;
 @property (assign) BOOL empty;
+@property (assign) long long end;
 @property (assign) long long flagId;
 // identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
-@property (assign) long long identifier;
+// "identifier" has different types for some query methods; see the
+// documentation for the right type for each query method.
+@property (retain) id identifier;
 @property (retain) NSArray *ids;  // of NSNumber (longLongValue)
 @property (copy) NSString *imageUrl;
 @property (assign) long long itemId;
@@ -82,6 +88,8 @@
 @property (assign) NSInteger sale;
 @property (assign) NSInteger sex;
 @property (assign) long long shopId;
+@property (assign) long long start;
+@property (assign) NSInteger statusCode;
 @property (assign) long long tag;
 @property (copy) NSString *thumbnailUrl;
 @property (assign) NSInteger type;
@@ -96,6 +104,29 @@
 //  Authorization scope(s):
 //   kGTLAuthScopeFlagengineUserinfoEmail
 + (id)queryForAppsFeedbacksInsertWithObject:(GTLFlagengineFeedbackMessage *)object;
+
+#pragma mark -
+#pragma mark "apps.idstrings" methods
+// These create a GTLQueryFlagengine object.
+
+// Method: flagengine.apps.idstrings.delete
+//  Optional:
+//   identifier: For this method, "identifier" should be of type NSInteger.
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
++ (id)queryForAppsIdstringsDelete;
+
+// Method: flagengine.apps.idstrings.get
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineIdStringCollection.
++ (id)queryForAppsIdstringsGet;
+
+// Method: flagengine.apps.idstrings.insert
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineIdString.
++ (id)queryForAppsIdstringsInsertWithObject:(GTLFlagengineIdString *)object;
 
 #pragma mark -
 #pragma mark "apps.notices" methods
@@ -331,6 +362,15 @@
 #pragma mark "items.list" methods
 // These create a GTLQueryFlagengine object.
 
+// Method: flagengine.items.list.ids
+//  Optional:
+//   ids: NSArray
+//   userId: long long
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineItemCollection.
++ (id)queryForItemsListIds;
+
 // Method: flagengine.items.list.item
 //  Optional:
 //   itemId: long long
@@ -373,7 +413,7 @@
 //  Optional:
 //   barcodeId: NSString
 //   descriptionProperty: NSString
-//   identifier: long long
+//   identifier: For this method, "identifier" should be of type long long.
 //   liked: BOOL
 //   likes: NSInteger
 //   name: NSString
@@ -385,6 +425,7 @@
 //   sale: NSInteger
 //   sex: NSInteger
 //   shopId: long long
+//   statusCode: NSInteger
 //   thumbnailUrl: NSString
 //   type: NSInteger
 //  Authorization scope(s):
@@ -416,6 +457,35 @@
 //   kGTLAuthScopeFlagengineUserinfoEmail
 // Fetches a GTLFlagengineLike.
 + (id)queryForLikesInsertWithObject:(GTLFlagengineLike *)object;
+
+#pragma mark -
+#pragma mark "logs" methods
+// These create a GTLQueryFlagengine object.
+
+// Method: flagengine.logs.get
+//  Optional:
+//   end: long long
+//   start: long long
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineLogCollection.
++ (id)queryForLogsGet;
+
+// Method: flagengine.logs.insert
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineLog.
++ (id)queryForLogsInsertWithObject:(GTLFlagengineLog *)object;
+
+#pragma mark -
+#pragma mark "logs.insert" methods
+// These create a GTLQueryFlagengine object.
+
+// Method: flagengine.logs.insert.ivpair
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineItemViewPair.
++ (id)queryForLogsInsertIvpairWithObject:(GTLFlagengineItemViewPair *)object;
 
 #pragma mark -
 #pragma mark "providers" methods
@@ -481,7 +551,7 @@
 
 // Method: flagengine.shops.get
 //  Optional:
-//   identifier: long long
+//   identifier: For this method, "identifier" should be of type long long.
 //   userId: long long
 //  Authorization scope(s):
 //   kGTLAuthScopeFlagengineUserinfoEmail
@@ -541,7 +611,7 @@
 // Method: flagengine.shops.patch
 //  Optional:
 //   descriptionProperty: NSString
-//   identifier: long long
+//   identifier: For this method, "identifier" should be of type long long.
 //   imageUrl: NSString
 //   liked: BOOL
 //   likes: NSInteger
@@ -552,6 +622,7 @@
 //   providerId: long long
 //   reward: NSInteger
 //   rewarded: BOOL
+//   statusCode: NSInteger
 //   type: NSInteger
 //  Authorization scope(s):
 //   kGTLAuthScopeFlagengineUserinfoEmail
@@ -574,6 +645,15 @@
 #pragma mark -
 #pragma mark "shops" methods
 // These create a GTLQueryFlagengine object.
+
+// Method: flagengine.shops.start
+//  Optional:
+//   mark: NSInteger
+//   userId: long long
+//  Authorization scope(s):
+//   kGTLAuthScopeFlagengineUserinfoEmail
+// Fetches a GTLFlagengineShopCollection.
++ (id)queryForShopsStart;
 
 // Method: flagengine.shops.update
 //  Authorization scope(s):
@@ -604,6 +684,7 @@
 //   job: NSInteger
 //   phone: NSString
 //   sex: NSInteger
+//   statusCode: NSInteger
 //   userId: long long
 //   verificationCode: NSString
 //  Authorization scope(s):

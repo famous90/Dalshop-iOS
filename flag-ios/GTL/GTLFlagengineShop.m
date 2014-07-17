@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineShop (0 custom class methods, 13 custom properties)
+//   GTLFlagengineShop (0 custom class methods, 14 custom properties)
 
 #import "GTLFlagengineShop.h"
 
@@ -24,7 +24,7 @@
 
 @implementation GTLFlagengineShop
 @dynamic descriptionProperty, identifier, imageUrl, liked, likes, logoUrl, name,
-         onSale, parentId, providerId, reward, rewarded, type;
+         onSale, parentId, providerId, reward, rewarded, statusCode, type;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

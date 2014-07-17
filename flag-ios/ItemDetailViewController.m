@@ -361,7 +361,7 @@
             [deleteLineView setHidden:YES];
         }
         
-        itemRewardLabel.text = [NSString stringWithFormat:@"%ld달", (long)self.item.reward];
+        itemRewardLabel.text = [NSString stringWithFormat:@"%ld%@", (long)self.item.reward, NSLocalizedString(@"Dal", @"Dal")];
         itemOldPriceLabel.text = self.item.oldPrice;
         itemOldPriceLabel.font = oldPriceTextFont;
         itemCurrentPriceLabel.text = self.item.price;
@@ -454,7 +454,7 @@
 
 - (IBAction)showLocationButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"show_location_click" label:@"inside_view" value:nil];
 
     

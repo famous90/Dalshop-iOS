@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineFeedbackMessage (0 custom class methods, 6 custom properties)
+//   GTLFlagengineFeedbackMessage (0 custom class methods, 7 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -37,5 +37,6 @@
 @property (retain) NSNumber *identifier;  // longLongValue
 
 @property (retain) GTLFlagengineText *message;
+@property (retain) NSNumber *statusCode;  // intValue
 @property (retain) NSNumber *userId;  // longLongValue
 @end

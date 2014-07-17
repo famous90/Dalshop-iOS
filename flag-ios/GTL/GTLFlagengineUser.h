@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineUser (0 custom class methods, 4 custom properties)
+//   GTLFlagengineUser (0 custom class methods, 5 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -34,4 +34,5 @@
 
 @property (copy) NSString *password;
 @property (retain) NSNumber *reward;  // intValue
+@property (retain) NSNumber *statusCode;  // intValue
 @end

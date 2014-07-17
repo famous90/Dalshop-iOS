@@ -18,6 +18,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *joinButton;
 @property (weak, nonatomic) IBOutlet UIButton *showUserAgreementButton;
 @property (weak, nonatomic) IBOutlet UIButton *showUserInfoPolicyButton;
+@property (weak, nonatomic) IBOutlet UILabel *dalshopLabel;
 
 @property (nonatomic, strong) User *user;
 @property (nonatomic, assign) NSInteger parentPage;

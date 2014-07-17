@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineNotice (0 custom class methods, 2 custom properties)
+//   GTLFlagengineNotice (0 custom class methods, 3 custom properties)
 
 #import "GTLFlagengineNotice.h"
 
@@ -23,5 +23,5 @@
 //
 
 @implementation GTLFlagengineNotice
-@dynamic createdAt, message;
+@dynamic createdAt, message, statusCode;
 @end

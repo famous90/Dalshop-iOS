@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineUploadUrl (0 custom class methods, 1 custom properties)
+//   GTLFlagengineUploadUrl (0 custom class methods, 2 custom properties)
 
 #import "GTLFlagengineUploadUrl.h"
 
@@ -23,5 +23,5 @@
 //
 
 @implementation GTLFlagengineUploadUrl
-@dynamic url;
+@dynamic statusCode, url;
 @end

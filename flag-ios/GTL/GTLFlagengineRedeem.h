@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineRedeem (0 custom class methods, 5 custom properties)
+//   GTLFlagengineRedeem (0 custom class methods, 6 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -34,5 +34,6 @@
 @property (copy) NSString *imageUrl;
 @property (copy) NSString *name;
 @property (retain) NSNumber *price;  // intValue
+@property (retain) NSNumber *statusCode;  // intValue
 @property (copy) NSString *vendor;
 @end

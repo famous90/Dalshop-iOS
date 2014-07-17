@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineItemCollection (0 custom class methods, 2 custom properties)
+//   GTLFlagengineItemCollection (0 custom class methods, 3 custom properties)
 
 #import "GTLFlagengineItemCollection.h"
 
@@ -25,7 +25,7 @@
 //
 
 @implementation GTLFlagengineItemCollection
-@dynamic hiddenItems, items;
+@dynamic hiddenItems, items, statusCode;
 
 + (NSDictionary *)arrayPropertyToClassMap {
   NSDictionary *map =

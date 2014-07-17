@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineVersion (0 custom class methods, 2 custom properties)
+//   GTLFlagengineVersion (0 custom class methods, 3 custom properties)
 
 #import "GTLFlagengineVersion.h"
 
@@ -23,5 +23,5 @@
 //
 
 @implementation GTLFlagengineVersion
-@dynamic createdAt, version;
+@dynamic createdAt, statusCode, version;
 @end

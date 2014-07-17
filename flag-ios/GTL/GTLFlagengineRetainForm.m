@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineRetainForm (0 custom class methods, 1 custom properties)
+//   GTLFlagengineRetainForm (0 custom class methods, 2 custom properties)
 
 #import "GTLFlagengineRetainForm.h"
 
@@ -23,7 +23,7 @@
 //
 
 @implementation GTLFlagengineRetainForm
-@dynamic identifier;
+@dynamic identifier, statusCode;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

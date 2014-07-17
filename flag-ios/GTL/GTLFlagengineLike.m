@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineLike (0 custom class methods, 4 custom properties)
+//   GTLFlagengineLike (0 custom class methods, 5 custom properties)
 
 #import "GTLFlagengineLike.h"
 
@@ -23,7 +23,7 @@
 //
 
 @implementation GTLFlagengineLike
-@dynamic identifier, targetId, type, userId;
+@dynamic identifier, statusCode, targetId, type, userId;
 
 + (NSDictionary *)propertyToJSONKeyMap {
   NSDictionary *map =

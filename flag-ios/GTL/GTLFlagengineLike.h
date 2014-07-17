@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineLike (0 custom class methods, 4 custom properties)
+//   GTLFlagengineLike (0 custom class methods, 5 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -29,8 +29,9 @@
 @interface GTLFlagengineLike : GTLObject
 
 // identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
-@property (copy) NSString *identifier;
+@property (retain) NSNumber *identifier;  // longLongValue
 
+@property (retain) NSNumber *statusCode;  // intValue
 @property (retain) NSNumber *targetId;  // longLongValue
 @property (retain) NSNumber *type;  // intValue
 @property (retain) NSNumber *userId;  // longLongValue

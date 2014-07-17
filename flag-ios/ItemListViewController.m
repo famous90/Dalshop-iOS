@@ -88,6 +88,11 @@
     NSMutableDictionary *kakaoTalkLinkObjects;
     
     NSInteger itemListMark;
+    
+    NSInteger view_type;
+    
+    UIView *cellResultMessageView;
+    NSInteger resultMessageType;
 }
 
 - (void)awakeFromNib
@@ -136,9 +141,7 @@
 
     }
     
-    // GA
-    //    [[[GAI sharedInstance] defaultTracker] set:kGAIScreenName value:GAI_SCREEN_NAME_ITEM_LIST_VIEW];
-    //    [[[GAI sharedInstance] defaultTracker] send:[[GAIDictionaryBuilder createAppView] build]];
+    // Analytics
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_ITEM_LIST_VIEW];
     [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
@@ -161,6 +164,7 @@
     if ([self.item hasOldPrice]) {
         itemDetailPricePartHeight = 42.0f;
     }else itemDetailPricePartHeight = 20.0f;
+    
     itemDetailNameFont = [UIFont boldSystemFontOfSize:17];
     itemDetailDescriptionFont = [UIFont systemFontOfSize:14];
     itemDetailOldPriceFont = [UIFont systemFontOfSize:14];
@@ -193,6 +197,8 @@
 {
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
+        view_type = VIEW_ITEM_LIST;
+        
         // navigation bar
         self.navigationController.navigationBar.tintColor = UIColorFromRGB(BASE_COLOR);
         
@@ -211,25 +217,33 @@
         
     }else if (self.parentPage == SALE_INFO_VIEW_PAGE || self.parentPage == SHOP_LIST_VIEW_PAGE){
         
+        view_type = VIEW_ITEM_LIST;
+        
         [self setTitle:self.shop.name];
         
     }else if (self.parentPage == SLIDE_MENU_PAGE){
         
+        view_type = VIEW_ITEM_LIST_MY_LIKES;
+        
         // navigation bar
-        self.title = @"나의 좋아요";
+        [self setTitle:NSLocalizedString(@"My Likes", @"My Likes")];
         
         UIBarButtonItem *menuButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
         self.navigationItem.leftBarButtonItem = menuButton;
         
     }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
         
-        self.title = @"스캔아이템";
+        view_type = VIEW_ITEM_LIST_REWARD;
+        
+        [self setTitle:NSLocalizedString(@"Scan Item", @"Scan Item")];
         
         UIBarButtonItem *backButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancelButtonTapped:)];
         self.navigationItem.leftBarButtonItem = backButton;
         backButton.tintColor = UIColorFromRGB(BASE_COLOR);
         
     }else if (self.parentPage == NOTIFICATION_VIEW){
+        
+        view_type = VIEW_ITEM_LIST;
         
         [self setTitle:self.shop.name];
         
@@ -239,8 +253,13 @@
         
     }else if (self.parentPage == ITEM_LIST_VIEW_PAGE){
         
-        [self setTitle:@"상세보기"];
+        view_type = VIEW_ITEM_LIST_DETAIL;
+        
+        [self setTitle:NSLocalizedString(@"Item Detail", @"Item Detail")];
     }
+    
+    // Analytics
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:view_type value:0];
 }
 
 - (void)initializeContent
@@ -249,6 +268,10 @@
     NSDictionary *item_list_section_dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:CELL_TYPE_ITEM_LIST], @"type", nil];
     NSDictionary *item_detail_section_dic = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:CELL_TYPE_ITEM_DETAIL], @"type", nil];
     [collectionViewCell addObject:item_list_section_dic];
+    
+    [cellResultMessageView removeFromSuperview];
+    cellResultMessageView = [ViewUtil getCellResultMessageInView:self.collectionView messageType:CELL_RESULT_DATA_LOADING];
+    [cellResultMessageView setHidden:NO];
     
     if (self.parentPage == TAB_BAR_VIEW_PAGE) {
         
@@ -309,7 +332,7 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         
-        NSLog(@"insert row at top");
+        DLog(@"insert row at top");
         [weakSelf.collectionView.infiniteScrollingView stopAnimating];
     });
     
@@ -353,7 +376,7 @@
     
     [urlParam setMethodName:@"item_init"];
     [urlParam addParameterWithKey:@"mark" withParameter:[NSNumber numberWithInteger:itemListMark++]];
-    NSLog(@"mark %d", itemListMark);
+    DLog(@"mark %ld", (long)itemListMark);
     [urlParam addParameterWithUserId:self.user.userId];
     
     return urlParam;
@@ -422,6 +445,12 @@
         }
     }
     
+    [cellResultMessageView removeFromSuperview];
+    if ([allItemData countOfList] == 0) {
+        cellResultMessageView = [ViewUtil getCellResultMessageInView:self.collectionView messageType:CELL_RESULT_NO_RESULT];
+        [cellResultMessageView setHidden:NO];
+    }
+    
     [self.collectionView reloadData];
 }
 
@@ -476,9 +505,10 @@
     
     if (([cellType intValue] == CELL_TYPE_SHOP_INFO) && (section == SHOP_INFO_SECTION)) {
         
-        if (isShopInfoCellExpanded) {
-            return 2;
-        }else return 1;
+//        if (isShopInfoCellExpanded) {
+//            return 2;
+//        }else return 1;
+        return 1;
         
     }else if (([cellType intValue] == CELL_TYPE_ITEM_DETAIL) && (section == ITEM_DETAIL_SECTION)){
         
@@ -506,15 +536,53 @@
             UIImageView *shopEventImageView = (UIImageView *)[cell viewWithTag:210];
             [shopEventImageView setImage:self.shopEventImage];
             
+            UIButton *shopShareButton = (UIButton *)[cell viewWithTag:214];
+            CGRect shopShareButtonFrame = CGRectMake(cell.frame.size.width - shopShareButton.frame.size.width, 0, shopShareButton.frame.size.width, shopShareButton.frame.size.height);
+            [shopShareButton setFrame:shopShareButtonFrame];
+            [shopShareButton setImage:[UIImage imageNamed:@"icon_share_green_round"] forState:UIControlStateNormal];
+            [shopShareButton addTarget:self action:@selector(shareShopButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            
+            UILabel *description = (UILabel *)[cell viewWithTag:212];
+            CGRect descriptionFrame = [self.shop.description boundingRectWithSize:CGSizeMake(collectionView.frame.size.width - shopDescriptionTextMargin - shopDescriptionTextPadding, shopDescriptionSectionMaxHeight) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: shopDescriptionFont} context:nil];
+            CGFloat descriptionHeight;
+            if (descriptionFrame.size.height > shopDescriptionSectionMaxHeight) {
+                descriptionHeight = shopDescriptionSectionMaxHeight;
+            }else {
+                descriptionHeight = descriptionFrame.size.height;
+            }
+            [description setFrame:CGRectMake(shopDescriptionTextPadding, shopEventImageHeight + shopDescriptionTextPadding, descriptionFrame.size.width, descriptionHeight)];
+            [description setText:self.shop.description];
+            [description setTextColor:UIColorFromRGB(BASE_COLOR)];
+            [description setFont:shopDescriptionFont];
+            [description setBackgroundColor:[UIColor whiteColor]];
+            
+            UIImageView *descriptionBgImageView = (UIImageView *)[cell viewWithTag:215];
+            CGRect bgFrame = CGRectMake(0, shopEventImageHeight, cell.frame.size.width, descriptionHeight + shopDescriptionTextPadding*2);
+            [descriptionBgImageView setFrame:bgFrame];
+            [descriptionBgImageView setBackgroundColor:[UIColor whiteColor]];
+            
             UIButton *cellExpandButton = (UIButton *)[cell viewWithTag:213];
-            [cell bringSubviewToFront:cellExpandButton];
+            [cellExpandButton setHidden:isShopInfoCellExpanded];
+            CGRect expandButtonFrame = CGRectMake(cellExpandButton.frame.origin.x, shopEventImageHeight, cellExpandButton.frame.size.width, cellExpandButton.frame.size.height);
+            [cellExpandButton setFrame:expandButtonFrame];
             [cellExpandButton addTarget:self action:@selector(expandCellButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
-            [cellExpandButton setBackgroundColor:[UIColor colorWithWhite:0.2 alpha:0.8]];
-            [cellExpandButton setImageEdgeInsets:UIEdgeInsetsMake(2, 2, 2, 2)];
             [cellExpandButton setImage:[UIImage imageNamed:@"icon_triangle_down"] forState:UIControlStateNormal];
-            [cellExpandButton setTitle:@"이벤트 자세히 보기" forState:UIControlStateNormal];
+            [cellExpandButton setTitle:NSLocalizedString(@"Event Detail", @"Event Detail") forState:UIControlStateNormal];
+            [cellExpandButton setBackgroundColor:UIColorFromRGB(0x246a7a)];
+            [cellExpandButton setImageEdgeInsets:UIEdgeInsetsMake(2, 2, 2, 2)];
             [cellExpandButton setTintColor:[UIColor whiteColor]];
-//            [cellExpandButton setHidden:isShopInfoCellExpanded];
+            
+            UIButton *cellFoldButton = (UIButton *)[cell viewWithTag:216];
+            [cellFoldButton setHidden:!isShopInfoCellExpanded];
+            [cellFoldButton setFrame:CGRectMake(0, [ViewUtil getOriginYBottomToFrame:descriptionBgImageView.frame], cellFoldButton.frame.size.width, cellFoldButton.frame.size.height)];
+            [cellFoldButton addTarget:self action:@selector(expandCellButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            [cellFoldButton setBackgroundColor:UIColorFromRGB(0x246a7a)];
+            [cellFoldButton setImageEdgeInsets:UIEdgeInsetsMake(2, 2, 2, 2)];
+            [cellFoldButton setImage:[UIImage imageNamed:@"icon_triangle_up"] forState:UIControlStateNormal];
+            [cellFoldButton setTitle:NSLocalizedString(@"Unfold Detail Event", @"Unfold Detail Event") forState:UIControlStateNormal];
+            [cellFoldButton setTintColor:[UIColor whiteColor]];
+            
+            [cell setBackgroundColor:[UIColor grayColor]];
             
             return cell;
             
@@ -550,7 +618,10 @@
             [cellExpandButton setTintColor:[UIColor whiteColor]];
             
             
-            [cell setBackgroundColor:[UIColor whiteColor]];
+            UIImageView *descriptionBgImageView = (UIImageView *)[cell viewWithTag:215];
+            CGRect bgFrame = CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height - cellExpandButton.frame.size.height);
+            [descriptionBgImageView setFrame:bgFrame];
+            [descriptionBgImageView setBackgroundColor:[UIColor whiteColor]];
             
             return cell;
             
@@ -567,6 +638,12 @@
             UIImageView *itemDetailImageView = (UIImageView *)[cell viewWithTag:221];
             [itemDetailImageView setImage:self.itemImage];
             
+            UIButton *itemShareButton = (UIButton *)[cell viewWithTag:230];
+            CGRect itemShareButtonFrame = CGRectMake(cell.frame.size.width - itemShareButton.frame.size.width, 0, itemShareButton.frame.size.width, itemShareButton.frame.size.height);
+            [itemShareButton setFrame:itemShareButtonFrame];
+            [itemShareButton setImage:[UIImage imageNamed:@"icon_share_green_round"] forState:UIControlStateNormal];
+            [itemShareButton addTarget:self action:@selector(shareItemButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
+            
             UIColor *buttonBgColor = [UIColor colorWithWhite:0.8 alpha:0.4];
             UIColor *buttonColor = UIColorFromRGB(0xeb6468);
             UIFont *buttonFont = [UIFont systemFontOfSize:12];
@@ -574,7 +651,7 @@
             UIButton *itemLikeButton = (UIButton *)[cell viewWithTag:222];
             [itemLikeButton setBackgroundColor:buttonBgColor];
             [itemLikeButton setImage:[ViewUtil getLikeIconImageWithLiked:self.item.liked colorType:@"red"] forState:UIControlStateNormal];
-            [itemLikeButton setTitle:[NSString stringWithFormat:@" 좋아요 %ld", (long)self.item.likes] forState:UIControlStateNormal];
+            [itemLikeButton setTitle:[NSString stringWithFormat:@" %@ %ld", NSLocalizedString(@"Like", @"Like"), (long)self.item.likes] forState:UIControlStateNormal];
             [itemLikeButton.titleLabel setFont:buttonFont];
             [itemLikeButton setTitleColor:buttonColor forState:UIControlStateNormal];
             [itemLikeButton addTarget:self action:@selector(likeItButtonTappedInItemDetail:) forControlEvents:UIControlEventTouchUpInside];
@@ -679,7 +756,7 @@
         
         UIButton *itemLikeButton = (UIButton *)[cell viewWithTag:206];
         UIImage *itemLikeButtonImage = [ViewUtil getLikeIconImageWithLiked:theItem.liked colorType:@"red"];
-        NSString *itemLikeButtonTitle = [NSString stringWithFormat:@" 좋아요 %ld", (long)theItem.likes];
+        NSString *itemLikeButtonTitle = [NSString stringWithFormat:@" %@ %ld", NSLocalizedString(@"Like", @"Like"), (long)theItem.likes];
         [itemLikeButton setImage:itemLikeButtonImage forState:UIControlStateNormal];
         [itemLikeButton setImageEdgeInsets:UIEdgeInsetsMake(5, 0, 5, 0)];
         [itemLikeButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
@@ -711,12 +788,21 @@
         
         if (indexPath.row == SHOP_EVENT_IMAGE_ROW) {
             
-            CGFloat height = 190.0f;
+            CGFloat cellHeight;
+            CGFloat imageHeight = 190.0f;
+            
+            CGRect descriptionFrame = [self.shop.description boundingRectWithSize:CGSizeMake(collectionView.frame.size.width - shopDescriptionTextPadding - shopDescriptionTextMargin, shopDescriptionSectionMaxHeight) options:NSStringDrawingUsesLineFragmentOrigin attributes:@{NSFontAttributeName: shopDescriptionFont} context:nil];
+            CGFloat descriptionHeight = shopDescriptionTextPadding + shopDescriptionTextPadding;
+            
+            if (descriptionFrame.size.height > shopDescriptionSectionMaxHeight) {
+                descriptionHeight += shopDescriptionSectionMaxHeight;
+            }else descriptionHeight += descriptionFrame.size.height;
             
             if (isShopInfoCellExpanded) {
-                height -= shopDescriptionExpandButtonHeight;
-            }
-            return CGSizeMake(310.0f, height);
+                cellHeight = imageHeight + descriptionHeight;
+            }else cellHeight = imageHeight;
+            
+            return CGSizeMake(310.0f, cellHeight);
             
         }else{
             
@@ -753,7 +839,7 @@
     NSNumber *cellType = [[collectionViewCell objectAtIndex:section] valueForKey:@"type"];
     
     if (([cellType integerValue] == CELL_TYPE_SHOP_INFO) && (section == SHOP_INFO_SECTION)) {
-        return 0;
+        return 4;
     }if (([cellType integerValue] == CELL_TYPE_ITEM_DETAIL) && (section == ITEM_DETAIL_SECTION)) {
         return 0;
     }else{
@@ -786,7 +872,7 @@
         UIButton *headerBgButton = (UIButton *)[headerView viewWithTag:240];
         UIImage *iconImage = [UIImage imageNamed:@"icon_star"];
         [headerBgButton setBackgroundImage:[UIImage imageNamed:@"bg_item_list_header"] forState:UIControlStateNormal];
-        [headerBgButton setTitle:@"추천아이템" forState:UIControlStateNormal];
+        [headerBgButton setTitle:NSLocalizedString(@"Recommend", @"Recommend") forState:UIControlStateNormal];
         [headerBgButton.titleLabel setFont:[UIFont systemFontOfSize:13]];
         [headerBgButton.titleLabel setTextColor:[UIColor whiteColor]];
         [headerBgButton setTitleEdgeInsets:UIEdgeInsetsMake(0, -iconImage.size.width + 15, 0, iconImage.size.width)];
@@ -811,7 +897,7 @@
         
     }else if (([cellType integerValue] == CELL_TYPE_ITEM_DETAIL) && (indexPath.section == ITEM_DETAIL_SECTION)) {
         
-        NSLog(@"item detail image tapped");
+        DLog(@"item detail image tapped");
         
     }else{
         
@@ -862,37 +948,38 @@
 #pragma mark - IBAction
 - (IBAction)expandCellButtonTapped:(id)sender
 {
-    NSLog(@"expand description tapped");
+    DLog(@"expand description tapped");
     
-    if (isShopInfoCellExpanded) {
-        isShopInfoCellExpanded = !isShopInfoCellExpanded;
-        [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:SHOP_DESCRIPTION_ROW inSection:SHOP_INFO_SECTION]]];
-    }else{
-        isShopInfoCellExpanded = !isShopInfoCellExpanded;
-        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:SHOP_DESCRIPTION_ROW inSection:SHOP_INFO_SECTION]]];
-    }
+//    if (isShopInfoCellExpanded) {
+//        [self.collectionView deleteItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:SHOP_DESCRIPTION_ROW inSection:SHOP_INFO_SECTION]]];
+//    }else{
+//        [self.collectionView insertItemsAtIndexPaths:@[[NSIndexPath indexPathForItem:SHOP_DESCRIPTION_ROW inSection:SHOP_INFO_SECTION]]];
+//    }
+    isShopInfoCellExpanded = !isShopInfoCellExpanded;
     
     [self.collectionView reloadData];
 }
 
 - (IBAction)scanButtonTapped:(UIButton *)sender
 {
-    // GA
-    [GAUtil sendGADataWithUIAction:@"item_scan_click" label:@"inside_view" value:nil];
-
-    
     CGPoint buttonOrigiInCollectionView = [sender convertPoint:CGPointZero toView:self.collectionView];
     NSIndexPath *indexPath = [self.collectionView indexPathForItemAtPoint:buttonOrigiInCollectionView];
     Item *theItem = (Item *)[allItemData objectInListAtIndex:indexPath.row];
     
     [self showItemScanViewWithItem:theItem];
+    
+
+    // Analytics
+    [GAUtil sendGADataWithUIAction:@"item_scan_click" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_SCAN target:[theItem.itemId integerValue] value:0];
 }
 
 - (IBAction)cancelButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
-
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:view_type value:0];
+    
     
     if (self.parentPage == SLIDE_MENU_PAGE) {
         
@@ -900,7 +987,7 @@
     
     }else if (self.parentPage == COLLECT_REWARD_SELECT_VIEW_PAGE){
     
-        NSLog(@"cancel button tapped");
+        DLog(@"cancel button tapped");
         [self dismissViewControllerAnimated:YES completion:nil];
     
     }else if (self.parentPage == NOTIFICATION_VIEW){
@@ -947,27 +1034,15 @@
     [self.navigationController pushViewController:childViewController animated:YES];
 }
 
-#pragma mark -
-#pragma mark notification
-- (void)configureCheckInRewardTutorial
-{
-    if (![DataUtil isUserFirstLaunchApp]) {
-        
-        [ViewUtil presentTutorialInView:self type:TUTORIAL_REWARD_DESCRIPTION];
-        [DataUtil saveUserHistoryAfterAppLaunch];
-        
-        // delegate user update
-        
-    }
-}
 
 
 #pragma mark
 #pragma mark - Item Detail Implemetation
 - (IBAction)likeItButtonTappedInItemDetail:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"like_item_click" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_LIKE target:[self.item.itemId integerValue] value:0];
     
     
     [self likeItemButtonTappedWithItem:self.item];
@@ -975,42 +1050,54 @@
 
 - (IBAction)likeItemButtonTappedInItemList:(id)sender
 {
-    // GA
-    [GAUtil sendGADataWithUIAction:@"like_item_in_list_click" label:@"inside_view" value:nil];
-    
-    
     CGPoint tappedPoint = [Util getPointForTappedObjectWithSender:sender toView:self.collectionView];
     NSIndexPath *indexpath = [self.collectionView indexPathForItemAtPoint:tappedPoint];
     Item *theItem = [allItemData objectInListAtIndex:indexpath.row];
-    NSLog(@"item id %@ %@", theItem.itemId, theItem.name);
     [self likeItemButtonTappedWithItem:theItem];
+    
+    
+    // Analytics
+    [GAUtil sendGADataWithUIAction:@"like_item_in_list_click" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_LIKE target:[theItem.itemId integerValue] value:0];
 }
 
 - (IBAction)itemRewardButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"reward_item_click" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_SCAN target:[self.item.itemId integerValue] value:0];
     
     
     if ([self.item getRewardState] == REWARD_STATE_BEFORE) {
         
-        NSLog(@"item reward");
+        DLog(@"item reward");
         
     }else if ([self.item getRewardState] == REWARD_STATE_DISABLED){
         
-        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@는 입점 준비 중입니다\n하지만 이런 사소하지만 소중한 터치가\n브랜드와 제휴를 가능케합니다!", self.item.name] title:@"적립불가"];
+        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@%@", self.item.name, NSLocalizedString(@"will cooperate with us. Please wait", @"will cooperate with us. Please wait")] title:NSLocalizedString(@"No Reward", @"No Reward")];
         
     }else if ([self.item getRewardState] == REWARD_STATE_DONE){
         
-        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@는 이미 적립하였습니다\n쿨타임이 끝난 뒤에 다시 적립하세요:)", self.item.name] title:@"적립완료"];
+        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@%@", self.item.name, NSLocalizedString(@"is already rewarded", @"is already rewarded")] title:NSLocalizedString(@"Reward Complete", @"Reward Complete")];
         
     }
 }
 
-- (IBAction)shareButtonTapped:(id)sender
+- (IBAction)shareShopButtonTapped:(id)sender
 {
-    // GA
-    [GAUtil sendGADataWithUIAction:@"share_item_click" label:@"inside_view" value:nil];
+    // Analytics
+    [GAUtil sendGADataWithUIAction:@"share_shop_tapped" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_SHOP_SHARE target:[self.shop.shopId integerValue] value:0];
+    
+    
+    [self shareShopThrouhKakaoTalk];
+}
+
+- (IBAction)shareItemButtonTapped:(id)sender
+{
+    // Analytics
+    [GAUtil sendGADataWithUIAction:@"share_item_tapped" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_SHARE target:[self.item.itemId integerValue] value:0];
     
     
     [self shareItemThroughKakaoTalk];
@@ -1018,8 +1105,9 @@
 
 - (IBAction)showLocationButtonTapped:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"show_location_click" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_MAP target:[self.item.itemId integerValue] value:0];
     
     
     [self presentMapView];
@@ -1048,7 +1136,7 @@
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineLike *object, NSError *error){
         
-        NSLog(@"result object %@", object);
+        DLog(@"result object %@", object);
         
         if (error == nil) {
             // GA
@@ -1089,10 +1177,21 @@
     return urlParam;
 }
 
+- (void)shareShopThrouhKakaoTalk
+{
+    NSDictionary *kakaoTalkParams = [[NSDictionary alloc] initWithObjectsAndKeys:@"shop", @"method", self.shop.shopId, @"shopId", nil];
+    NSString *kakaoTalkMessage = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"DALSHOP found SALE For you", @"DALSHOP found SALE For you"), self.shop.description];
+    CGFloat imageWidth  = 150;
+    CGFloat imageHeight = self.shopEventImage.size.height * imageWidth / self.shopEventImage.size.width;
+    
+    [SNSUtil makeKakaoTalkLinkToKakaoTalkLinkObjects:kakaoTalkLinkObjects message:kakaoTalkMessage imageURL:self.shop.imageUrl imageWidth:imageWidth Height:imageHeight execParameter:kakaoTalkParams];
+    [SNSUtil sendKakaoTalkLinkByKakaoTalkLinkObjects:kakaoTalkLinkObjects];
+}
+
 - (void)shareItemThroughKakaoTalk
 {
     NSDictionary *kakaoTalkParams = [[NSDictionary alloc] initWithObjectsAndKeys:@"item", @"method", self.item.shopId, @"shopId", self.item.itemId, @"itemId", nil];
-    NSString *kakaoTalkMessage = [NSString stringWithFormat:@"%@\n%@", @"달샵에서 설레는 아이템을 발견했어요!", self.item.description];
+    NSString *kakaoTalkMessage = [NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"DALSHOP found Hot Item For you", @"DALSHOP found Hot Item For you"), self.item.description];
     CGFloat imageWidth  = 150;
     CGFloat imageHeight = self.itemImage.size.height * imageWidth / self.itemImage.size.width;
     
@@ -1111,5 +1210,25 @@
     [self.navigationController pushViewController:childViewController animated:YES];
 }
 
+
+#pragma mark -
+#pragma mark notification
+- (void)configureCheckInRewardTutorial
+{
+    if (![DataUtil isUserFirstLaunchApp]) {
+        
+        [ViewUtil presentTutorialInView:self type:TUTORIAL_REWARD_DESCRIPTION];
+        [DataUtil saveUserHistoryAfterAppLaunch];
+    }
+}
+
+- (void)configureScanRewardTutorial
+{
+    if (![DataUtil getUserActionHistoryForRewardShopWatched]) {
+        NSString *tutorialMessage = @"상품의 바코드를 스캔하세요\n스캔으로 달을 딸 수 있어요!!";
+        [Util showAlertView:nil message:tutorialMessage title:@"서비스소개"];
+        [DataUtil saveUserHistoryForRewardShopWatched];
+    }
+}
 
 @end

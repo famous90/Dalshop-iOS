@@ -66,8 +66,8 @@
     NSDictionary *dic_my_info = [[NSDictionary alloc] initWithObjectsAndKeys:@"MyInfoCell", @"CellIdentifier", @"", @"cellTitle", @"", @"cellIconImage", nil];
     NSArray *array_my_info = [[NSArray alloc] initWithObjects:dic_my_info, nil];
     
-    NSDictionary *dic_menu1 = [[NSDictionary alloc] initWithObjectsAndKeys:@"RedeemCell", @"CellIdentifier", @"사용하기", @"cellTitle", @"icon_redeem", @"cellIconImage", nil];
-    NSDictionary *dic_menu2 = [[NSDictionary alloc] initWithObjectsAndKeys:@"RewardHistoryCell", @"CellIdentifier", @"적립내역", @"cellTitle", @"icon_reward_history", @"cellIconImage", nil];
+    NSDictionary *dic_menu1 = [[NSDictionary alloc] initWithObjectsAndKeys:@"RedeemCell", @"CellIdentifier", NSLocalizedString(@"Use DAL", @"Use DAL"), @"cellTitle", @"icon_redeem", @"cellIconImage", nil];
+    NSDictionary *dic_menu2 = [[NSDictionary alloc] initWithObjectsAndKeys:@"RewardHistoryCell", @"CellIdentifier", NSLocalizedString(@"Reward History", @"Reward History"), @"cellTitle", @"icon_reward_history", @"cellIconImage", nil];
     NSArray *array_menu = [[NSArray alloc] initWithObjects:dic_menu1, dic_menu2, nil];
     
     menuTableCell = [[NSArray alloc] initWithObjects:array_select_reward, array_my_info, array_menu, nil];
@@ -127,7 +127,7 @@
             
             [collectCheckInRewardButton addTarget:self action:@selector(checkInRewardShopsButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
             [collectCheckInRewardButton.titleLabel setNumberOfLines:2];
-            [collectCheckInRewardButton setTitle:@"달이 뜨는 가게\nCHECK-IN" forState:UIControlStateNormal];
+            [collectCheckInRewardButton setTitle:[NSString stringWithFormat:@"%@\n%@", NSLocalizedString(@"Shop with DAL", @"Shop with DAL"), NSLocalizedString(@"CHECK-IN", @"CHECK-IN")] forState:UIControlStateNormal];
             [collectCheckInRewardButton setTitleColor:UIColorFromRGB(0xf2b518) forState:UIControlStateNormal];
             [collectCheckInRewardButton.titleLabel setFont:[UIFont boldSystemFontOfSize:15]];
             [collectCheckInRewardButton.titleLabel setTextAlignment:NSTextAlignmentCenter];
@@ -152,7 +152,7 @@
         
         if (indexPath.row == MY_INFO_ROW) {
             
-            CGFloat buttonPadding = 18.0f;
+            CGFloat buttonPadding = 25.0f;
             
             
             // name label
@@ -174,7 +174,7 @@
             CGFloat pointButtonWidth = [ViewUtil getMagnifiedImageWidthWithImage:pointButtonBackgroundImage height:titleLabelHeight];
             UIButton *pointButton = [[UIButton alloc] initWithFrame:CGRectMake(cell.frame.size.width - buttonPadding - pointButtonWidth, (cell.frame.size.height - titleLabelHeight)/2, pointButtonWidth, titleLabelHeight)];
             [pointButton setBackgroundImage:pointButtonBackgroundImage forState:UIControlStateNormal];
-            [pointButton setTitle:[NSString stringWithFormat:@"%ld달", (long)self.user.reward]    forState:UIControlStateNormal];
+            [pointButton setTitle:[NSString stringWithFormat:@"%ld%@", (long)self.user.reward, NSLocalizedString(@"Dal", @"Dal")] forState:UIControlStateNormal];
             [pointButton.titleLabel setFont:[UIFont systemFontOfSize:12]];
             [pointButton.titleLabel setTextAlignment:NSTextAlignmentRight];
             [pointButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];

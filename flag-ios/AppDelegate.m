@@ -35,7 +35,7 @@
 
 /******* Set your tracking ID here *******/
 static NSString *const kGaTrackingId = @"UA-45882688-3";
-static BOOL const kGaTrackingOptOut = YES;
+static BOOL const kGaTrackingOptOut = NO;
 static NSString *const kTrackingPreferenceKey = @"allowTracking";
 
 //#ifdef DEBUG
@@ -98,9 +98,8 @@ static int const kGaDispatchPeriod = 20;
     [self startDetectingBeacon];
     
 
-    // NAV BAR
-    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0xffffff)];
-    [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(BASE_COLOR), NSForegroundColorAttributeName, [UIFont fontWithName:@"Helvetica_Bold" size:18], NSFontAttributeName, nil]];
+    // set base appearance
+    [self configureApprearance];
 
     
     // Google Map
@@ -152,6 +151,19 @@ static int const kGaDispatchPeriod = 20;
     [self saveContext];
 }
 
+- (void)configureApprearance
+{
+    // NAV BAR
+    [[UINavigationBar appearance] setBarTintColor:UIColorFromRGB(0xffffff)];
+    [[UINavigationBar appearance] setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:UIColorFromRGB(BASE_COLOR), NSForegroundColorAttributeName, [UIFont fontWithName:@"Helvetica_Bold" size:18], NSFontAttributeName, nil]];
+    
+    
+    // PAGE CONTROL
+    UIPageControl *pageControl = [UIPageControl appearance];
+    pageControl.pageIndicatorTintColor = [UIColor lightGrayColor];
+    pageControl.currentPageIndicatorTintColor = UIColorFromRGB(BASE_COLOR);
+}
+
 #pragma mark -
 #pragma mark Core Data stack
 - (void)saveContext
@@ -162,7 +174,7 @@ static int const kGaDispatchPeriod = 20;
         if ([managedObjectContext hasChanges] && ![managedObjectContext save:&error]) {
             // Replace this implementation with code to handle the error appropriately.
             // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development.
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            DLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
     }
@@ -233,7 +245,7 @@ static int const kGaDispatchPeriod = 20;
          Lightweight migration will only work for a limited set of schema changes; consult "Core Data Model Versioning and Data Migration Programming Guide" for details.
          
          */
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        DLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
     }    
     
@@ -278,7 +290,7 @@ static int const kGaDispatchPeriod = 20;
 {
     NSString *alertTitle = [self.appBaseData getLaunchAlertTitle];
     NSString *alertMessage = [self.appBaseData getLaunchAlertMessage];
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:nil otherButtonTitles:@"좋아. 이해해주지", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:alertTitle message:alertMessage delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"I got it", @"I got it"), nil];
     [alert setTag:ALERT_UNEXPECTED_MESSAGE];
     [alert show];
 }
@@ -292,7 +304,7 @@ static int const kGaDispatchPeriod = 20;
     BOOL isNetworkAvailable = [device networkAvailable];
     
     if (!isNetworkAvailable) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"네트워크 에러" message:@"네트워크 상태가 좋지 않습니다\n네트워크를 확인해주세요" delegate:self cancelButtonTitle:nil otherButtonTitles:@"종료", nil];
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Network error", @"Network error") message:NSLocalizedString(@"app is impossible to network", @"app is impossible to network") delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"End App", @"End App"), nil];
         [alert setTag:ALERT_NETWORK_CHECK];
         [alert show];
     }
@@ -338,10 +350,17 @@ static int const kGaDispatchPeriod = 20;
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForUsersGuest];
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineUser *object, NSError *error){
-        NSLog(@"start guest session result object %@", object);
+        DLog(@"start guest session result object %@", object);
         
         if (error == nil) {
+            // GA
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_guest_session" label:nil];
+            
+            
+            // DALOG
+            [DaLogClient sendDaLogWithCategory:CATEGORY_FIRST_USER target:VIEW_LOADING value:0];
+            
+            
             User *user = [[User alloc] init];
             user.userId = [object identifier];
             user.reward = [[object reward] integerValue];
@@ -442,7 +461,7 @@ static int const kGaDispatchPeriod = 20;
         if (results) {
             
             if ([results objectForKey:@"error"]) {
-                NSLog(@"update flag list error %@", [results objectForKey:@"error"]);
+                DLog(@"update flag list error %@", [results objectForKey:@"error"]);
             }else{
                 [DataUtil updateFlagListWithData:results afterLastUpdateTime:time];
             }
@@ -477,12 +496,12 @@ static int const kGaDispatchPeriod = 20;
             [FlagClient getDataResultWithURL:url methodName:methodName completion:^(NSDictionary *result){
                 
                 if (result) {
-                    NSLog(@"recommand shop near user");
+                    DLog(@"recommand shop near user");
                     [self recommandShopsNearUserWithData:result];
                 }
             }];
             
-        }else NSLog(@"no flag list nearby");
+        }else DLog(@"no flag list nearby");
     }
 }
 
@@ -506,10 +525,10 @@ static int const kGaDispatchPeriod = 20;
     if (theShop.name) {
         shopName = theShop.name;
     }else{
-        shopName = @"상점";
+        shopName = NSLocalizedString(@"Shop", @"Shop");
     }
     
-    NSString *message = [NSString stringWithFormat:@"주변에 %@이/가 있습니다\n달샵과 함께 쇼핑을 즐겨보세요", shopName];
+    NSString *message = [NSString stringWithFormat:@"%@%@", shopName, NSLocalizedString(@"is near here", @"is near here")];
     NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:theShop.shopId, @"shopId", theShop.name, @"shopName", [NSNumber numberWithInteger:NOTIFICATION_BY_GPS], @"type", nil];
     
     [Util showLocalNotificationWithUserInfo:userInfo atDate:[NSDate date] message:message];
@@ -547,7 +566,7 @@ static int const kGaDispatchPeriod = 20;
        
         if (result) {
             
-            NSLog(@"result %@", result);
+            DLog(@"result %@", result);
             Shop *theShop = [[Shop alloc] initWithData:result];
             
             [self popUpForCheckInRewardWithShop:theShop];
@@ -560,7 +579,7 @@ static int const kGaDispatchPeriod = 20;
 
 - (void)popUpForCheckInRewardWithShop:(Shop *)theShop
 {
-    NSString *message = [NSString stringWithFormat:@"체크인 가능한 상점에 들어왔습니다. 쇼핑도 하고 달도 받아가세요!"];
+    NSString *message = [NSString stringWithFormat:NSLocalizedString(@"You are in check-in shop. Have a shopping and get DAL", @"You are in check-in shop. Have a shopping and get DAL")];
     NSDictionary *userInfo = [[NSDictionary alloc] initWithObjectsAndKeys:theShop.shopId, @"shopId", theShop.name, @"shopName", [NSNumber numberWithInteger:theShop.reward], @"reward", [NSNumber numberWithInteger:NOTIFICATION_BY_BEACON], @"type", nil];
     [Util showLocalNotificationWithUserInfo:userInfo atDate:[NSDate date] message:message];
 }
@@ -575,13 +594,18 @@ static int const kGaDispatchPeriod = 20;
     [reward setTargetId:shop.shopId];
     [reward setTargetName:shop.name];
     [reward setReward:[NSNumber numberWithInteger:shop.reward]];
-    [reward setType:[NSNumber numberWithInteger:REWARD_CHECKIN]];
+    [reward setType:[NSNumber numberWithInteger:REWARD_REQUEST_CHECKIN]];
     GTLQueryFlagengine *query = [GTLQueryFlagengine queryForRewardsInsertWithObject:reward];
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineReward *reward, NSError *error){
-        NSLog(@"reward result %@", reward);
+        DLog(@"reward result %@", reward);
         
+        // GA
         [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"reward_check_in" label:nil];
+        
+        
+        // DALOG
+        [DaLogClient sendDaLogWithCategory:CATEGORY_CHECK_IN target:[shop.shopId integerValue] value:0];
     }];
 }
 
@@ -615,7 +639,7 @@ static int const kGaDispatchPeriod = 20;
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
                 
                 //Perform your tasks that your application requires
-                NSLog(@"\n\nRunning in the background!\n\n");
+                DLog(@"\n\nRunning in the background!\n\n");
                 
 //                [application endBackgroundTask: background_task]; //End the task so the system knows that you are done with what you need to perform
 //                background_task = UIBackgroundTaskInvalid; //Invalidate the background_task
@@ -652,14 +676,14 @@ static int const kGaDispatchPeriod = 20;
 
 - (void)locationManager:(CLLocationManager *)manager didFailWithError:(NSError *)error
 {
-    NSLog(@"fail to update location with error %@", [error localizedDescription]);
+    DLog(@"fail to update location with error %@", [error localizedDescription]);
     [locationManager stopUpdatingLocation];
     [NSTimer scheduledTimerWithTimeInterval:LOCATION_UPDATE_DELAY_TIME target:locationManager selector:@selector(startUpdatingLocation) userInfo:nil repeats:NO];
 }
 
 - (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations
 {
-    NSLog(@"location updated");
+    DLog(@"location updated");
     [locationManager stopUpdatingLocation];
     CLLocation *currentLocation = [locations lastObject];
     
@@ -689,24 +713,24 @@ static int const kGaDispatchPeriod = 20;
 - (void)locationManager:(CLLocationManager *)manager didDetermineState:(CLRegionState)state forRegion:(CLRegion *)region
 {
     if (state == CLRegionStateInside) {
-        NSLog(@"location manager did determine state INSIDE for %@", region.identifier);
+        DLog(@"location manager did determine state INSIDE for %@", region.identifier);
     }else if (state == CLRegionStateOutside){
-        NSLog(@"location manager did determine state OUTSIDE for %@", region.identifier);
+        DLog(@"location manager did determine state OUTSIDE for %@", region.identifier);
     }else{
-        NSLog(@"location manager did determine state OTHER for %@", region.identifier);
+        DLog(@"location manager did determine state OTHER for %@", region.identifier);
     }
 }
 
 - (void)locationManager:(CLLocationManager *)manager didRangeBeacons:(NSArray *)beacons inRegion:(CLBeaconRegion *)region
 {
-    NSLog(@"did range beacon");
+    DLog(@"did range beacon");
     
     if ([beacons count]) {
         
         for(CLBeacon *theBeacon in beacons){
           
             Flag *flag = [DataUtil getFlagWithFlagId:theBeacon.major];
-            NSLog(@"beacon find with flag %@ %@ %@ %f %d", flag.flagId, flag.shopId, flag.shopName, theBeacon.accuracy, [BeaconUtil isDeviceInRangeOfBeaconCheckInWithBeacon:theBeacon]);
+            DLog(@"beacon find with flag %@ %@ %@ %f %d", flag.flagId, flag.shopId, flag.shopName, theBeacon.accuracy, [BeaconUtil isDeviceInRangeOfBeaconCheckInWithBeacon:theBeacon]);
         
             // check in
             if ([flag canFlagBeCheckedIn] && [BeaconUtil isDeviceInRangeOfBeaconCheckInWithBeacon:theBeacon]) {
@@ -731,7 +755,9 @@ static int const kGaDispatchPeriod = 20;
     
     if (notiType == NOTIFICATION_BY_BEACON) {
         
+        // GA
         [GAUtil sendGADataWithCategory:@"bg_trigger" actionName:@"push_beacon" label:nil value:nil];
+        
         
         if (self.presentingViewController) {
             
@@ -742,11 +768,11 @@ static int const kGaDispatchPeriod = 20;
         }
 
         if (state == UIApplicationStateActive) {
-            NSLog(@"beacon detected in active");
+            DLog(@"beacon detected in active");
         }else if (state == UIApplicationStateBackground){
-            NSLog(@"beacon detected in background");
+            DLog(@"beacon detected in background");
         }else if (state == UIApplicationStateInactive){
-            NSLog(@"beacon detected in inactive");
+            DLog(@"beacon detected in inactive");
         }
         
         return;
@@ -754,7 +780,13 @@ static int const kGaDispatchPeriod = 20;
     
     if (notiType == NOTIFICATION_BY_GPS) {
         
+        // GA
         [GAUtil sendGADataWithCategory:@"bg_trigger" actionName:@"push_gps" label:nil value:nil];
+        
+        
+        // DALOG
+        [DaLogClient sendDaLogWithCategory:CATEGORY_LOCAL_PUSH target:[shopId integerValue] value:0];
+        
         
         if (state == UIApplicationStateBackground || state == UIApplicationStateInactive) {
             if (self.presentingViewController) {
@@ -811,7 +843,7 @@ static int const kGaDispatchPeriod = 20;
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
     NSString *token = [self hexStringFromData:deviceToken];
-    NSLog(@"content---%@", token);
+    DLog(@"content---%@", token);
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"deviceTokenNotification" object:self];
 }
@@ -832,12 +864,12 @@ static int const kGaDispatchPeriod = 20;
 
 - (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error
 {
-    NSLog(@"error %@", error);
+    DLog(@"error %@", error);
 }
 
 - (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo
 {
-    NSLog(@"alert %@", userInfo);
+    DLog(@"alert %@", userInfo);
     
     NSString *message = userInfo[@"hiddenMessage"];
     
@@ -846,13 +878,13 @@ static int const kGaDispatchPeriod = 20;
     
     // Tokens are not expected, do nothing
     if ([tokens count] != 3) {
-        NSLog(@"Message doesn't conform to the subId format at the backend %@", message);
+        DLog(@"Message doesn't conform to the subId format at the backend %@", message);
         return;
     }
     
     // Token type isn't "query", do nothing
     if (![[tokens objectAtIndex:1] isEqual:@"query"]) {
-        NSLog(@"Message id not in type QUERY %@", message);
+        DLog(@"Message id not in type QUERY %@", message);
         return;
     }
     
@@ -870,7 +902,7 @@ static int const kGaDispatchPeriod = 20;
     if ([KOSession isKakaoLinkCallback:url]) {
         
         NSMutableDictionary *paramDic = [Util dictionaryWithURLParameter:url];
-        NSLog(@"kakaoLink callback! query string : %@", paramDic);
+        DLog(@"kakaoLink callback! query string : %@", paramDic);
         NSString *method = [paramDic valueForKey:@"method"];
         NSNumber *shopId = [paramDic valueForKey:@"shopId"];
         NSNumber *itemId = [paramDic valueForKey:@"itemId"];

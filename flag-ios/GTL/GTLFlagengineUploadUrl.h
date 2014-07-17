@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineUploadUrl (0 custom class methods, 1 custom properties)
+//   GTLFlagengineUploadUrl (0 custom class methods, 2 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -27,5 +27,6 @@
 //
 
 @interface GTLFlagengineUploadUrl : GTLObject
+@property (retain) NSNumber *statusCode;  // intValue
 @property (copy) NSString *url;
 @end

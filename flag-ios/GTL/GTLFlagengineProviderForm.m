@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineProviderForm (0 custom class methods, 2 custom properties)
+//   GTLFlagengineProviderForm (0 custom class methods, 3 custom properties)
 
 #import "GTLFlagengineProviderForm.h"
 
@@ -23,5 +23,5 @@
 //
 
 @implementation GTLFlagengineProviderForm
-@dynamic email, password;
+@dynamic email, password, statusCode;
 @end

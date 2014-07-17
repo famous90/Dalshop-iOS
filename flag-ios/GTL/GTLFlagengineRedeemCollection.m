@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineRedeemCollection (0 custom class methods, 1 custom properties)
+//   GTLFlagengineRedeemCollection (0 custom class methods, 2 custom properties)
 
 #import "GTLFlagengineRedeemCollection.h"
 
@@ -25,7 +25,7 @@
 //
 
 @implementation GTLFlagengineRedeemCollection
-@dynamic redeems;
+@dynamic redeems, statusCode;
 
 + (NSDictionary *)arrayPropertyToClassMap {
   NSDictionary *map =

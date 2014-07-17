@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineRetainForm (0 custom class methods, 1 custom properties)
+//   GTLFlagengineRetainForm (0 custom class methods, 2 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -31,4 +31,5 @@
 // identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
 @property (retain) NSNumber *identifier;  // longLongValue
 
+@property (retain) NSNumber *statusCode;  // intValue
 @end

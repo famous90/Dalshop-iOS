@@ -110,8 +110,6 @@
 		005E808818ED2AF000903204 /* button_moon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 005E808718ED2AF000903204 /* button_moon@2x.png */; };
 		005E808A18ED309800903204 /* icon_like_unselected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 005E808918ED309800903204 /* icon_like_unselected@2x.png */; };
 		005E808E18ED30FD00903204 /* icon_like_selected@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 005E808B18ED30FD00903204 /* icon_like_selected@2x.png */; };
-		005E808F18ED30FD00903204 /* icon_scan_done@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 005E808C18ED30FD00903204 /* icon_scan_done@2x.png */; };
-		005E809018ED30FD00903204 /* icon_scan@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 005E808D18ED30FD00903204 /* icon_scan@2x.png */; };
 		005E80E118ED455900903204 /* button_double_circle@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 005E80E018ED455900903204 /* button_double_circle@2x.png */; };
 		005E80EB18ED980000903204 /* e5e4e4@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 005E80EA18ED980000903204 /* e5e4e4@2x.png */; };
 		005E80EE18EDA89F00903204 /* ItemDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 005E80ED18EDA89F00903204 /* ItemDetailViewController.m */; };
@@ -161,6 +159,13 @@
 		E22CF902191CA51800372913 /* AbstractActionSheetPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = E22CF8FF191CA51800372913 /* AbstractActionSheetPicker.m */; };
 		E22CF903191CA51800372913 /* ActionSheetStringPicker.m in Sources */ = {isa = PBXBuildFile; fileRef = E22CF901191CA51800372913 /* ActionSheetStringPicker.m */; };
 		E23C8B13196C268000AB629E /* AppBaseDataController.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B12196C268000AB629E /* AppBaseDataController.m */; };
+		E23C8B20196E944400AB629E /* GTLFlagengineIdString.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B15196E944400AB629E /* GTLFlagengineIdString.m */; };
+		E23C8B21196E944400AB629E /* GTLFlagengineIdStringCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B17196E944400AB629E /* GTLFlagengineIdStringCollection.m */; };
+		E23C8B22196E944400AB629E /* GTLFlagengineItemViewPair.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B19196E944400AB629E /* GTLFlagengineItemViewPair.m */; };
+		E23C8B23196E944400AB629E /* GTLFlagengineJsonMap.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B1B196E944400AB629E /* GTLFlagengineJsonMap.m */; };
+		E23C8B24196E944400AB629E /* GTLFlagengineLog.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B1D196E944400AB629E /* GTLFlagengineLog.m */; };
+		E23C8B25196E944400AB629E /* GTLFlagengineLogCollection.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B1F196E944400AB629E /* GTLFlagengineLogCollection.m */; };
+		E23C8B28196E94F800AB629E /* DaLogClient.m in Sources */ = {isa = PBXBuildFile; fileRef = E23C8B27196E94F800AB629E /* DaLogClient.m */; };
 		E2847C4119191CDF00BCEF81 /* button_cancel@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2847C4019191CDF00BCEF81 /* button_cancel@2x.png */; };
 		E28CA5BF192D051E006FD079 /* BeaconUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E28CA5BE192D051E006FD079 /* BeaconUtil.m */; };
 		E28CA5C2192D0710006FD079 /* DataUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = E28CA5C1192D0710006FD079 /* DataUtil.m */; };
@@ -207,7 +212,6 @@
 		E2ABEDC4194C7AF800E45E37 /* UIDevice-Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E2ABEDC3194C7AF800E45E37 /* UIDevice-Reachability.m */; };
 		E2ABEDC71950709100E45E37 /* EventViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2ABEDC61950709100E45E37 /* EventViewController.m */; };
 		E2ABEDC91950854500E45E37 /* icon_scan_disable_round@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2ABEDC81950854500E45E37 /* icon_scan_disable_round@2x.png */; };
-		E2ABEDCC1950963D00E45E37 /* FirstTutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2ABEDCB1950963D00E45E37 /* FirstTutorialViewController.m */; };
 		E2ABEDD2195097FE00E45E37 /* tutorial1_button@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2ABEDCE195097FE00E45E37 /* tutorial1_button@2x.png */; };
 		E2ABEDD3195097FE00E45E37 /* tutorial1_coffee@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2ABEDCF195097FE00E45E37 /* tutorial1_coffee@2x.png */; };
 		E2ABEDD4195097FE00E45E37 /* tutorial1_money@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2ABEDD0195097FE00E45E37 /* tutorial1_money@2x.png */; };
@@ -218,6 +222,12 @@
 		E2B035D51963561B006287AA /* icon_share_red@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B035D31963561B006287AA /* icon_share_red@2x.png */; };
 		E2B035D919636DDF006287AA /* icon_triangle_down@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B035D719636DDF006287AA /* icon_triangle_down@2x.png */; };
 		E2B035DA19636DDF006287AA /* icon_triangle_up@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B035D819636DDF006287AA /* icon_triangle_up@2x.png */; };
+		E2B0E50019704EB5002D9083 /* TutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B0E4FF19704EB5002D9083 /* TutorialViewController.m */; };
+		E2B0E50F19705A18002D9083 /* PageTutorialViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B0E50E19705A18002D9083 /* PageTutorialViewController.m */; };
+		E2B0E51219705B18002D9083 /* PageContentViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B0E51119705B18002D9083 /* PageContentViewController.m */; };
+		E2B0E516197062BB002D9083 /* tutorial_bluetooth@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B0E513197062BB002D9083 /* tutorial_bluetooth@2x.png */; };
+		E2B0E517197062BB002D9083 /* tutorial_redeem@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B0E514197062BB002D9083 /* tutorial_redeem@2x.png */; };
+		E2B0E518197062BB002D9083 /* tutorial_reward_menu@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B0E515197062BB002D9083 /* tutorial_reward_menu@2x.png */; };
 		E2B9803A1961479700529726 /* bg_point@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B980391961479700529726 /* bg_point@2x.png */; };
 		E2B98040196155FF00529726 /* RightSlideMenuTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E2B9803F196155FF00529726 /* RightSlideMenuTableViewController.m */; };
 		E2B980421961638B00529726 /* icon_reward_history@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E2B980411961638B00529726 /* icon_reward_history@2x.png */; };
@@ -460,8 +470,6 @@
 		005E808718ED2AF000903204 /* button_moon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button_moon@2x.png"; path = "Resources/Images/map/button_moon@2x.png"; sourceTree = "<group>"; };
 		005E808918ED309800903204 /* icon_like_unselected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_like_unselected@2x.png"; path = "Resources/Images/itemList/icon_like_unselected@2x.png"; sourceTree = "<group>"; };
 		005E808B18ED30FD00903204 /* icon_like_selected@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_like_selected@2x.png"; path = "Resources/Images/itemList/icon_like_selected@2x.png"; sourceTree = "<group>"; };
-		005E808C18ED30FD00903204 /* icon_scan_done@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_scan_done@2x.png"; path = "Resources/Images/itemList/icon_scan_done@2x.png"; sourceTree = "<group>"; };
-		005E808D18ED30FD00903204 /* icon_scan@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_scan@2x.png"; path = "Resources/Images/itemList/icon_scan@2x.png"; sourceTree = "<group>"; };
 		005E80E018ED455900903204 /* button_double_circle@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "button_double_circle@2x.png"; path = "Resources/Images/saleInfo/button_double_circle@2x.png"; sourceTree = "<group>"; };
 		005E80EA18ED980000903204 /* e5e4e4@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "e5e4e4@2x.png"; path = "Resources/Images/background/e5e4e4@2x.png"; sourceTree = "<group>"; };
 		005E80EC18EDA89F00903204 /* ItemDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ItemDetailViewController.h; sourceTree = "<group>"; };
@@ -532,6 +540,20 @@
 		E23C8B0D196BEF9800AB629E /* DalogField.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = DalogField.h; path = Library/Dalog/DalogField.h; sourceTree = "<group>"; };
 		E23C8B11196C268000AB629E /* AppBaseDataController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppBaseDataController.h; path = Model/AppBaseDataController.h; sourceTree = "<group>"; };
 		E23C8B12196C268000AB629E /* AppBaseDataController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppBaseDataController.m; path = Model/AppBaseDataController.m; sourceTree = "<group>"; };
+		E23C8B14196E944400AB629E /* GTLFlagengineIdString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLFlagengineIdString.h; sourceTree = "<group>"; };
+		E23C8B15196E944400AB629E /* GTLFlagengineIdString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLFlagengineIdString.m; sourceTree = "<group>"; };
+		E23C8B16196E944400AB629E /* GTLFlagengineIdStringCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLFlagengineIdStringCollection.h; sourceTree = "<group>"; };
+		E23C8B17196E944400AB629E /* GTLFlagengineIdStringCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLFlagengineIdStringCollection.m; sourceTree = "<group>"; };
+		E23C8B18196E944400AB629E /* GTLFlagengineItemViewPair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLFlagengineItemViewPair.h; sourceTree = "<group>"; };
+		E23C8B19196E944400AB629E /* GTLFlagengineItemViewPair.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLFlagengineItemViewPair.m; sourceTree = "<group>"; };
+		E23C8B1A196E944400AB629E /* GTLFlagengineJsonMap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLFlagengineJsonMap.h; sourceTree = "<group>"; };
+		E23C8B1B196E944400AB629E /* GTLFlagengineJsonMap.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLFlagengineJsonMap.m; sourceTree = "<group>"; };
+		E23C8B1C196E944400AB629E /* GTLFlagengineLog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLFlagengineLog.h; sourceTree = "<group>"; };
+		E23C8B1D196E944400AB629E /* GTLFlagengineLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLFlagengineLog.m; sourceTree = "<group>"; };
+		E23C8B1E196E944400AB629E /* GTLFlagengineLogCollection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GTLFlagengineLogCollection.h; sourceTree = "<group>"; };
+		E23C8B1F196E944400AB629E /* GTLFlagengineLogCollection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GTLFlagengineLogCollection.m; sourceTree = "<group>"; };
+		E23C8B26196E94F800AB629E /* DaLogClient.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DaLogClient.h; path = Server/DaLogClient.h; sourceTree = "<group>"; };
+		E23C8B27196E94F800AB629E /* DaLogClient.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DaLogClient.m; path = Server/DaLogClient.m; sourceTree = "<group>"; };
 		E2847C4019191CDF00BCEF81 /* button_cancel@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "button_cancel@2x.png"; sourceTree = "<group>"; };
 		E28CA5BD192D051E006FD079 /* BeaconUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BeaconUtil.h; path = Util/BeaconUtil.h; sourceTree = "<group>"; };
 		E28CA5BE192D051E006FD079 /* BeaconUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BeaconUtil.m; path = Util/BeaconUtil.m; sourceTree = "<group>"; };
@@ -617,8 +639,6 @@
 		E2ABEDC51950709100E45E37 /* EventViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EventViewController.h; path = PopupView/EventViewController.h; sourceTree = "<group>"; };
 		E2ABEDC61950709100E45E37 /* EventViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EventViewController.m; path = PopupView/EventViewController.m; sourceTree = "<group>"; };
 		E2ABEDC81950854500E45E37 /* icon_scan_disable_round@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_scan_disable_round@2x.png"; path = "Resources/Images/general/icon_scan_disable_round@2x.png"; sourceTree = "<group>"; };
-		E2ABEDCA1950963D00E45E37 /* FirstTutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FirstTutorialViewController.h; path = PopupView/FirstTutorialViewController.h; sourceTree = "<group>"; };
-		E2ABEDCB1950963D00E45E37 /* FirstTutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FirstTutorialViewController.m; path = PopupView/FirstTutorialViewController.m; sourceTree = "<group>"; };
 		E2ABEDCE195097FE00E45E37 /* tutorial1_button@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial1_button@2x.png"; sourceTree = "<group>"; };
 		E2ABEDCF195097FE00E45E37 /* tutorial1_coffee@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial1_coffee@2x.png"; sourceTree = "<group>"; };
 		E2ABEDD0195097FE00E45E37 /* tutorial1_money@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial1_money@2x.png"; sourceTree = "<group>"; };
@@ -630,6 +650,15 @@
 		E2B035D31963561B006287AA /* icon_share_red@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_share_red@2x.png"; path = "Resources/Images/general/icon_share_red@2x.png"; sourceTree = "<group>"; };
 		E2B035D719636DDF006287AA /* icon_triangle_down@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_triangle_down@2x.png"; path = "Resources/Images/general/icon_triangle_down@2x.png"; sourceTree = "<group>"; };
 		E2B035D819636DDF006287AA /* icon_triangle_up@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "icon_triangle_up@2x.png"; path = "Resources/Images/general/icon_triangle_up@2x.png"; sourceTree = "<group>"; };
+		E2B0E4FE19704EB5002D9083 /* TutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TutorialViewController.h; path = PopupView/TutorialViewController.h; sourceTree = "<group>"; };
+		E2B0E4FF19704EB5002D9083 /* TutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TutorialViewController.m; path = PopupView/TutorialViewController.m; sourceTree = "<group>"; };
+		E2B0E50D19705A18002D9083 /* PageTutorialViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageTutorialViewController.h; path = PopupView/PageTutorialViewController.h; sourceTree = "<group>"; };
+		E2B0E50E19705A18002D9083 /* PageTutorialViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PageTutorialViewController.m; path = PopupView/PageTutorialViewController.m; sourceTree = "<group>"; };
+		E2B0E51019705B18002D9083 /* PageContentViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PageContentViewController.h; path = PopupView/PageContentViewController.h; sourceTree = "<group>"; };
+		E2B0E51119705B18002D9083 /* PageContentViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PageContentViewController.m; path = PopupView/PageContentViewController.m; sourceTree = "<group>"; };
+		E2B0E513197062BB002D9083 /* tutorial_bluetooth@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_bluetooth@2x.png"; sourceTree = "<group>"; };
+		E2B0E514197062BB002D9083 /* tutorial_redeem@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_redeem@2x.png"; sourceTree = "<group>"; };
+		E2B0E515197062BB002D9083 /* tutorial_reward_menu@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tutorial_reward_menu@2x.png"; sourceTree = "<group>"; };
 		E2B980391961479700529726 /* bg_point@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "bg_point@2x.png"; sourceTree = "<group>"; };
 		E2B9803E196155FF00529726 /* RightSlideMenuTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RightSlideMenuTableViewController.h; path = SlideMenu/RightSlideMenuTableViewController.h; sourceTree = "<group>"; };
 		E2B9803F196155FF00529726 /* RightSlideMenuTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RightSlideMenuTableViewController.m; path = SlideMenu/RightSlideMenuTableViewController.m; sourceTree = "<group>"; };
@@ -815,6 +844,9 @@
 				0016D15718A1012B0093629E /* Client Library */,
 				000F064C18D87E06004F3581 /* FlagClient.h */,
 				E2C217A8190F9CFD007EFF49 /* FlagClient.m */,
+				E23C8B26196E94F800AB629E /* DaLogClient.h */,
+				E23C8B27196E94F800AB629E /* DaLogClient.m */,
+				E23C8B0D196BEF9800AB629E /* DalogField.h */,
 			);
 			name = Server;
 			sourceTree = "<group>";
@@ -1126,8 +1158,6 @@
 				E28CA5C419349822006FD079 /* CollectRewardViewController.m */,
 				00FE39FC18B5DFD100B3505D /* MyPageViewController.h */,
 				00FE39FD18B5DFD100B3505D /* MyPageViewController.m */,
-				00EA154C18B8C4360025D1D1 /* RewardHistoryViewController.h */,
-				00EA154D18B8C4360025D1D1 /* RewardHistoryViewController.m */,
 			);
 			name = Controller;
 			sourceTree = "<group>";
@@ -1167,7 +1197,6 @@
 		00D4A4A218F7A0C600297B1F /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				E23C8B0C196BEF7D00AB629E /* Dalog */,
 				E2ABEDC1194C7AF800E45E37 /* Reachability */,
 				E28CA5C61934A154006FD079 /* Transition Delegate */,
 				E2AB1BCA1922151D00D2E8FE /* PullToRefresh */,
@@ -1216,9 +1245,6 @@
 		00FE399318B4463C00B3505D /* general */ = {
 			isa = PBXGroup;
 			children = (
-				E2E9F29E196AAA840039656D /* icon_checkIn_before@2x.png */,
-				E2C3C57119666F6500315E8D /* icon_share_green_round@2x.png */,
-				E2C3C57219666F6500315E8D /* icon_share_white@2x.png */,
 				E2C3C5591965D9E800315E8D /* appIcon@2x.png */,
 				E2C3C55B1965DC4C00315E8D /* bg_item_list_header@2x.png */,
 				000F063818D6D700004F3581 /* button_bound_white.png */,
@@ -1231,6 +1257,7 @@
 				E2C3C55F19666E3900315E8D /* icon_buy_before@2x.png */,
 				E2C3C56019666E3900315E8D /* icon_buy_disabled.png */,
 				E2C3C56119666E3900315E8D /* icon_buy_done@2x.png */,
+				E2E9F29E196AAA840039656D /* icon_checkIn_before@2x.png */,
 				E2C3C56919666E4700315E8D /* icon_checkIn_disabled@2x.png */,
 				E2C3C56319666E3900315E8D /* icon_checkIn_done@2x.png */,
 				E28CA5CD1934B0C2006FD079 /* icon_checkIn_round@2x.png */,
@@ -1248,15 +1275,17 @@
 				E2C3C56B19666ED500315E8D /* icon_scan_before@2x.png */,
 				E2C3C56C19666ED500315E8D /* icon_scan_disable_round@2x.png */,
 				E2C3C56D19666ED500315E8D /* icon_scan_disabled@2x.png */,
-				E2ABEDC81950854500E45E37 /* icon_scan_disable_round@2x.png */,
 				E28CA5CF1934B0C2006FD079 /* icon_scan_round@2x.png */,
+				E2C3C57119666F6500315E8D /* icon_share_green_round@2x.png */,
 				E2B035D31963561B006287AA /* icon_share_red@2x.png */,
+				E2C3C57219666F6500315E8D /* icon_share_white@2x.png */,
 				E2C3C5571965D98600315E8D /* icon_star@2x.png */,
 				E2B035D719636DDF006287AA /* icon_triangle_down@2x.png */,
 				E2B035D819636DDF006287AA /* icon_triangle_up@2x.png */,
 				E28CA5E01936323F006FD079 /* LaunchImage-568h@2x.png */,
 				E28CA5E11936323F006FD079 /* LaunchImage@2x.png */,
 				E28CA5D31934B0FA006FD079 /* line_dotted@2x.png */,
+				E2ABEDC81950854500E45E37 /* icon_scan_disable_round@2x.png */,
 				E2DF686A1938C68900E3ECF7 /* appIcon@2x.png */,
 			);
 			name = general;
@@ -1290,8 +1319,6 @@
 				E2C21719190F8833007EFF49 /* icon_likeIt_done_white@2x.png */,
 				E2C2171A190F8833007EFF49 /* icon_likeIt_white@2x.png */,
 				005E808B18ED30FD00903204 /* icon_like_selected@2x.png */,
-				005E808C18ED30FD00903204 /* icon_scan_done@2x.png */,
-				005E808D18ED30FD00903204 /* icon_scan@2x.png */,
 				005E808918ED309800903204 /* icon_like_unselected@2x.png */,
 				0088951118C9A2710060A121 /* segment_background_highlighted@2x.png */,
 				0088950B18C9A11B0060A121 /* segment_background@2x.png */,
@@ -1311,14 +1338,6 @@
 			path = Library/ActionSheetPicker;
 			sourceTree = "<group>";
 		};
-		E23C8B0C196BEF7D00AB629E /* Dalog */ = {
-			isa = PBXGroup;
-			children = (
-				E23C8B0D196BEF9800AB629E /* DalogField.h */,
-			);
-			name = Dalog;
-			sourceTree = "<group>";
-		};
 		E2847C36191918B500BCEF81 /* PopupView */ = {
 			isa = PBXGroup;
 			children = (
@@ -1326,8 +1345,12 @@
 				E2E887BA193F97E000717910 /* CheckInPopUpViewController.m */,
 				E2ABEDC51950709100E45E37 /* EventViewController.h */,
 				E2ABEDC61950709100E45E37 /* EventViewController.m */,
-				E2ABEDCA1950963D00E45E37 /* FirstTutorialViewController.h */,
-				E2ABEDCB1950963D00E45E37 /* FirstTutorialViewController.m */,
+				E2B0E4FE19704EB5002D9083 /* TutorialViewController.h */,
+				E2B0E4FF19704EB5002D9083 /* TutorialViewController.m */,
+				E2B0E50D19705A18002D9083 /* PageTutorialViewController.h */,
+				E2B0E50E19705A18002D9083 /* PageTutorialViewController.m */,
+				E2B0E51019705B18002D9083 /* PageContentViewController.h */,
+				E2B0E51119705B18002D9083 /* PageContentViewController.m */,
 			);
 			name = PopupView;
 			sourceTree = "<group>";
@@ -1369,6 +1392,18 @@
 		E2AB1BD219222DB100D2E8FE /* GTL */ = {
 			isa = PBXGroup;
 			children = (
+				E23C8B14196E944400AB629E /* GTLFlagengineIdString.h */,
+				E23C8B15196E944400AB629E /* GTLFlagengineIdString.m */,
+				E23C8B16196E944400AB629E /* GTLFlagengineIdStringCollection.h */,
+				E23C8B17196E944400AB629E /* GTLFlagengineIdStringCollection.m */,
+				E23C8B18196E944400AB629E /* GTLFlagengineItemViewPair.h */,
+				E23C8B19196E944400AB629E /* GTLFlagengineItemViewPair.m */,
+				E23C8B1A196E944400AB629E /* GTLFlagengineJsonMap.h */,
+				E23C8B1B196E944400AB629E /* GTLFlagengineJsonMap.m */,
+				E23C8B1C196E944400AB629E /* GTLFlagengineLog.h */,
+				E23C8B1D196E944400AB629E /* GTLFlagengineLog.m */,
+				E23C8B1E196E944400AB629E /* GTLFlagengineLogCollection.h */,
+				E23C8B1F196E944400AB629E /* GTLFlagengineLogCollection.m */,
 				E2AB1BD319222DB100D2E8FE /* GTLFlagengine.h */,
 				E2AB1BD819222DB100D2E8FE /* GTLFlagengineBranchItemMatcher.h */,
 				E2AB1BD919222DB100D2E8FE /* GTLFlagengineBranchItemMatcher.m */,
@@ -1455,6 +1490,9 @@
 		E2ABEDCD195097FE00E45E37 /* tutorial */ = {
 			isa = PBXGroup;
 			children = (
+				E2B0E513197062BB002D9083 /* tutorial_bluetooth@2x.png */,
+				E2B0E514197062BB002D9083 /* tutorial_redeem@2x.png */,
+				E2B0E515197062BB002D9083 /* tutorial_reward_menu@2x.png */,
 				E2ABEDCE195097FE00E45E37 /* tutorial1_button@2x.png */,
 				E2ABEDCF195097FE00E45E37 /* tutorial1_coffee@2x.png */,
 				E2ABEDD0195097FE00E45E37 /* tutorial1_money@2x.png */,
@@ -1481,6 +1519,8 @@
 				E28CA5E519377876006FD079 /* RedeemViewController.m */,
 				E2B9803E196155FF00529726 /* RightSlideMenuTableViewController.h */,
 				E2B9803F196155FF00529726 /* RightSlideMenuTableViewController.m */,
+				00EA154C18B8C4360025D1D1 /* RewardHistoryViewController.h */,
+				00EA154D18B8C4360025D1D1 /* RewardHistoryViewController.m */,
 			);
 			name = SlideMenu;
 			sourceTree = "<group>";
@@ -1660,7 +1700,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				005E808F18ED30FD00903204 /* icon_scan_done@2x.png in Resources */,
 				E2ABEDD5195097FE00E45E37 /* tutorial1_point@2x.png in Resources */,
 				E2B035DA19636DDF006287AA /* icon_triangle_up@2x.png in Resources */,
 				E2DAD130196B125A00A2BF9C /* pin_retail_red@2x.png in Resources */,
@@ -1721,7 +1760,6 @@
 				E2DAD132196B125A00A2BF9C /* pin_tankers_red@2x.png in Resources */,
 				E28CA5D11934B0C2006FD079 /* icon_moon_border@2x.png in Resources */,
 				E2C216F6190E21E7007EFF49 /* slide_footer@2x.png in Resources */,
-				005E809018ED30FD00903204 /* icon_scan@2x.png in Resources */,
 				E2C92064191B71FD00F4A8AF /* button_woman_selected@2x.png in Resources */,
 				E2DF686B1938C68900E3ECF7 /* appIcon@2x.png in Resources */,
 				E28CA5D41934B0FA006FD079 /* line_dotted@2x.png in Resources */,
@@ -1730,6 +1768,7 @@
 				E2DAD12C196B125A00A2BF9C /* pin_beauty_red@2x.png in Resources */,
 				E2C3C56A19666E4700315E8D /* icon_checkIn_disabled@2x.png in Resources */,
 				E2B035D919636DDF006287AA /* icon_triangle_down@2x.png in Resources */,
+				E2B0E518197062BB002D9083 /* tutorial_reward_menu@2x.png in Resources */,
 				00FE39DB18B49A3300B3505D /* beep.mp3 in Resources */,
 				E2C216EB190D11F9007EFF49 /* icon_help@2x.png in Resources */,
 				E2C3C56419666E3900315E8D /* icon_buy_before@2x.png in Resources */,
@@ -1779,6 +1818,8 @@
 				E2B035D0196355E1006287AA /* icon_likeIt_done_red@2x.png in Resources */,
 				000F064318D6D7B3004F3581 /* icon_login.png in Resources */,
 				E2B035D1196355E1006287AA /* icon_likeIt_red@2x.png in Resources */,
+				E2B0E517197062BB002D9083 /* tutorial_redeem@2x.png in Resources */,
+				E2B0E516197062BB002D9083 /* tutorial_bluetooth@2x.png in Resources */,
 				000F064218D6D7B3004F3581 /* icon_join@2x.png in Resources */,
 				E2C3C56E19666ED500315E8D /* icon_scan_before@2x.png in Resources */,
 				006FBDF2189F3D3900DD8224 /* Main.storyboard in Resources */,
@@ -1812,6 +1853,7 @@
 			files = (
 				00A04DD518CF1A4B0000CE6F /* MapUtil.m in Sources */,
 				002E85B318A14FB80084D496 /* GTMHTTPUploadFetcher.m in Sources */,
+				E23C8B24196E944400AB629E /* GTLFlagengineLog.m in Sources */,
 				E2AB1C0E19222DB100D2E8FE /* GTLFlagengineFlagCollection.m in Sources */,
 				00BA22EB18F7C31500A58D3B /* SideMenuViewController.m in Sources */,
 				E2AB1C1D19222DB100D2E8FE /* GTLFlagengineUserForm.m in Sources */,
@@ -1843,6 +1885,7 @@
 				E2E887B1193CBB7300717910 /* GTLFlagengineRedeemCollection.m in Sources */,
 				E2B9E1961913904600AD1B7A /* HelpViewController.m in Sources */,
 				E2AB1C1419222DB100D2E8FE /* GTLFlagengineProviderForm.m in Sources */,
+				E2B0E50F19705A18002D9083 /* PageTutorialViewController.m in Sources */,
 				E2B98040196155FF00529726 /* RightSlideMenuTableViewController.m in Sources */,
 				E2E887B7193CD56A00717910 /* GTLFlagengineTOU.m in Sources */,
 				E22CF902191CA51800372913 /* AbstractActionSheetPicker.m in Sources */,
@@ -1855,22 +1898,27 @@
 				00EA155118B8C8120025D1D1 /* Reward.m in Sources */,
 				002E85A718A14FB80084D496 /* GTLUtilities.m in Sources */,
 				E28CA5BF192D051E006FD079 /* BeaconUtil.m in Sources */,
+				E2B0E51219705B18002D9083 /* PageContentViewController.m in Sources */,
 				00D4A4A518F7A26D00297B1F /* SWRevealViewController.m in Sources */,
 				000F06C618D972E5004F3581 /* BeaconDataController.m in Sources */,
 				E2AB1C1119222DB100D2E8FE /* GTLFlagengineLike.m in Sources */,
 				000F064718D6D8F2004F3581 /* LoginViewController.m in Sources */,
+				E2B0E50019704EB5002D9083 /* TutorialViewController.m in Sources */,
 				E2AB1C2019222DB100D2E8FE /* GTLQueryFlagengine.m in Sources */,
 				E2DF6874193CA2AA00E3ECF7 /* PhoneCertificationViewController.m in Sources */,
 				E2AB1C1C19222DB100D2E8FE /* GTLFlagengineUser.m in Sources */,
 				E2AB1C0C19222DB100D2E8FE /* GTLFlagengineFeedbackMessage.m in Sources */,
+				E23C8B25196E944400AB629E /* GTLFlagengineLogCollection.m in Sources */,
 				006FBDEF189F3D3900DD8224 /* AppDelegate.m in Sources */,
 				E2E887CA194879A600717910 /* LikeDataController.m in Sources */,
 				002E85AD18A14FB80084D496 /* GTMHTTPFetcherLogging.m in Sources */,
 				E2E887BB193F97E000717910 /* CheckInPopUpViewController.m in Sources */,
 				E2E887C71948785500717910 /* Like.m in Sources */,
 				E2DF6870193C71BE00E3ECF7 /* UserPolicyViewController.m in Sources */,
+				E23C8B22196E944400AB629E /* GTLFlagengineItemViewPair.m in Sources */,
 				E2AB1C1719222DB100D2E8FE /* GTLFlagengineRewardCollection.m in Sources */,
 				E2ABEDC4194C7AF800E45E37 /* UIDevice-Reachability.m in Sources */,
+				E23C8B23196E944400AB629E /* GTLFlagengineJsonMap.m in Sources */,
 				002E859F18A14FB80084D496 /* GTLQuery.m in Sources */,
 				00E38A0018E91978005636D5 /* ActivityIndicatorView.m in Sources */,
 				E2AB1C1A19222DB100D2E8FE /* GTLFlagengineText.m in Sources */,
@@ -1883,6 +1931,8 @@
 				002E868118A3356C0084D496 /* ItemDataController.m in Sources */,
 				002E867118A326190084D496 /* Item.m in Sources */,
 				E2E887C31948410D00717910 /* DelegateUtil.m in Sources */,
+				E23C8B20196E944400AB629E /* GTLFlagengineIdString.m in Sources */,
+				E23C8B28196E94F800AB629E /* DaLogClient.m in Sources */,
 				002E85BF18A14FB80084D496 /* GTMReadMonitorInputStream.m in Sources */,
 				00EA154E18B8C4360025D1D1 /* RewardHistoryViewController.m in Sources */,
 				002E85A518A14FB80084D496 /* GTLUploadParameters.m in Sources */,
@@ -1897,7 +1947,6 @@
 				002E867518A326EE0084D496 /* User.m in Sources */,
 				002E85A318A14FB80084D496 /* GTLService.m in Sources */,
 				000F06C318D97095004F3581 /* Beacon.m in Sources */,
-				E2ABEDCC1950963D00E45E37 /* FirstTutorialViewController.m in Sources */,
 				E2AB1C1E19222DB100D2E8FE /* GTLFlagengineUserInfo.m in Sources */,
 				002E85BB18A14FB80084D496 /* GTMOAuth2ViewControllerTouch.m in Sources */,
 				002E858B18A14FB80084D496 /* GTLBase64.m in Sources */,
@@ -1913,6 +1962,7 @@
 				E2AB1C0D19222DB100D2E8FE /* GTLFlagengineFlag.m in Sources */,
 				002E86AC18A40B530084D496 /* FlagViewController.m in Sources */,
 				E2AB1C0A19222DB100D2E8FE /* GTLFlagengineBranchItemMatcher.m in Sources */,
+				E23C8B21196E944400AB629E /* GTLFlagengineIdStringCollection.m in Sources */,
 				002E866518A272F60084D496 /* Flag.m in Sources */,
 				002E85C318A14FB80084D496 /* SBJsonParser.m in Sources */,
 				E28CA5E91937A36F006FD079 /* RedeemDataController.m in Sources */,

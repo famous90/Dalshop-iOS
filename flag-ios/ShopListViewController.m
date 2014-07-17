@@ -16,6 +16,7 @@
 #import "FlagViewController.h"
 #import "ItemListViewController.h"
 #import "SVPullToRefresh.h"
+#import "PageTutorialViewController.h"
 
 #import "User.h"
 #import "FlagDataController.h"
@@ -49,6 +50,8 @@
     NSInteger shopListMarker;
     
     CLLocation *applicationLocation;
+    
+    NSInteger view_type;
 }
 
 - (void)awakeFromNib
@@ -74,9 +77,10 @@
     [self initializeContent];
     
     
-    // GA
+    // Analytics
     [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_SHOP_LIST_VIEW];
     [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_APPEAR target:VIEW_TABBAR_SHOP_LIST value:0];
 }
 
 - (void)configureViewContent
@@ -100,7 +104,7 @@
         
     }else if (self.parentPage == SLIDE_MENU_PAGE){
         
-        [self setTitle:@"체크인 상점"];
+        [self setTitle:NSLocalizedString(@"Check-In Shop", @"Check-In Shop")];
         [self.navigationController.navigationBar setTintColor:UIColorFromRGB(BASE_COLOR)];
         
         UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:UIBarButtonItemStyleBordered target:self action:@selector(cancel:)];
@@ -113,6 +117,8 @@
 
 - (void)initializeParameters
 {
+    shopListMarker = 0;
+
     shopData = [[ShopDataController alloc] init];
     flagData = [[FlagDataController alloc] init];
     logoImageData = [[ImageDataController alloc] init];
@@ -125,12 +131,12 @@
         
         shopListURLParam = [self urlParamsToGetShopListWithLocation:applicationLocation];
         
-//        __weak ShopListViewController *weakSelf = self;
-//        
-//        // setup infinite scrolling
-//        [self.tableView addInfiniteScrollingWithActionHandler:^{
-//            [weakSelf insertRowAtBottom];
-//        }];
+        __weak ShopListViewController *weakSelf = self;
+        
+        // setup infinite scrolling
+        [self.tableView addInfiniteScrollingWithActionHandler:^{
+            [weakSelf insertRowAtBottom];
+        }];
         
     }else if (self.parentPage == SLIDE_MENU_PAGE){
         
@@ -154,7 +160,6 @@
     [self setUser:[DelegateUtil getUser]];
     [ViewUtil setAppDelegatePresentingViewControllerWithViewController:self];
     
-    shopListMarker = 0;
     applicationLocation = [DelegateUtil getCurrentLocation];
 }
 
@@ -176,7 +181,7 @@
         if (results) {
             [self setFlagDataWithJsonData:results];
             [self setShopDataWithJsonData:results];
-            NSLog(@"marker %d", shopListMarker);
+            DLog(@"marker %ld", (long)shopListMarker);
             shopListMarker++;
         }
         
@@ -302,7 +307,7 @@
     
         UIButton *shopLikeButton = (UIButton *)[cell viewWithTag:609];
         [shopLikeButton setImage:[ViewUtil getLikeIconImageWithLiked:theShop.liked colorType:@"red"] forState:UIControlStateNormal];
-        [shopLikeButton setTitle:[NSString stringWithFormat:@" 좋아요 %ld", (long)theShop.likes] forState:UIControlStateNormal];
+        [shopLikeButton setTitle:[NSString stringWithFormat:@" %@ %ld", NSLocalizedString(@"Like", @"Like"), (long)theShop.likes] forState:UIControlStateNormal];
         [shopLikeButton.titleLabel setFont:buttonFont];
         [shopLikeButton setTitleColor:buttonColor forState:UIControlStateNormal];
         [shopLikeButton addTarget:self action:@selector(likeItButtonTapped:) forControlEvents:UIControlEventTouchUpInside];
@@ -359,16 +364,19 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // GA
-    [GAUtil sendGADataWithUIAction:@"pick_shop" label:@"escape_view" value:nil];
-    
-
 //    Flag *theFlag = (Flag *)[orderedFlagData objectInListAtIndex:indexPath.row];
 //    Shop *theShop = (Shop *)[shopData objectInlistWithObjectId:theFlag.shopId];
     Shop *theShop = (Shop *)[shopData objectInListAtIndex:indexPath.row];
 //    Flag *theFlag = (Flag *)[flagData objectWithShopId:theShop.shopId];
     UIImage *shopEventImage = [eventImageData imageInListWithId:theShop.shopId];
 
+    
+    // Analytics
+    [GAUtil sendGADataWithUIAction:@"pick_shop" label:@"escape_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_TABBAR_SHOP_LIST value:0];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_SHOP_VIEW target:[theShop.shopId integerValue] value:0];
+
+    
     [self presentItemListViewWithShop:theShop shopEventImage:shopEventImage];
 }
 
@@ -416,7 +424,14 @@
     dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, delayInSeconds * NSEC_PER_SEC);
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
         
-        [weakSelf performSelectorInBackground:@selector(getShopListWithURLParam:) withObject:shopListURLParam];
+        URLParameters *urlParam;
+        if (self.parentPage == TAB_BAR_VIEW_PAGE) {
+            urlParam = [self urlParamsToGetShopListWithLocation:applicationLocation];
+        }else if (self.parentPage == SLIDE_MENU_PAGE){
+            urlParam = [self urlParamToGetRewardShopListWithLocation:applicationLocation];
+        }
+        
+        [weakSelf performSelectorInBackground:@selector(getShopListWithURLParam:) withObject:urlParam];
         [weakSelf.tableView.infiniteScrollingView stopAnimating];
         
     });
@@ -428,20 +443,22 @@
 
 - (IBAction)cancel:(id)sender
 {
-    // GA
+    // Analytics
     [GAUtil sendGADataWithUIAction:@"go_back" label:@"escape_view" value:nil];
-
+    [DaLogClient sendDaLogWithCategory:CATEGORY_VIEW_DISAPPEAR target:VIEW_TABBAR_SHOP_LIST value:0];
+    
     
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)likeItButtonTapped:(id)sender
 {
-    // GA
-    [GAUtil sendGADataWithUIAction:@"like_shop_button_tapped" label:@"inside_view" value:nil];
-    
-    
     Shop *theShop = [self getShopByUIButton:sender];
+
+    // Analytics
+    [GAUtil sendGADataWithUIAction:@"like_shop_button_tapped" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_SHOP_LIKE target:[theShop.shopId integerValue] value:0];
+    
     
     if ([theShop isShopLiked]) {
         [self cancelLikeShopWithShop:theShop];
@@ -452,28 +469,34 @@
 
 - (IBAction)checkInButtonTapped:(id)sender
 {
-    // GA
-    [GAUtil sendGADataWithUIAction:@"check_in_button_tapped" label:@"inside_view" value:nil];
+    [ViewUtil presentBluetoothTutorialInView:self];
     
-    
-    Shop *theShop = [self getShopByUIButton:sender];
-    if ([theShop getCheckInStateType] == REWARD_STATE_BEFORE) {
-        [self checkInShopWithShop:theShop];
-    }else if ([theShop getCheckInStateType] == REWARD_STATE_DISABLED){
-        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@는 입점 준비 중입니다\n하지만 이런 사소하지만 소중한 터치가\n브랜드와 제휴를 가능케합니다!", theShop.name] title:@"적립불가"];
-    }else if ([theShop getCheckInStateType] == REWARD_STATE_DONE){
-        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@에서 이미 적립하였습니다\n쿨타임이 끝난 뒤에 다시 방문해주세요^^", theShop.name] title:@"적립완료"];
-    }
+//    Shop *theShop = [self getShopByUIButton:sender];
+//
+//    // Analytics
+//    [GAUtil sendGADataWithUIAction:@"check_in_button_tapped" label:@"inside_view" value:nil];
+//    [DaLogClient sendDaLogWithCategory:CATEGORY_CHECK_IN target:[theShop.shopId integerValue] value:0];
+//
+//    
+//    if ([theShop getCheckInStateType] == REWARD_STATE_BEFORE) {
+//        [self checkInShopWithShop:theShop];
+//    }else if ([theShop getCheckInStateType] == REWARD_STATE_DISABLED){
+//        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@는 입점 준비 중입니다\n하지만 이런 사소하지만 소중한 터치가\n브랜드와 제휴를 가능케합니다!", theShop.name] title:@"적립불가"];
+//    }else if ([theShop getCheckInStateType] == REWARD_STATE_DONE){
+//        [Util showAlertView:nil message:[NSString stringWithFormat:@"%@에서 이미 적립하였습니다\n쿨타임이 끝난 뒤에 다시 방문해주세요^^", theShop.name] title:@"적립완료"];
+//    }
 }
 
 - (IBAction)showLocationButtonTapped:(id)sender
 {
-    // GA
-    [GAUtil sendGADataWithUIAction:@"shop_location_button_tapped" label:@"inside_view" value:nil];
-    
-    
     Shop *theShop = [self getShopByUIButton:sender];
-    NSLog(@"%@ %@", theShop.shopId, theShop.name);
+
+    // Analytics
+    [GAUtil sendGADataWithUIAction:@"shop_location_button_tapped" label:@"inside_view" value:nil];
+    [DaLogClient sendDaLogWithCategory:CATEGORY_SHOP_MAP target:[theShop.shopId integerValue] value:0];
+    
+    
+    DLog(@"%@ %@", theShop.shopId, theShop.name);
     [self presentFlagListWithShop:theShop];
 }
 
@@ -505,7 +528,7 @@
     
     [service executeQuery:query completionHandler:^(GTLServiceTicket *ticket, GTLFlagengineLike *object, NSError *error){
         
-        NSLog(@"result object %@", object);
+        DLog(@"result object %@", object);
         
         if (error == nil) {
             // GA
@@ -547,7 +570,7 @@
 
 - (void)checkInShopWithShop:(Shop *)theShop
 {
-    NSLog(@"check in shop button tapped");
+    DLog(@"check in shop button tapped");
 }
 
 - (void)presentFlagListWithShop:(Shop *)theShop

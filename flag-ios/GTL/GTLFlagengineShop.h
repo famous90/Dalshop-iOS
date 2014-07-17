@@ -13,7 +13,7 @@
 // Description:
 //   This is an API
 // Classes:
-//   GTLFlagengineShop (0 custom class methods, 13 custom properties)
+//   GTLFlagengineShop (0 custom class methods, 14 custom properties)
 
 #if GTL_BUILT_AS_FRAMEWORK
   #import "GTL/GTLObject.h"
@@ -44,5 +44,6 @@
 @property (retain) NSNumber *providerId;  // longLongValue
 @property (retain) NSNumber *reward;  // intValue
 @property (retain) NSNumber *rewarded;  // boolValue
+@property (retain) NSNumber *statusCode;  // intValue
 @property (retain) NSNumber *type;  // intValue
 @end

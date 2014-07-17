@@ -53,15 +53,13 @@
     
     if ([self startReading]) {
         [_stopButton setHidden:NO];
-        [_statusLabel setText:@"코드를 스캔해주세요"];
+        [_statusLabel setText:NSLocalizedString(@"Please scan the code", @"Please scan the code")];
     }
     _isReading = YES;
     
     
     // GA
     [self setScreenName:GAI_SCREEN_NAME_QRCODE_READER_VIEW];
-    //    [[GAI sharedInstance].defaultTracker set:kGAIScreenName value:GAI_SCREEN_NAME_QRCODE_READER_VIEW];
-    //    [[GAI sharedInstance].defaultTracker send:[[GAIDictionaryBuilder createAppView] build]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -134,11 +132,11 @@
             [self performSelectorOnMainThread:@selector(stopReadingWithCheckBoolean:) withObject:[NSNumber numberWithBool:YES] waitUntilDone:NO];
             _isReading = NO;
             
-            NSLog(@"correct code read");
+            DLog(@"correct code read");
 
         }else{
             
-            NSLog(@"incorrect code read");
+            DLog(@"incorrect code read");
             [_statusLabel performSelectorOnMainThread:@selector(setText:) withObject:[metadataObj stringValue] waitUntilDone:NO];
             [self performSelectorOnMainThread:@selector(stopReadingWithCheckBoolean:) withObject:[NSNumber numberWithBool:NO] waitUntilDone:NO];
         }
@@ -162,11 +160,11 @@
     // not match item scanning
     }else{
         
-        // GA
+        // Analytics
         [GAUtil sendGADataWithUIAction:@"scan_fail" label:@"inside_view" value:nil];
         
         
-        alert = [[UIAlertView alloc] initWithTitle:@"match" message:@"일치하는 상품이 아닙니다" delegate:self cancelButtonTitle:nil otherButtonTitles:@"재시도", nil];
+        alert = [[UIAlertView alloc] initWithTitle:@"match" message:NSLocalizedString(@"No Match", @"No Match") delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Try again", @"Try again"), nil];
         alert.tag = NOT_MATCH_ALERT_TAG;
         
     }
@@ -189,8 +187,9 @@
         
         if (results) {
             
-            // GA
+            // Analytics
             [GAUtil sendGADataWithUIAction:@"scan_success" label:@"inside_view" value:nil];
+            [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_SCAN target:[self.item.itemId integerValue] value:0];
             
             
             [self checkItemScanIsRightWithData:results comparingShopId:hqShopId];
@@ -244,8 +243,8 @@
     
     _audioPlayer = [[AVAudioPlayer alloc] initWithContentsOfURL:beepURL error:&error];
     if (error) {
-        NSLog(@"Could not play beep file");
-        NSLog(@"%@", [error localizedDescription]);
+        DLog(@"Could not play beep file");
+        DLog(@"%@", [error localizedDescription]);
     }else{
         [_audioPlayer prepareToPlay];
     }
@@ -270,18 +269,21 @@
         
         if (error == nil) {
             
+            // Analytics
             [GAUtil sendGADataLoadTimeWithInterval:[[NSDate date] timeIntervalSinceDate:startDate] actionName:@"get_scan_reward" label:nil];
-            [DataUtil saveRewardObjectWithObjectId:self.item.itemId type:REWARD_SCAN];
+            [DaLogClient sendDaLogWithCategory:CATEGORY_ITEM_SCAN target:[self.item.itemId integerValue] value:0];
+            
+            [DataUtil saveRewardObjectWithObjectId:self.item.itemId type:REWARD_REQUEST_SCAN];
             self.itemListViewController.afterItemScan = YES;
             [self.navigationController popViewControllerAnimated:YES];
             
         }else{
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"아이템 스캔" message:@"리워드 적립 중 에러가 발생했습니다\n죄송하지만 다시 스캔해주세요" delegate:self cancelButtonTitle:nil otherButtonTitles:@"재시도", nil];
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Item Scan", @"Item Scan") message:NSLocalizedString(@"Reward error and try again", @"Reward error and try again") delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Try again", @"Try again"), nil];
             [alert setTag:NOT_MATCH_ALERT_TAG];
             [alert show];
             
-            NSLog(@"error occur %@ %@", error, [error localizedDescription]);
+            DLog(@"error occur %@ %@", error, [error localizedDescription]);
         }
     }];
     
@@ -290,7 +292,7 @@
 #pragma mark - alert delegate
 - (void)showWrongScanError
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"아이템 스캔" message:@"스캔 상품이 올바르지 않네요\n다시 확인 후 스캔해주세요~" delegate:self cancelButtonTitle:nil otherButtonTitles:@"재시도", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Item Scan", @"Item Scan") message:NSLocalizedString(@"Not match item", @"Not match item") delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Try again", @"Try again"), nil];
     alert.tag = NOT_MATCH_ALERT_TAG;
     
     [alert show];
@@ -298,7 +300,7 @@
 
 - (void)showRightScanAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"아이템 스캔" message:@"s(~o~)/\n성공적으로 스캔했습니다\n다른 아이템도 스캔해보세요" delegate:self cancelButtonTitle:nil otherButtonTitles:@"확인", nil];
+    UIAlertView *alert = [[UIAlertView alloc] initWithTitle:NSLocalizedString(@"Item Scan", @"Item Scan") message:NSLocalizedString(@"Success scanning item", @"Success scanning item") delegate:self cancelButtonTitle:nil otherButtonTitles:NSLocalizedString(@"Okay", @"Okay"), nil];
     alert.tag = MATCH_ALERT_TAG;
     
     [alert show];
